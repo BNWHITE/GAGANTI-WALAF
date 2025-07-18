@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaganti Pro - Éditeur</title>
+  <title>Itnagag - Mbind mi ci Wolof</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -82,7 +82,6 @@
       background-clip: text;
       color: transparent;
       letter-spacing: 3px;
-      text-transform: uppercase;
     }
 
     /* Navigation principale */
@@ -506,17 +505,20 @@
   <header>
     <div class="logo">
       <span class="logo-icon">✍️</span>
-      <h1>Gaganti Pro</h1>
+      <h1>Itnagag - Mbind mi ci Wolof</h1>
     </div>
   </header>
 
   <!-- Navigation principale -->
   <nav class="main-nav">
     <a href="#" class="nav-link active">
-      <i class="fas fa-edit"></i> Éditeur
+      <i class="fas fa-edit"></i> Bind
     </a>
     <a href="#" class="nav-link" id="forum-link">
-      <i class="fas fa-users"></i> Forum Communautaire
+      <i class="fas fa-users"></i> Waxtaan
+    </a>
+    <a href="#" class="nav-link">
+      <i class="fas fa-book"></i> Xam-xam
     </a>
   </nav>
 
@@ -524,19 +526,19 @@
   <main class="main-content">
     <!-- Éditeur de texte -->
     <div class="editor-container">
-      <textarea id="editor" placeholder="...اكتب هنا باللغة الغاغانتية"></textarea>
+      <textarea id="editor" placeholder="...Bindal ci Itnagag"></textarea>
       <div class="editor-footer">
-        <div class="character-count">0 caractères</div>
+        <div class="character-count">0 xatt</div>
         <button onclick="toggleFullscreen()" class="outline">
-          <i class="fas fa-expand"></i> Plein écran
+          <i class="fas fa-expand"></i> Ekraan bu bees
         </button>
       </div>
     </div>
 
-    <!-- Clavier Gaganti -->
+    <!-- Clavier Itnagag -->
     <div class="keyboard-container animate">
       <h2 class="keyboard-title">
-        <i class="fas fa-keyboard"></i> Clavier Gaganti
+        <i class="fas fa-keyboard"></i> Pangeeru Itnagag
       </h2>
       
       <div class="keyboard">
@@ -579,19 +581,19 @@
     <!-- Boutons d'action -->
     <div class="action-buttons">
       <button onclick="copyText()" class="secondary">
-        <i class="fas fa-copy"></i> Copier le texte
+        <i class="fas fa-copy"></i> Nàppal mbind
       </button>
       <button onclick="downloadText()" class="secondary">
-        <i class="fas fa-file-alt"></i> Exporter en TXT
+        <i class="fas fa-file-alt"></i> Mbind ci .txt
       </button>
       <button onclick="downloadPDF()" class="accent">
-        <i class="fas fa-file-pdf"></i> Exporter en PDF
+        <i class="fas fa-file-pdf"></i> Mbind ci .pdf
       </button>
       <button onclick="downloadPNG()" class="accent">
-        <i class="fas fa-image"></i> Exporter en PNG
+        <i class="fas fa-image"></i> Mbind ci .png
       </button>
       <button onclick="clearText()" class="outline">
-        <i class="fas fa-trash-alt"></i> Effacer tout
+        <i class="fas fa-trash-alt"></i> Fàyyi mbind
       </button>
     </div>
   </main>
@@ -600,13 +602,13 @@
   <footer>
     <div class="footer-content">
       <div class="footer-links">
-        <a href="#" class="footer-link">À propos</a>
-        <a href="#" class="footer-link">Documentation</a>
-        <a href="#" class="footer-link">Contribuer</a>
-        <a href="#" class="footer-link">Contact</a>
+        <a href="#" class="footer-link">Ci mbiri</a>
+        <a href="#" class="footer-link">Jukki</a>
+        <a href="#" class="footer-link">Jàppale</a>
+        <a href="#" class="footer-link">Natte</a>
       </div>
       <div class="copyright">
-        &copy; 2023 Gaganti Pro - Préservation de l'écriture Wolof
+        &copy; 2023 Itnagag - Défaraayu Wolof
       </div>
     </div>
   </footer>
@@ -623,7 +625,7 @@
       // Gestionnaire pour le lien du forum
       document.getElementById('forum-link').addEventListener('click', function(e) {
         e.preventDefault();
-        alert("Le forum communautaire sera disponible dans la prochaine version!");
+        alert("Waxtaan gi dinañu ko def ci wàll wi!");
       });
     });
 
@@ -656,14 +658,14 @@
     function updateCharacterCount() {
       const editor = document.getElementById('editor');
       const count = editor.value.length;
-      document.querySelector('.character-count').textContent = `${count} caractères`;
+      document.querySelector('.character-count').textContent = `${count} xatt`;
     }
 
     function copyText() {
       const textArea = document.getElementById('editor');
       navigator.clipboard.writeText(textArea.value)
-        .then(() => showToast('Texte copié avec succès!', 'success'))
-        .catch(err => showToast('Erreur lors de la copie', 'error'));
+        .then(() => showToast('Mbind bi nàpp na!', 'success'))
+        .catch(err => showToast('Jàpp na jàkkaarloo', 'error'));
     }
 
     function downloadText() {
@@ -671,9 +673,9 @@
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `gaganti-${new Date().toISOString().slice(0,10)}.txt`;
+      link.download = `itnagag-${new Date().toISOString().slice(0,10)}.txt`;
       link.click();
-      showToast('Téléchargement TXT démarré', 'success');
+      showToast('Mbind ci .txt dinañu ko yóbbu', 'success');
     }
 
     function downloadPDF() {
@@ -693,10 +695,10 @@
       // Ajouter un en-tête culturel
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text('Document créé avec Gaganti Pro - Éditeur Wolof', 105, 10, { align: 'center' });
+      doc.text('Bindal ci Itnagag - Mbind mi ci Wolof', 105, 10, { align: 'center' });
       
-      doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
-      showToast('PDF généré avec succès', 'success');
+      doc.save(`itnagag-${new Date().toISOString().slice(0,10)}.pdf`);
+      showToast('PDF bi généré na', 'success');
     }
 
     function downloadPNG() {
@@ -708,17 +710,17 @@
       }).then(canvas => {
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
-        link.download = `gaganti-${new Date().toISOString().slice(0,10)}.png`;
+        link.download = `itnagag-${new Date().toISOString().slice(0,10)}.png`;
         link.click();
-        showToast('PNG généré avec succès', 'success');
+        showToast('PNG bi généré na', 'success');
       });
     }
 
     function clearText() {
-      if (confirm('Voulez-vous vraiment effacer tout le texte?')) {
+      if (confirm('Danga bëgg fàyyi mbind mi ci dëgg?')) {
         document.getElementById('editor').value = '';
         updateCharacterCount();
-        showToast('Texte effacé', 'info');
+        showToast('Mbind bi fàyyi na', 'info');
       }
     }
 
