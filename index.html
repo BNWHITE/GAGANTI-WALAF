@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Itnagag - Wolof ci Mbind</title>
+  <title>Gaganti - Wolof ci Mbind</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -11,7 +11,9 @@
       --noir: #0a0a0a;
       --or: #D4AF37;
       --terre: #7c4d1e;
+      --ocre: #CC7722;
       --ivoire: #F5F5DC;
+      --indigo: #4B0082;
       --vert-fonce: #013220;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
@@ -35,13 +37,63 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.03" d="M100,20 C120,60 180,80 180,120 C140,120 100,160 100,200 C100,160 60,120 20,120 C20,80 80,60 100,20 Z"/></svg>');
-      background-size: 300px;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    /* En-tête avec motif africain */
+    /* Fond avec motifs africains */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.03" d="M100,20 C120,60 180,80 180,120 C140,120 100,160 100,200 C100,160 60,120 20,120 C20,80 80,60 100,20 Z"/></svg>'),
+        linear-gradient(to right, rgba(10,10,10,0.9), rgba(10,10,10,0.9));
+      background-size: 300px, cover;
+      z-index: -2;
+    }
+
+    /* Silhouettes de cases traditionnelles */
+    body::after {
+      content: "";
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23D4AF37"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23D4AF37"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23D4AF37"/></svg>');
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: -1;
+      opacity: 0.15;
+    }
+
+    /* Motifs latéraux inspirés des tissus wax */
+    .decoration-left, .decoration-right {
+      position: fixed;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.05" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
+      background-size: 80px;
+      z-index: -1;
+    }
+
+    .decoration-left {
+      left: 0;
+    }
+
+    .decoration-right {
+      right: 0;
+      transform: rotate(180deg);
+    }
+
+    /* En-tête avec motif de tissu africain */
     header {
-      background: linear-gradient(to right, var(--noir), var(--vert-fonce));
+      background: linear-gradient(to right, var(--noir), var(--indigo));
       padding: 1.5rem;
       text-align: center;
       position: relative;
@@ -56,9 +108,9 @@
       right: 0;
       width: 100%;
       height: 100%;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path fill="%23D4AF37" fill-opacity="0.1" d="M0,10 Q25,20 50,10 T100,10"/></svg>');
-      background-size: 100px;
-      opacity: 0.5;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><path fill="%23D4AF37" fill-opacity="0.08" d="M60,0C80,30 120,30 120,60C90,80 120,120 60,120C30,80 0,120 0,60C30,30 0,30 60,0Z"/></svg>');
+      background-size: 120px;
+      opacity: 0.3;
     }
 
     .logo {
@@ -82,14 +134,27 @@
       background-clip: text;
       color: transparent;
       letter-spacing: 3px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    /* Navigation principale */
+    /* Navigation principale avec motif de bordure */
     .main-nav {
       display: flex;
       justify-content: center;
-      background-color: rgba(1, 50, 32, 0.8);
+      background: linear-gradient(to right, var(--noir), var(--vert-fonce));
       border-bottom: 1px solid var(--or);
+      position: relative;
+    }
+
+    .main-nav::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10"><path fill="%23D4AF37" d="M0,0 Q5,10 10,0 T20,0" opacity="0.3"/></svg>');
+      background-size: 20px;
     }
 
     .nav-link {
@@ -102,6 +167,7 @@
       display: flex;
       align-items: center;
       gap: 0.8rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .nav-link:hover {
@@ -124,24 +190,51 @@
       background-color: var(--or);
     }
 
-    /* Contenu principal */
+    /* Contenu principal avec bordure inspirée des motifs wolof */
     .main-content {
       flex: 1;
       padding: 2rem;
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
+      position: relative;
     }
 
-    /* Éditeur */
+    .main-content::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -30px;
+      width: 60px;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="%23D4AF37" fill-opacity="0.05" d="M30,0 C40,15 50,20 60,30 C50,40 40,45 30,60 C20,45 10,40 0,30 C10,20 20,15 30,0 Z"/></svg>');
+      background-size: 60px;
+      background-repeat: repeat-y;
+    }
+
+    .main-content::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -30px;
+      width: 60px;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="%23D4AF37" fill-opacity="0.05" d="M30,0 C40,15 50,20 60,30 C50,40 40,45 30,60 C20,45 10,40 0,30 C10,20 20,15 30,0 Z"/></svg>');
+      background-size: 60px;
+      background-repeat: repeat-y;
+      transform: rotate(180deg);
+    }
+
+    /* Éditeur avec motif de case traditionnelle */
     .editor-container {
       background-color: rgba(10, 10, 10, 0.9);
-      border-radius: 12px;
+      border-radius: 8px;
       box-shadow: var(--shadow);
       padding: 2.5rem;
       border: 1px solid var(--or);
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(5px);
     }
 
     .editor-container::before {
@@ -155,6 +248,17 @@
       background-size: 200px;
       opacity: 0.3;
       pointer-events: none;
+    }
+
+    .editor-container::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(90deg, var(--ocre), var(--or), var(--ocre));
+      opacity: 0.2;
     }
 
     #editor {
@@ -196,16 +300,17 @@
       font-size: 1.1rem;
     }
 
-    /* Clavier */
+    /* Clavier avec motif de tissu africain */
     .keyboard-container {
       background-color: rgba(10, 10, 10, 0.9);
-      border-radius: 12px;
+      border-radius: 8px;
       box-shadow: var(--shadow);
       padding: 2rem;
       border: 1px solid var(--or);
       margin: 2rem 0;
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(5px);
     }
 
     .keyboard-container::before {
@@ -217,6 +322,17 @@
       height: 100%;
       background: linear-gradient(135deg, transparent 60%, rgba(212, 175, 55, 0.05));
       pointer-events: none;
+    }
+
+    .keyboard-container::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(90deg, var(--ocre), var(--or), var(--ocre));
+      opacity: 0.2;
     }
 
     .keyboard-title {
@@ -248,19 +364,20 @@
       background-color: var(--vert-fonce);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.3s;
       font-family: 'Gaganti', sans-serif;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .keyboard button:hover {
       background-color: var(--or);
       color: var(--noir);
       transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     }
 
     .keyboard button::before {
@@ -279,7 +396,7 @@
       transform: translateX(0);
     }
 
-    /* Menu émojis */
+    /* Menu émojis avec motif africain */
     .emoji-panel {
       display: none;
       position: absolute;
@@ -309,17 +426,19 @@
       cursor: pointer;
       padding: 0.5rem;
       border-radius: 4px;
+      transition: all 0.2s;
     }
 
     .emoji-btn:hover {
       background-color: rgba(212, 175, 55, 0.2);
+      transform: scale(1.2);
     }
 
     .emoji-toggle {
       position: relative;
     }
 
-    /* Boutons d'action */
+    /* Boutons d'action avec style africain */
     .action-buttons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -343,6 +462,7 @@
       position: relative;
       overflow: hidden;
       box-shadow: var(--shadow);
+      border-bottom: 3px solid var(--or);
     }
 
     button:hover {
@@ -360,23 +480,26 @@
 
     button.secondary {
       background-color: var(--terre);
+      border-bottom-color: #5a2d0c;
     }
 
     button.accent {
       background-color: var(--or);
       color: var(--noir);
       font-weight: bold;
+      border-bottom-color: #b38d2a;
     }
 
     button.outline {
       background-color: transparent;
       border: 2px solid var(--or);
       color: var(--or);
+      border-bottom: 3px solid var(--or);
     }
 
-    /* Pied de page */
+    /* Pied de page avec motif de case */
     footer {
-      background: linear-gradient(to right, var(--noir), var(--vert-fonce));
+      background: linear-gradient(to right, var(--noir), var(--indigo));
       color: white;
       text-align: center;
       padding: 2rem;
@@ -392,9 +515,20 @@
       right: 0;
       width: 100%;
       height: 100%;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path fill="%23D4AF37" fill-opacity="0.1" d="M0,10 Q25,0 50,10 T100,10"/></svg>');
-      background-size: 100px;
-      opacity: 0.5;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><path fill="%23D4AF37" fill-opacity="0.08" d="M60,0C80,30 120,30 120,60C90,80 120,120 60,120C30,80 0,120 0,60C30,30 0,30 60,0Z"/></svg>');
+      background-size: 120px;
+      opacity: 0.3;
+    }
+
+    footer::after {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10"><path fill="%23D4AF37" d="M0,10 Q5,0 10,10 T20,10" opacity="0.3"/></svg>');
+      background-size: 20px;
     }
 
     .footer-content {
@@ -417,6 +551,7 @@
       font-size: 1.1rem;
       transition: all 0.3s;
       position: relative;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .footer-link::after {
@@ -465,6 +600,10 @@
         height: 70px;
         font-size: 1.8rem;
       }
+
+      .decoration-left, .decoration-right {
+        width: 60px;
+      }
     }
 
     @media (max-width: 768px) {
@@ -483,6 +622,11 @@
       
       .main-content {
         padding: 1.5rem;
+      }
+
+      .main-content::before, 
+      .main-content::after {
+        display: none;
       }
       
       .editor-container, .keyboard-container {
@@ -506,6 +650,10 @@
       
       .action-buttons {
         grid-template-columns: 1fr;
+      }
+
+      .decoration-left, .decoration-right {
+        width: 40px;
       }
     }
 
@@ -537,28 +685,36 @@
         padding: 1rem;
         font-size: 1rem;
       }
+
+      .decoration-left, .decoration-right {
+        width: 20px;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Décorations latérales -->
+  <div class="decoration-left"></div>
+  <div class="decoration-right"></div>
+
   <!-- En-tête avec logo -->
   <header>
     <div class="logo">
-      <span class="logo-icon">✍️</span>
-      <h1>Itnagag - Wolof ci Mbind</h1>
+      <span class="logo-icon">✍️🇸🇳'</span>
+      <h1>Itnagag - dnibM ic foloW</h1>
     </div>
   </header>
 
   <!-- Navigation principale -->
   <nav class="main-nav">
     <a href="#" class="nav-link active">
-      <i class="fas fa-edit"></i> Bind
+      <i class="fas fa-edit"></i> dniB
     </a>
     <a href="#" class="nav-link" id="forum-link">
-      <i class="fas fa-users"></i> Waxtaan
+      <i class="fas fa-users"></i> naatxaW
     </a>
     <a href="#" class="nav-link">
-      <i class="fas fa-book"></i> Xam-xam
+      <i class="fas fa-book"></i> maX-maX
     </a>
   </nav>
 
@@ -566,7 +722,7 @@
   <main class="main-content">
     <!-- Éditeur de texte -->
     <div class="editor-container">
-      <textarea id="editor" placeholder="...Itnagag ci Bindal"></textarea>
+      <textarea id="editor" placeholder="...Itnagag ic ladniB"></textarea>
       <div class="editor-footer">
         <div class="character-count">0 xatt</div>
         <button onclick="toggleFullscreen()" class="outline">
@@ -681,7 +837,7 @@
         <a href="#" class="footer-link">Natte bi</a>
       </div>
       <div class="copyright">
-        &copy; 2023 Itnagag - Wolof ci Défaraayu
+        &copy; 2025 Itnagag - falaW
       </div>
     </div>
   </footer>
