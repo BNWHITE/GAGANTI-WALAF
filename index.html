@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="fr" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaganti Writer</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Gaganti</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <style>
     @font-face {
@@ -43,9 +42,9 @@
       color: #88c0d0;
     }
 
-    textarea {
+    #editor {
       width: 100%;
-      height: 60vh;
+      height: 50vh;
       padding: 1rem;
       font-size: 1.5rem;
       background-color: #3b4252;
@@ -56,23 +55,26 @@
       font-family: 'Gaganti', sans-serif;
       text-align: right;
       direction: rtl;
+      pointer-events: none;
     }
 
-    .buttons {
+    .buttons, .keyboard, .emojis {
       display: flex;
-      gap: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
       justify-content: center;
     }
 
     button {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 1.1rem;
       background-color: #4c566a;
       color: #eceff4;
       border: none;
       border-radius: 0.5rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-family: 'Gaganti', sans-serif;
     }
 
     button:hover {
@@ -80,12 +82,12 @@
     }
 
     @media (max-width: 600px) {
-      textarea {
+      #editor {
         font-size: 1.2rem;
       }
       button {
         padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
     }
   </style>
@@ -93,20 +95,39 @@
 <body>
   <div class="container">
     <h1>Gaganti Writer</h1>
-    <textarea id="editor" placeholder="اكتب نصك هنا..."></textarea>
+    <textarea id="editor" placeholder="Tapez ici avec le clavier ci-dessous..."></textarea>
+
+    <div class="keyboard">
+      <script>
+        const keys = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي',' '];
+        document.write(keys.map(k => `<button onclick="addChar('${k}')">${k}</button>`).join(''));
+      </script>
+    </div>
+
+    <div class="emojis">
+      <button onclick="addChar('😊')">😊</button>
+      <button onclick="addChar('😂')">😂</button>
+      <button onclick="addChar('❤️')">❤️</button>
+      <button onclick="addChar('👍')">👍</button>
+    </div>
+
     <div class="buttons">
-      <button onclick="copyText()">نسخ</button>
-      <button onclick="downloadText()">تنزيل</button>
-      <button onclick="clearText()">مسح</button>
+      <button onclick="copyText()">Copier</button>
+      <button onclick="downloadText()">Télécharger</button>
+      <button onclick="downloadPDF()">PDF</button>
+      <button onclick="clearText()">Effacer</button>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
+    function addChar(char) {
+      const editor = document.getElementById('editor');
+      editor.value = char + editor.value;
+    }
+
     function copyText() {
       const textArea = document.getElementById('editor');
-      textArea.select();
-      textArea.setSelectionRange(0, 99999);
-      document.execCommand('copy');
-      alert('تم نسخ النص');
+      navigator.clipboard.writeText(textArea.value).then(() => alert('Texte copié !'));
     }
 
     function downloadText() {
@@ -116,6 +137,15 @@
       link.href = URL.createObjectURL(blob);
       link.download = 'gaganti-text.txt';
       link.click();
+    }
+
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+      const text = document.getElementById('editor').value;
+      doc.setFontSize(14);
+      doc.text(text.split('\n'), 520, 50, { align: 'right', maxWidth: 500 });
+      doc.save('gaganti-text.pdf');
     }
 
     function clearText() {
