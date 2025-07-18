@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="wo" dir="rtl">
+<html lang="wo">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,16 +15,19 @@
       --vert-fonce: #013220;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
+
     @font-face {
       font-family: 'Gaganti';
       src: url('gaganti.ttf') format('truetype');
       font-display: swap;
     }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: 'Gaganti', sans-serif;
       background-color: var(--noir);
@@ -35,6 +38,8 @@
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.03" d="M100,20 C120,60 180,80 180,120 C140,120 100,160 100,200 C100,160 60,120 20,120 C20,80 80,60 100,20 Z"/></svg>');
       background-size: 300px;
     }
+
+    /* Xarit bu bees */
     header {
       background: linear-gradient(to right, var(--noir), var(--vert-fonce));
       padding: 1.5rem;
@@ -42,16 +47,19 @@
       border-bottom: 2px solid var(--or);
       box-shadow: var(--shadow);
     }
+
     .logo {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 1rem;
     }
+
     .logo-icon {
       font-size: 2.8rem;
       color: var(--or);
     }
+
     h1 {
       font-size: 2.5rem;
       background: linear-gradient(to right, var(--or), #F5DEB3);
@@ -60,12 +68,15 @@
       color: transparent;
       letter-spacing: 3px;
     }
+
+    /* Ménu bu mag */
     .main-nav {
       display: flex;
       justify-content: center;
       background-color: rgba(1, 50, 32, 0.8);
       border-bottom: 1px solid var(--or);
     }
+
     .nav-link {
       padding: 1.2rem 2.5rem;
       color: var(--wolof);
@@ -76,15 +87,19 @@
       align-items: center;
       gap: 0.8rem;
     }
+
     .nav-link:hover {
       background-color: rgba(212, 175, 55, 0.1);
       color: var(--or);
     }
+
     .nav-link.active {
       background-color: rgba(212, 175, 55, 0.2);
       color: var(--or);
       border-bottom: 3px solid var(--or);
     }
+
+    /* Contenu principal */
     .main-content {
       display: none;
       flex: 1;
@@ -93,9 +108,12 @@
       margin: 0 auto;
       width: 95%;
     }
+
     .main-content.active {
       display: block;
     }
+
+    /* === ÉDITEUR === */
     .editor-container {
       background-color: rgba(10, 10, 10, 0.9);
       border-radius: 12px;
@@ -104,6 +122,7 @@
       border: 1px solid var(--or);
       margin-bottom: 2rem;
     }
+
     #editor {
       width: 100%;
       min-height: 50vh;
@@ -119,6 +138,7 @@
       direction: rtl;
       line-height: 1.8;
     }
+
     .editor-footer {
       display: flex;
       justify-content: space-between;
@@ -127,6 +147,8 @@
       font-size: 1rem;
       color: var(--or);
     }
+
+    /* Clavier bu wolof */
     .keyboard-container {
       background-color: rgba(10, 10, 10, 0.9);
       border-radius: 12px;
@@ -135,6 +157,7 @@
       border: 1px solid var(--or);
       margin-bottom: 2rem;
     }
+
     .keyboard-title {
       font-size: 1.6rem;
       margin-bottom: 1.5rem;
@@ -143,11 +166,13 @@
       align-items: center;
       gap: 1rem;
     }
+
     .keyboard {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
       gap: 1rem;
     }
+
     .keyboard button {
       height: 80px;
       font-size: 2rem;
@@ -159,17 +184,21 @@
       transition: all 0.3s;
       font-family: 'Gaganti', sans-serif;
     }
+
     .keyboard button:hover {
       background-color: var(--or);
       color: var(--noir);
       transform: translateY(-3px);
     }
+
+    /* Tëf yi */
     .action-buttons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
     }
+
     button {
       padding: 1.2rem;
       font-size: 1.2rem;
@@ -184,20 +213,25 @@
       justify-content: center;
       gap: 1rem;
     }
+
     button:hover {
       transform: translateY(-3px);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
+
     button.accent {
       background-color: var(--or);
       color: var(--noir);
       font-weight: bold;
     }
+
     button.outline {
       background-color: transparent;
       border: 2px solid var(--or);
       color: var(--or);
     }
+
+    /* === FORUM === */
     .forum-container {
       display: flex;
       height: 70vh;
@@ -207,13 +241,16 @@
       border: 1px solid var(--or);
       overflow: hidden;
     }
+
     .participants-sidebar {
       width: 250px;
       background-color: rgba(1, 65, 28, 0.2);
       border-left: 1px solid var(--or);
       padding: 1rem;
       overflow-y: auto;
+      direction: rtl;
     }
+
     .participant {
       display: flex;
       align-items: center;
@@ -221,10 +258,14 @@
       margin-bottom: 0.5rem;
       border-radius: 6px;
       transition: all 0.3s;
+      direction: rtl;
+      text-align: right;
     }
+
     .participant:hover {
       background-color: rgba(212, 175, 55, 0.1);
     }
+
     .participant-avatar {
       width: 40px;
       height: 40px;
@@ -237,18 +278,24 @@
       font-weight: bold;
       color: var(--noir);
     }
+
     .participant-name {
       flex: 1;
+      text-align: right;
     }
+
     .participant-status {
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background-color: #888;
+      margin-left: 0.5rem;
     }
+
     .participant-status.online {
       background-color: #4CAF50;
     }
+
     .messages-container {
       flex: 1;
       padding: 1.5rem;
@@ -256,42 +303,53 @@
       background-color: rgba(0, 0, 0, 0.2);
       direction: rtl;
     }
+
     .message {
       margin-bottom: 1.5rem;
       max-width: 70%;
       padding: 1rem;
       border-radius: 8px;
       position: relative;
+      text-align: right;
     }
+
     .message.received {
       background-color: rgba(139, 69, 19, 0.3);
       margin-right: auto;
       border-right: 3px solid var(--or);
     }
+
     .message.sent {
       background-color: rgba(1, 65, 28, 0.3);
       margin-left: auto;
       border-left: 3px solid var(--or);
     }
+
     .message-header {
       display: flex;
       align-items: center;
       margin-bottom: 0.5rem;
+      justify-content: flex-end;
     }
+
     .message-sender {
       font-weight: bold;
       color: var(--or);
     }
+
     .message-time {
       font-size: 0.8rem;
       color: #aaa;
-      margin-right: 1rem;
+      margin-left: 1rem;
     }
+
     .message-content {
       font-size: 1.1rem;
       line-height: 1.5;
       font-family: 'Gaganti', sans-serif;
+      text-align: right;
     }
+
     .chat-input-container {
       padding: 1rem;
       background-color: rgba(26, 26, 26, 0.9);
@@ -299,6 +357,7 @@
       display: flex;
       flex-direction: column;
     }
+
     .chat-input {
       width: 100%;
       padding: 1rem;
@@ -310,7 +369,9 @@
       font-size: 1.1rem;
       resize: none;
       direction: rtl;
+      text-align: right;
     }
+
     .send-button {
       align-self: flex-end;
       margin-top: 0.5rem;
@@ -322,6 +383,8 @@
       font-weight: bold;
       cursor: pointer;
     }
+
+    /* Modal d'authentification */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -334,6 +397,7 @@
       align-items: center;
       z-index: 1000;
     }
+
     .modal-content {
       background-color: var(--noir);
       padding: 2rem;
@@ -341,10 +405,14 @@
       border: 1px solid var(--or);
       width: 90%;
       max-width: 500px;
+      direction: rtl;
+      text-align: right;
     }
+
     .form-group {
       margin-bottom: 1.5rem;
     }
+
     .form-input {
       width: 100%;
       padding: 0.8rem;
@@ -353,7 +421,11 @@
       border-radius: 6px;
       color: var(--wolof);
       font-family: 'Gaganti', sans-serif;
+      direction: rtl;
+      text-align: right;
     }
+
+    /* Taamu réew mi */
     footer {
       background: linear-gradient(to right, var(--noir), var(--vert-fonce));
       color: white;
@@ -361,7 +433,9 @@
       padding: 2rem;
       margin-top: auto;
       border-top: 1px solid var(--or);
+      direction: rtl;
     }
+
     .footer-links {
       display: flex;
       justify-content: center;
@@ -369,52 +443,65 @@
       flex-wrap: wrap;
       margin-bottom: 1.5rem;
     }
+
     .footer-link {
       color: var(--or);
       text-decoration: none;
       transition: all 0.3s;
     }
+
     .footer-link:hover {
       color: white;
     }
+
     .copyright {
       font-size: 0.9rem;
       opacity: 0.8;
     }
+
+    /* Responsive */
     @media (max-width: 992px) {
       .keyboard {
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
       }
+      
       .keyboard button {
         height: 70px;
         font-size: 1.8rem;
       }
     }
+
     @media (max-width: 768px) {
       .forum-container {
         flex-direction: column;
         height: auto;
       }
+      
       .participants-sidebar {
         width: 100%;
         border-left: none;
         border-bottom: 1px solid var(--or);
       }
+      
       .message {
         max-width: 85%;
       }
+      
       .nav-link {
         padding: 1rem;
       }
     }
+
     @media (max-width: 480px) {
       .keyboard {
         grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
       }
+      
       .keyboard button {
         height: 50px;
         font-size: 1.4rem;
       }
+      
       button {
         padding: 1rem;
         font-size: 1rem;
@@ -423,6 +510,7 @@
   </style>
 </head>
 <body>
+  <!-- En-tête -->
   <header>
     <div class="logo">
       <span class="logo-icon">✍️</span>
@@ -430,6 +518,7 @@
     </div>
   </header>
 
+  <!-- Navigation principale -->
   <nav class="main-nav">
     <a href="#" class="nav-link active" id="editor-link">
       <i class="fas fa-edit"></i> Bindal
@@ -439,9 +528,10 @@
     </a>
   </nav>
 
+  <!-- Éditeur -->
   <main class="main-content active" id="editor-section">
     <div class="editor-container">
-      <textarea id="editor" placeholder="Tëral noonu..."></textarea>
+      <textarea id="editor" placeholder="...Tëral noonu"></textarea>
       <div class="editor-footer">
         <div class="character-count">0 xaraf</div>
         <button onclick="toggleFullscreen()" class="outline">
@@ -449,11 +539,14 @@
         </button>
       </div>
     </div>
+
     <div class="keyboard-container">
       <h2 class="keyboard-title">
         <i class="fas fa-keyboard"></i> Clavier bu Gaganti
       </h2>
+      
       <div class="keyboard">
+        <!-- Alphabet ADLaM complet -->
         <button onclick="insertAtCursor('𞤀')">𞤀</button>
         <button onclick="insertAtCursor('𞤁')">𞤁</button>
         <button onclick="insertAtCursor('𞤂')">𞤂</button>
@@ -461,6 +554,7 @@
         <button onclick="insertAtCursor('𞤄')">𞤄</button>
         <button onclick="insertAtCursor('𞤅')">𞤅</button>
         <button onclick="insertAtCursor('𞤆')">𞤆</button>
+        
         <button onclick="insertAtCursor('𞤇')">𞤇</button>
         <button onclick="insertAtCursor('𞤈')">𞤈</button>
         <button onclick="insertAtCursor('𞤉')">𞤉</button>
@@ -468,6 +562,7 @@
         <button onclick="insertAtCursor('𞤋')">𞤋</button>
         <button onclick="insertAtCursor('𞤌')">𞤌</button>
         <button onclick="insertAtCursor('𞤍')">𞤍</button>
+        
         <button onclick="insertAtCursor('𞤎')">𞤎</button>
         <button onclick="insertAtCursor('𞤏')">𞤏</button>
         <button onclick="insertAtCursor('𞤐')">𞤐</button>
@@ -475,6 +570,7 @@
         <button onclick="insertAtCursor('𞤒')">𞤒</button>
         <button onclick="insertAtCursor('𞤓')">𞤓</button>
         <button onclick="insertAtCursor('𞤔')">𞤔</button>
+        
         <button onclick="insertAtCursor('𞤕')">𞤕</button>
         <button onclick="insertAtCursor('𞤖')">𞤖</button>
         <button onclick="insertAtCursor('𞤗')">𞤗</button>
@@ -482,6 +578,8 @@
         <button onclick="insertAtCursor('𞤙')">𞤙</button>
         <button onclick="insertAtCursor('𞤚')">𞤚</button>
         <button onclick="insertAtCursor('𞤛')">𞤛</button>
+        
+        <!-- Ponctuation -->
         <button onclick="insertAtCursor('𞥞')">𞥞</button>
         <button onclick="insertAtCursor('𞥟')">𞥟</button>
         <button onclick="insertAtCursor(' ')">␣</button>
@@ -489,6 +587,7 @@
         <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
       </div>
     </div>
+
     <div class="action-buttons">
       <button onclick="copyText()" class="secondary">
         <i class="fas fa-copy"></i> Nàññ
@@ -505,43 +604,51 @@
     </div>
   </main>
 
+  <!-- Forum -->
   <main class="main-content" id="forum-section">
     <div class="forum-container">
       <div class="messages-container" id="messages-container">
-        <!-- Messages seront ajoutés ici -->
+        <!-- Messages seront ajoutés dynamiquement -->
       </div>
+      
       <div class="participants-sidebar">
         <h3>Jëfandikoo bi <span id="online-count">(0 ci kaw)</span></h3>
         <div id="participants-list">
-          <!-- Participants seront ajoutés ici -->
+          <!-- Participants seront ajoutés dynamiquement -->
         </div>
       </div>
     </div>
+    
     <div class="chat-input-container">
-      <textarea class="chat-input" id="chat-input" placeholder="Bindal message bi..."></textarea>
+      <textarea class="chat-input" id="chat-input" placeholder="...Bindal message bi"></textarea>
       <button class="send-button" onclick="sendMessage()">
         <i class="fas fa-paper-plane"></i> Yónné
       </button>
     </div>
   </main>
 
+  <!-- Modal d'authentification -->
   <div class="modal-overlay" id="login-modal">
     <div class="modal-content">
       <h2 class="keyboard-title" style="text-align: center; margin-bottom: 1.5rem;">
         <i class="fas fa-user-circle"></i> Sàkku ci Mbooloo
       </h2>
+      
       <div class="form-group">
         <input type="text" class="form-input" id="user-name" placeholder="Tur wi">
       </div>
+      
       <div class="form-group">
-        <input type="text" class="form-input" id="user-pronoun" placeholder="Pronom (góor/jigéen/...)">
+        <input type="text" class="form-input" id="user-pronoun" placeholder="(góor/jigéen/...) Pronom">
       </div>
+      
       <button class="send-button" style="width: 100%;" onclick="joinForum()">
         <i class="fas fa-sign-in-alt"></i> Dugg
       </button>
     </div>
   </div>
 
+  <!-- Pied de page -->
   <footer>
     <div class="footer-links">
       <a href="#" class="footer-link">Ci lii la</a>
@@ -555,59 +662,78 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
   <script>
-    // Configuration Firebase
-    const firebaseConfig = {
-      apiKey: "VOTRE_API_KEY",
-      authDomain: "VOTRE_AUTH_DOMAIN",
-      projectId: "VOTRE_PROJECT_ID",
-      storageBucket: "VOTRE_STORAGE_BUCKET",
-      messagingSenderId: "VOTRE_MESSAGING_SENDER_ID",
-      appId: "VOTRE_APP_ID"
-    };
-
-    // Initialiser Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
-
     // Variables globales
     let currentUser = null;
     let participants = [];
     let messages = [];
+    let socket = io('https://gaganti-pro-server.onrender.com'); // Serveur déployé sur Render
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', function() {
       updateCharacterCount();
       document.getElementById('editor').addEventListener('input', updateCharacterCount);
-
+      
       // Gestionnaires de navigation
       document.getElementById('editor-link').addEventListener('click', function(e) {
         e.preventDefault();
         showSection('editor');
       });
-
+      
       document.getElementById('forum-link').addEventListener('click', function(e) {
         e.preventDefault();
         showSection('forum');
       });
-
-      // Écouter les changements d'authentification
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          currentUser = {
-            id: user.uid,
-            name: user.displayName || "Utilisateur",
-            pronoun: "góor",
-            avatar: (user.displayName || "U").charAt(0).toUpperCase(),
-            online: true
+      
+      // Gestionnaire d'envoi de message avec Enter
+      document.getElementById('chat-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+      
+      // Écouteurs Socket.io
+      socket.on('connect', () => {
+        console.log('Connecté au serveur');
+      });
+      
+      socket.on('participants_update', (updatedParticipants) => {
+        participants = updatedParticipants;
+        updateParticipantsList();
+      });
+      
+      socket.on('new_message', (message) => {
+        messages.push(message);
+        updateMessages();
+      });
+      
+      socket.on('initial_data', (data) => {
+        participants = data.participants;
+        messages = data.messages;
+        updateParticipantsList();
+        updateMessages();
+      });
+      
+      socket.on('user_disconnected', (userId) => {
+        const participant = participants.find(p => p.id === userId);
+        if (participant) {
+          participant.online = false;
+          updateParticipantsList();
+          
+          // Ajouter un message système
+          const systemMessage = {
+            id: Date.now(),
+            senderId: userId,
+            senderName: participant.name,
+            content: `${participant.name} génn na ci mbooloo mi!`,
+            timestamp: new Date(),
+            type: 'system'
           };
-          loadMessages();
-        } else {
-          currentUser = null;
+          
+          messages.push(systemMessage);
+          updateMessages();
         }
       });
     });
@@ -617,18 +743,26 @@
       document.querySelectorAll('.main-content').forEach(section => {
         section.classList.remove('active');
       });
-
+      
       document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
       });
-
+      
       document.getElementById(sectionId + '-section').classList.add('active');
       document.getElementById(sectionId + '-link').classList.add('active');
-
+      
       if (sectionId === 'forum' && !currentUser) {
         document.getElementById('login-modal').style.display = 'flex';
       } else {
         document.getElementById('login-modal').style.display = 'none';
+      }
+      
+      // Faire défiler les messages vers le bas quand on change de section
+      if (sectionId === 'forum') {
+        setTimeout(() => {
+          const container = document.getElementById('messages-container');
+          container.scrollTop = container.scrollHeight;
+        }, 100);
       }
     }
 
@@ -637,10 +771,10 @@
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
       const text = editor.value;
-
+      
       editor.value = text.substring(0, cursorPos) + char + text.substring(cursorPos);
       editor.selectionStart = editor.selectionEnd = cursorPos + char.length;
-
+      
       updateCharacterCount();
       editor.focus();
     }
@@ -649,7 +783,7 @@
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
       const text = editor.value;
-
+      
       if (cursorPos > 0) {
         editor.value = text.substring(0, cursorPos - 1) + text.substring(cursorPos);
         editor.selectionStart = editor.selectionEnd = cursorPos - 1;
@@ -688,17 +822,17 @@
         unit: "mm",
         format: "a4"
       });
-
+      
       const text = document.getElementById('editor').value;
       const lines = doc.splitTextToSize(text, 180);
-
+      
       doc.setFontSize(12);
       doc.text(lines, 200, 20, { align: 'right' });
-
+      
       doc.setFontSize(10);
       doc.setTextColor(100);
       doc.text('Bindal bu Gaganti Pro - Waxukaay Wolof', 105, 10, { align: 'center' });
-
+      
       doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
       alert('PDF bi généré na');
     }
@@ -721,85 +855,37 @@
 
     // === FONCTIONS FORUM ===
     function joinForum() {
-      const userName = document.getElementById('user-name').value;
-      const userPronoun = document.getElementById('user-pronoun').value;
-
+      const userName = document.getElementById('user-name').value.trim();
+      const userPronoun = document.getElementById('user-pronoun').value.trim();
+      
       if (!userName || !userPronoun) {
         alert('Fàww nga bind tur ak pronom');
         return;
       }
-
-      auth.signInAnonymously()
-        .then(() => {
-          const user = auth.currentUser;
-          user.updateProfile({
-            displayName: userName
-          }).then(() => {
-            currentUser = {
-              id: user.uid,
-              name: userName,
-              pronoun: userPronoun,
-              avatar: userName.charAt(0).toUpperCase(),
-              online: true
-            };
-
-            // Ajouter un message de bienvenue
-            const welcomeMessage = {
-              senderId: currentUser.id,
-              senderName: currentUser.name,
-              content: `${userName} dugg na ci mbooloo mi!`,
-              timestamp: new Date(),
-              type: 'system'
-            };
-
-            db.collection("messages").add(welcomeMessage);
-            document.getElementById('login-modal').style.display = 'none';
-          });
-        })
-        .catch((error) => {
-          console.error("Erreur d'authentification: ", error);
-        });
-    }
-
-    function loadMessages() {
-      db.collection("messages")
-        .orderBy("timestamp")
-        .onSnapshot((querySnapshot) => {
-          messages = [];
-          querySnapshot.forEach((doc) => {
-            messages.push(doc.data());
-          });
-          updateMessages();
-        });
-
-      // Écouter les participants en ligne
-      db.collection("participants").onSnapshot((querySnapshot) => {
-        participants = [];
-        querySnapshot.forEach((doc) => {
-          participants.push(doc.data());
-        });
-        updateParticipantsList();
-      });
-
-      // Ajouter le participant actuel
-      if (currentUser) {
-        db.collection("participants").doc(currentUser.id).set({
-          id: currentUser.id,
-          name: currentUser.name,
-          pronoun: currentUser.pronoun,
-          avatar: currentUser.avatar,
-          online: true
-        });
-      }
+      
+      currentUser = {
+        id: socket.id,
+        name: userName,
+        pronoun: userPronoun,
+        avatar: userName.charAt(0).toUpperCase(),
+        online: true
+      };
+      
+      // Envoyer les infos au serveur
+      socket.emit('new_user', currentUser);
+      
+      document.getElementById('login-modal').style.display = 'none';
+      document.getElementById('chat-input').focus();
     }
 
     function updateParticipantsList() {
       const container = document.getElementById('participants-list');
       const onlineCount = participants.filter(p => p.online).length;
-
+      
       document.getElementById('online-count').textContent = `(${onlineCount} ci kaw)`;
+      
       container.innerHTML = '';
-
+      
       participants.forEach(participant => {
         const participantEl = document.createElement('div');
         participantEl.className = 'participant';
@@ -810,7 +896,7 @@
           </div>
           <div class="participant-status ${participant.online ? 'online' : ''}"></div>
         `;
-
+        
         container.appendChild(participantEl);
       });
     }
@@ -818,11 +904,14 @@
     function updateMessages() {
       const container = document.getElementById('messages-container');
       container.innerHTML = '';
-
-      messages.forEach(message => {
+      
+      // Trier les messages par date
+      const sortedMessages = [...messages].sort((a, b) => a.timestamp - b.timestamp);
+      
+      sortedMessages.forEach(message => {
         const isCurrentUser = currentUser && message.senderId === currentUser.id;
         const isSystem = message.type === 'system';
-
+        
         if (isSystem) {
           const systemMsg = document.createElement('div');
           systemMsg.className = 'message system';
@@ -834,48 +923,70 @@
           container.appendChild(systemMsg);
           return;
         }
-
+        
         const messageEl = document.createElement('div');
         messageEl.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
-
+        
+        // Formater la date
+        const messageDate = new Date(message.timestamp);
+        const now = new Date();
+        let formattedTime;
+        
+        if (messageDate.toDateString() === now.toDateString()) {
+          // Aujourd'hui - afficher seulement l'heure
+          formattedTime = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        } else {
+          // Autre jour - afficher la date et l'heure
+          formattedTime = messageDate.toLocaleString([], { 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+        }
+        
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-sender">${message.senderName}</div>
-            <div class="message-time">${formatTime(message.timestamp)}</div>
+            <div class="message-time">${formattedTime}</div>
           </div>
           <div class="message-content">${message.content}</div>
         `;
-
+        
         container.appendChild(messageEl);
       });
-
+      
+      // Faire défiler vers le bas
       container.scrollTop = container.scrollHeight;
     }
-
-    function formatTime(date) {
-      if (date instanceof firebase.firestore.Timestamp) {
-        date = date.toDate();
-      }
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
+    
     function sendMessage() {
       const input = document.getElementById('chat-input');
       const content = input.value.trim();
-
+      
       if (!content || !currentUser) return;
-
+      
       const newMessage = {
+        id: Date.now(),
         senderId: currentUser.id,
         senderName: currentUser.name,
         content: content,
         timestamp: new Date(),
         type: 'text'
       };
-
-      db.collection("messages").add(newMessage);
+      
+      // Envoyer le message au serveur
+      socket.emit('send_message', newMessage);
+      
       input.value = '';
     }
+
+    // Gestion de la déconnexion
+    window.addEventListener('beforeunload', function() {
+      if (currentUser) {
+        socket.emit('user_disconnecting', currentUser.id);
+      }
+    });
   </script>
 </body>
 </html>
