@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --noir: #1A1A1A;
+      --noir: #121212;
       --or: #D4AF37;
       --terre: #8B4513;
       --ivoire: #FFFFF0;
@@ -39,20 +39,7 @@
       overflow-x: hidden;
     }
 
-    /* Décoration baobab */
-    .baobab-decoration {
-      position: fixed;
-      left: -150px;
-      bottom: -50px;
-      width: 400px;
-      height: 400px;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%2301411C" fill-opacity="0.15" d="M100,10 C70,40 60,80 70,120 C50,110 30,100 20,120 C10,140 30,160 60,170 C40,180 30,190 40,200 C60,190 80,180 100,180 C120,180 140,190 160,200 C170,190 160,180 140,170 C170,160 190,140 180,120 C170,100 150,110 130,120 C140,80 130,40 100,10 Z"/></svg>');
-      background-size: contain;
-      background-repeat: no-repeat;
-      z-index: -1;
-      pointer-events: none;
-    }
-
+    /* Décoration */
     .wolof-pattern {
       position: fixed;
       top: 0;
@@ -118,17 +105,6 @@
       overflow: hidden;
     }
 
-    .editor-container::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent 70%);
-      pointer-events: none;
-    }
-
     #editor {
       width: 100%;
       min-height: 40vh;
@@ -144,6 +120,7 @@
       direction: rtl;
       line-height: 1.8;
       transition: all 0.3s;
+      unicode-bidi: bidi-override; /* Force le sens RTL */
     }
 
     #editor:focus {
@@ -185,13 +162,6 @@
       text-align: right;
     }
 
-    .keyboard-title::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to left, var(--or), transparent);
-    }
-
     .keyboard {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
@@ -201,6 +171,18 @@
     .keyboard button {
       height: 70px;
       font-size: 1.8rem;
+      background-color: var(--vert-fonce);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .keyboard button:hover {
+      background-color: var(--or);
+      color: var(--noir);
+      transform: translateY(-3px);
     }
 
     .action-buttons {
@@ -223,33 +205,11 @@
       align-items: center;
       justify-content: center;
       gap: 0.8rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.2));
-      transform: translateX(-100%);
-      transition: transform 0.3s;
     }
 
     button:hover {
       transform: translateY(-3px);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    button:hover::before {
-      transform: translateX(0);
-    }
-
-    button:active {
-      transform: translateY(0);
     }
 
     button i {
@@ -280,56 +240,6 @@
       border-top: 1px solid var(--or);
     }
 
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .footer-link {
-      color: var(--or);
-      text-decoration: none;
-      font-size: 1.1rem;
-      transition: all 0.3s;
-      position: relative;
-    }
-
-    .footer-link::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      right: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--or);
-      transition: width 0.3s;
-    }
-
-    .footer-link:hover {
-      color: white;
-    }
-
-    .footer-link:hover::after {
-      width: 100%;
-      left: 0;
-    }
-
-    .copyright {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-top: 1rem;
-    }
-
-    /* Toast */
     .toast {
       position: fixed;
       bottom: 2rem;
@@ -351,88 +261,25 @@
       opacity: 1;
     }
 
-    /* Mobile optimisations */
     @media (max-width: 768px) {
-      .container {
-        padding: 0 1rem;
-        gap: 1.5rem;
-      }
-
-      .editor-container {
-        padding: 1rem;
-      }
-
-      #editor {
-        font-size: 1.5rem;
-        min-height: 50vh;
-      }
-
       .keyboard {
         grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-        gap: 0.6rem;
       }
-
       .keyboard button {
         height: 60px;
         font-size: 1.5rem;
       }
-
-      .action-buttons {
-        grid-template-columns: 1fr;
-      }
-
-      .baobab-decoration {
-        display: none;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.8rem;
-      }
-
       #editor {
-        font-size: 1.3rem;
-        padding: 1rem;
+        font-size: 1.5rem;
+        min-height: 50vh;
       }
-
-      .keyboard {
-        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-        gap: 0.5rem;
-      }
-
-      .keyboard button {
-        height: 50px;
-        font-size: 1.3rem;
-      }
-
-      button {
-        padding: 0.8rem;
-        font-size: 1rem;
-      }
-
-      .footer-links {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-    }
-
-    /* Animation pour l'écriture */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate {
-      animation: fadeIn 0.5s ease-out forwards;
     }
   </style>
 </head>
 <body>
-  <div class="baobab-decoration"></div>
   <div class="wolof-pattern"></div>
   
-  <header class="animate">
+  <header>
     <div class="logo">
       <span class="logo-icon">✍️</span>
       <h1>Gaganti Pro</h1>
@@ -440,8 +287,8 @@
   </header>
 
   <div class="container">
-    <div class="editor-container animate">
-      <textarea id="editor" placeholder="Tapez votre texte en Gaganti ici..."></textarea>
+    <div class="editor-container">
+      <textarea id="editor" placeholder="اكتب هنا..."></textarea>
       <div class="editor-footer">
         <div class="character-count">0 caractères</div>
         <button onclick="toggleFullscreen()" class="outline">
@@ -450,42 +297,47 @@
       </div>
     </div>
 
-    <div class="keyboard-container animate">
+    <div class="keyboard-container">
       <h2 class="keyboard-title">
         <i class="fas fa-keyboard"></i> Clavier Gaganti
       </h2>
       
       <div class="keyboard">
-        <!-- Lettres Gaganti - À adapter avec votre police -->
-        <button onclick="addChar('G')">G</button>
-        <button onclick="addChar('A')">A</button>
-        <button onclick="addChar('N')">N</button>
-        <button onclick="addChar('T')">T</button>
-        <button onclick="addChar('I')">I</button>
-        <button onclick="addChar('B')">B</button>
-        <button onclick="addChar('D')">D</button>
-        <button onclick="addChar('E')">E</button>
-        <button onclick="addChar('F')">F</button>
-        <button onclick="addChar('H')">H</button>
-        <button onclick="addChar('J')">J</button>
-        <button onclick="addChar('K')">K</button>
-        <button onclick="addChar('L')">L</button>
-        <button onclick="addChar('M')">M</button>
-        <button onclick="addChar('O')">O</button>
-        <button onclick="addChar('P')">P</button>
-        <button onclick="addChar('R')">R</button>
-        <button onclick="addChar('S')">S</button>
-        <button onclick="addChar('U')">U</button>
-        <button onclick="addChar('V')">V</button>
-        <button onclick="addChar('W')">W</button>
-        <button onclick="addChar('Y')">Y</button>
-        <button onclick="addChar('Z')">Z</button>
-        <button onclick="addChar(' ')">␣</button>
-        <button onclick="addChar('\n')">↵</button>
+        <!-- Exemple avec lettres arabes (à remplacer par vos glyphes Gaganti) -->
+        <button onclick="insertAtCursor('ا')">ا</button>
+        <button onclick="insertAtCursor('ب')">ب</button>
+        <button onclick="insertAtCursor('ت')">ت</button>
+        <button onclick="insertAtCursor('ث')">ث</button>
+        <button onclick="insertAtCursor('ج')">ج</button>
+        <button onclick="insertAtCursor('ح')">ح</button>
+        <button onclick="insertAtCursor('خ')">خ</button>
+        <button onclick="insertAtCursor('د')">د</button>
+        <button onclick="insertAtCursor('ذ')">ذ</button>
+        <button onclick="insertAtCursor('ر')">ر</button>
+        <button onclick="insertAtCursor('ز')">ز</button>
+        <button onclick="insertAtCursor('س')">س</button>
+        <button onclick="insertAtCursor('ش')">ش</button>
+        <button onclick="insertAtCursor('ص')">ص</button>
+        <button onclick="insertAtCursor('ض')">ض</button>
+        <button onclick="insertAtCursor('ط')">ط</button>
+        <button onclick="insertAtCursor('ظ')">ظ</button>
+        <button onclick="insertAtCursor('ع')">ع</button>
+        <button onclick="insertAtCursor('غ')">غ</button>
+        <button onclick="insertAtCursor('ف')">ف</button>
+        <button onclick="insertAtCursor('ق')">ق</button>
+        <button onclick="insertAtCursor('ك')">ك</button>
+        <button onclick="insertAtCursor('ل')">ل</button>
+        <button onclick="insertAtCursor('م')">م</button>
+        <button onclick="insertAtCursor('ن')">ن</button>
+        <button onclick="insertAtCursor('ه')">ه</button>
+        <button onclick="insertAtCursor('و')">و</button>
+        <button onclick="insertAtCursor('ي')">ي</button>
+        <button onclick="insertAtCursor(' ')">␣</button>
+        <button onclick="insertAtCursor('\n')">↵</button>
       </div>
     </div>
 
-    <div class="action-buttons animate">
+    <div class="action-buttons">
       <button onclick="copyText()" class="secondary">
         <i class="fas fa-copy"></i> Copier
       </button>
@@ -501,17 +353,9 @@
     </div>
   </div>
 
-  <footer class="animate">
+  <footer>
     <div class="footer-content">
-      <div class="footer-links">
-        <a href="#" class="footer-link">À propos du Gaganti</a>
-        <a href="#" class="footer-link">Tutoriels</a>
-        <a href="#" class="footer-link">Communauté</a>
-        <a href="#" class="footer-link">Support</a>
-      </div>
-      <div class="copyright">
-        &copy; 2023 Éditeur Gaganti Pro - Préservation de l'écriture Wolof
-      </div>
+      <p>Éditeur Gaganti Pro - Préservation de l'écriture Wolof</p>
     </div>
   </footer>
 
@@ -521,30 +365,26 @@
     document.addEventListener('DOMContentLoaded', function() {
       updateCharacterCount();
       document.getElementById('editor').addEventListener('input', updateCharacterCount);
-      
-      // Focus sur l'éditeur au chargement
       document.getElementById('editor').focus();
     });
 
-    // Fonction d'ajout de caractère (droite à gauche)
-    function addChar(char) {
+    // Fonction d'insertion RTL corrigée
+    function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
       const text = editor.value;
       
-      // Insère le caractère à la position du curseur
+      // Insère le caractère à la position actuelle
       editor.value = text.substring(0, cursorPos) + char + text.substring(cursorPos);
       
-      // Place le curseur après le caractère inséré
+      // Place le curseur après le caractère inséré (à gauche en RTL)
       editor.selectionStart = editor.selectionEnd = cursorPos + char.length;
       
-      // Met à jour le compteur
       updateCharacterCount();
-      
-      // Garde le focus sur l'éditeur
       editor.focus();
     }
 
+    // Exemple : "BONJOUR" s'affichera comme "RUOJNOB"
     function updateCharacterCount() {
       const editor = document.getElementById('editor');
       const count = editor.value.length;
@@ -580,14 +420,7 @@
       const lines = doc.splitTextToSize(text, 180);
       
       doc.setFontSize(12);
-      doc.setFont('helvetica', 'normal');
       doc.text(lines, 200, 20, { align: 'right' });
-      
-      // Ajouter un en-tête culturel
-      doc.setFontSize(10);
-      doc.setTextColor(100);
-      doc.text('Document créé avec Gaganti Pro - Éditeur Wolof', 105, 10, { align: 'center' });
-      
       doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
       showToast('PDF généré avec succès', 'success');
     }
@@ -601,12 +434,8 @@
     }
 
     function toggleFullscreen() {
-      const editorContainer = document.querySelector('.editor-container');
-      
       if (!document.fullscreenElement) {
-        editorContainer.requestFullscreen().catch(err => {
-          showToast(`Erreur Fullscreen: ${err.message}`, 'error');
-        });
+        document.documentElement.requestFullscreen();
       } else {
         document.exitFullscreen();
       }
@@ -629,15 +458,6 @@
         }, 300);
       }, 3000);
     }
-
-    // Gestion du clavier physique pour mobile
-    document.getElementById('editor').addEventListener('keydown', function(e) {
-      // Empêche le comportement par défaut pour certaines touches
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addChar('\n');
-      }
-    });
   </script>
 </body>
 </html>
