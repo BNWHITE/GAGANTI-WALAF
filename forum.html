@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="wo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaganti Pro - Mbooloo</title>
+  <style>
+    /* Styles similaires à la page précédente */
+    .forum-container {
+      display: flex;
+      height: 70vh;
+      background-color: rgba(10, 10, 10, 0.9);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--or);
+      margin: 2rem auto;
+      max-width: 1200px;
+      width: 95%;
+    }
+
+    .participants-sidebar {
+      width: 250px;
+      background-color: rgba(1, 65, 28, 0.2);
+      border-left: 1px solid var(--or);
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .messages-container {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: rgba(139, 69, 19, 0.3);
+      border-right: 3px solid var(--or);
+    }
+
+    .chat-input {
+      width: 100%;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--or);
+      border-radius: 8px;
+      color: var(--wolof);
+      font-family: 'Gaganti', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <!-- Même en-tête et navigation que la page précédente -->
+
+  <div class="forum-container">
+    <div class="messages-container" id="messages-container">
+      <!-- Exemple de message -->
+      <div class="message">
+        <div class="message-header">
+          <span class="message-sender">Ibrahima</span>
+          <span class="message-time">14:30</span>
+        </div>
+        <div class="message-content">
+          Nanga def? Ana wër gi ñu leen di jënd?
+        </div>
+      </div>
+    </div>
+    
+    <div class="participants-sidebar">
+      <h3>Jëfandikoo bi <span>(3 ci kaw)</span></h3>
+      <div class="participant">
+        <div class="participant-avatar">A</div>
+        <div class="participant-name">Awa <small>(jigéen)</small></div>
+        <div class="participant-status online"></div>
+      </div>
+      <!-- Autres participants -->
+    </div>
+  </div>
+
+  <div class="chat-input-container">
+    <textarea class="chat-input" placeholder="Bindal message bi..."></textarea>
+    <button class="send-button">
+          <i class="fas fa-paper-plane"></i> Yónné
+    </button>
+  </div>
+</body>
+</html>
