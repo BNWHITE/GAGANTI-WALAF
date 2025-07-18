@@ -39,13 +39,26 @@
       background-size: 300px;
     }
 
-    /* Xarit bu bees */
+    /* En-tête avec motif africain */
     header {
       background: linear-gradient(to right, var(--noir), var(--vert-fonce));
       padding: 1.5rem;
       text-align: center;
+      position: relative;
       border-bottom: 2px solid var(--or);
       box-shadow: var(--shadow);
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path fill="%23D4AF37" fill-opacity="0.1" d="M0,10 Q25,20 50,10 T100,10"/></svg>');
+      background-size: 100px;
+      opacity: 0.5;
     }
 
     .logo {
@@ -53,11 +66,13 @@
       justify-content: center;
       align-items: center;
       gap: 1rem;
+      position: relative;
     }
 
     .logo-icon {
       font-size: 2.8rem;
       color: var(--or);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
     h1 {
@@ -69,7 +84,7 @@
       letter-spacing: 3px;
     }
 
-    /* Ménu bu mag */
+    /* Navigation principale */
     .main-nav {
       display: flex;
       justify-content: center;
@@ -82,6 +97,7 @@
       color: var(--wolof);
       text-decoration: none;
       font-size: 1.2rem;
+      position: relative;
       transition: all 0.3s;
       display: flex;
       align-items: center;
@@ -113,14 +129,28 @@
       display: block;
     }
 
-    /* === ÉDITEUR === */
+    /* Éditeur */
     .editor-container {
       background-color: rgba(10, 10, 10, 0.9);
       border-radius: 12px;
       box-shadow: var(--shadow);
       padding: 2.5rem;
       border: 1px solid var(--or);
-      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .editor-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
+      background-size: 200px;
+      opacity: 0.3;
+      pointer-events: none;
     }
 
     #editor {
@@ -137,6 +167,13 @@
       text-align: right;
       direction: rtl;
       line-height: 1.8;
+      transition: all 0.3s;
+    }
+
+    #editor:focus {
+      outline: none;
+      border-color: var(--or);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
     }
 
     .editor-footer {
@@ -148,7 +185,7 @@
       color: var(--or);
     }
 
-    /* Clavier bu wolof */
+    /* Clavier ADLaM inspiré du modèle */
     .keyboard-container {
       background-color: rgba(10, 10, 10, 0.9);
       border-radius: 12px;
@@ -156,6 +193,19 @@
       padding: 2rem;
       border: 1px solid var(--or);
       margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .keyboard-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 60%, rgba(212, 175, 55, 0.05));
+      pointer-events: none;
     }
 
     .keyboard-title {
@@ -165,11 +215,19 @@
       display: flex;
       align-items: center;
       gap: 1rem;
+      text-align: right;
+    }
+
+    .keyboard-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to left, var(--or), transparent);
     }
 
     .keyboard {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      grid-template-columns: repeat(7, 1fr);
       gap: 1rem;
     }
 
@@ -183,15 +241,34 @@
       cursor: pointer;
       transition: all 0.3s;
       font-family: 'Gaganti', sans-serif;
+      position: relative;
+      overflow: hidden;
     }
 
     .keyboard button:hover {
       background-color: var(--or);
       color: var(--noir);
       transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
-    /* Tëf yi */
+    .keyboard button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+
+    .keyboard button:hover::before {
+      transform: translateX(0);
+    }
+
+    /* Boutons d'action */
     .action-buttons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -425,7 +502,7 @@
       text-align: right;
     }
 
-    /* Taamu réew mi */
+    /* Pied de page */
     footer {
       background: linear-gradient(to right, var(--noir), var(--vert-fonce));
       color: white;
@@ -459,6 +536,16 @@
       opacity: 0.8;
     }
 
+    /* Animation pour le clavier */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
     /* Responsive */
     @media (max-width: 992px) {
       .keyboard {
@@ -490,16 +577,20 @@
       .nav-link {
         padding: 1rem;
       }
+      
+      .keyboard {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
 
     @media (max-width: 480px) {
       .keyboard {
-        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
       }
       
       .keyboard button {
-        height: 50px;
-        font-size: 1.4rem;
+        height: 60px;
+        font-size: 1.6rem;
       }
       
       button {
@@ -540,13 +631,14 @@
       </div>
     </div>
 
-    <div class="keyboard-container">
+    <!-- Nouveau clavier ADLaM inspiré du modèle -->
+    <div class="keyboard-container animate">
       <h2 class="keyboard-title">
         <i class="fas fa-keyboard"></i> Clavier bu Gaganti
       </h2>
       
       <div class="keyboard">
-        <!-- Alphabet ADLaM complet -->
+        <!-- Rangée 1 -->
         <button onclick="insertAtCursor('𞤀')">𞤀</button>
         <button onclick="insertAtCursor('𞤁')">𞤁</button>
         <button onclick="insertAtCursor('𞤂')">𞤂</button>
@@ -555,6 +647,7 @@
         <button onclick="insertAtCursor('𞤅')">𞤅</button>
         <button onclick="insertAtCursor('𞤆')">𞤆</button>
         
+        <!-- Rangée 2 -->
         <button onclick="insertAtCursor('𞤇')">𞤇</button>
         <button onclick="insertAtCursor('𞤈')">𞤈</button>
         <button onclick="insertAtCursor('𞤉')">𞤉</button>
@@ -563,6 +656,7 @@
         <button onclick="insertAtCursor('𞤌')">𞤌</button>
         <button onclick="insertAtCursor('𞤍')">𞤍</button>
         
+        <!-- Rangée 3 -->
         <button onclick="insertAtCursor('𞤎')">𞤎</button>
         <button onclick="insertAtCursor('𞤏')">𞤏</button>
         <button onclick="insertAtCursor('𞤐')">𞤐</button>
@@ -571,6 +665,7 @@
         <button onclick="insertAtCursor('𞤓')">𞤓</button>
         <button onclick="insertAtCursor('𞤔')">𞤔</button>
         
+        <!-- Rangée 4 -->
         <button onclick="insertAtCursor('𞤕')">𞤕</button>
         <button onclick="insertAtCursor('𞤖')">𞤖</button>
         <button onclick="insertAtCursor('𞤗')">𞤗</button>
@@ -579,7 +674,7 @@
         <button onclick="insertAtCursor('𞤚')">𞤚</button>
         <button onclick="insertAtCursor('𞤛')">𞤛</button>
         
-        <!-- Ponctuation -->
+        <!-- Rangée 5 - Ponctuation et actions -->
         <button onclick="insertAtCursor('𞥞')">𞥞</button>
         <button onclick="insertAtCursor('𞥟')">𞥟</button>
         <button onclick="insertAtCursor(' ')">␣</button>
