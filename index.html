@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaganti Pro - Éditeur Wolof</title>
+  <title>Gaganti Pro - Communauté</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -41,48 +41,53 @@
       background-size: 300px;
     }
 
-    header {
-      background: linear-gradient(to left, var(--vert-fonce), var(--noir));
-      padding: 1.5rem;
-      text-align: center;
-      box-shadow: var(--shadow);
-      position: relative;
-      z-index: 10;
-      border-bottom: 1px solid var(--or);
-    }
-
-    .logo {
+    /* Navigation */
+    .nav-container {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
+      background: linear-gradient(to left, var(--vert-fonce), var(--noir));
+      border-bottom: 1px solid var(--or);
+      box-shadow: var(--shadow);
     }
 
-    .logo-icon {
-      font-size: 2.5rem;
+    .nav-button {
+      padding: 1.2rem 2rem;
+      background: none;
+      border: none;
+      color: var(--ivoire);
+      cursor: pointer;
+      font-family: 'Gaganti', sans-serif;
+      font-size: 1.1rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    .nav-button.active {
+      background-color: rgba(212, 175, 55, 0.1);
       color: var(--or);
     }
 
-    h1 {
-      font-size: 2.2rem;
-      background: linear-gradient(to right, var(--or), #F5F5DC);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 2px;
-    }
-
-    .container {
-      flex: 1;
+    .nav-button.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
       width: 100%;
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+      height: 3px;
+      background-color: var(--or);
     }
 
+    /* Contenu principal */
+    .main-content {
+      display: none;
+      flex: 1;
+      padding: 2rem;
+    }
+
+    .main-content.active {
+      display: block;
+    }
+
+    /* Éditeur (existant) */
     .editor-container {
       background-color: rgba(26, 26, 26, 0.8);
       border-radius: 12px;
@@ -90,370 +95,700 @@
       padding: 2rem;
       border: 1px solid var(--or);
       backdrop-filter: blur(5px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    #editor {
-      width: 100%;
-      min-height: 40vh;
-      padding: 1.5rem;
-      font-size: 1.8rem;
-      background-color: transparent;
-      color: var(--ivoire);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      border-radius: 8px;
-      resize: none;
-      font-family: 'Gaganti', sans-serif;
-      text-align: right;
-      direction: rtl;
-      line-height: 1.8;
-      transition: all 0.3s;
-      unicode-bidi: bidi-override;
-    }
-
-    #editor:focus {
-      outline: none;
-      border-color: var(--or);
-      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-    }
-
-    .editor-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: var(--or);
-    }
-
-    .character-count {
-      font-family: monospace;
-      letter-spacing: 1px;
-    }
-
-    .keyboard-container {
-      background-color: rgba(26, 26, 26, 0.9);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      padding: 1.5rem;
-      border: 1px solid var(--or);
       margin-bottom: 2rem;
     }
 
-    .keyboard-title {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: var(--or);
+    /* Forum */
+    .forum-container {
+      display: flex;
+      height: 70vh;
+      background-color: rgba(26, 26, 26, 0.8);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--or);
+      overflow: hidden;
+    }
+
+    /* Liste des participants */
+    .participants-sidebar {
+      width: 250px;
+      background-color: rgba(1, 65, 28, 0.2);
+      border-left: 1px solid var(--or);
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .participant {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      text-align: right;
-    }
-
-    .tab-buttons {
-      display: flex;
-      margin-bottom: 1rem;
-      border-bottom: 1px solid var(--or);
-    }
-
-    .tab-btn {
-      padding: 0.5rem 1rem;
-      background: none;
-      border: none;
-      color: var(--ivoire);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-    }
-
-    .tab-btn.active {
-      border-bottom-color: var(--or);
-      color: var(--or);
-    }
-
-    .keyboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-      gap: 0.8rem;
-    }
-
-    .keyboard button {
-      height: 70px;
-      font-size: 1.8rem;
-      background-color: var(--vert-fonce);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      padding: 0.8rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
       transition: all 0.3s;
-      font-family: 'Gaganti', sans-serif;
     }
 
-    .keyboard button:hover {
+    .participant:hover {
+      background-color: rgba(212, 175, 55, 0.1);
+    }
+
+    .participant-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       background-color: var(--or);
-      color: var(--noir);
-      transform: translateY(-3px);
-    }
-
-    .action-buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    button {
-      padding: 1rem;
-      font-size: 1.1rem;
-      background-color: var(--vert-fonce);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.8rem;
-    }
-
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    button i {
-      font-size: 1.2rem;
-    }
-
-    button.secondary {
-      background-color: var(--terre);
-    }
-
-    button.accent {
-      background-color: var(--or);
+      margin-left: 1rem;
+      font-weight: bold;
       color: var(--noir);
     }
 
-    button.outline {
-      background-color: transparent;
-      border: 1px solid var(--or);
+    .participant-name {
+      flex: 1;
+    }
+
+    .participant-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #888;
+    }
+
+    .participant-status.online {
+      background-color: #4CAF50;
+    }
+
+    /* Zone de discussion */
+    .chat-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .messages-container {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      max-width: 70%;
+      padding: 1rem;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .message.received {
+      background-color: rgba(139, 69, 19, 0.3);
+      margin-right: auto;
+      border-right: 3px solid var(--or);
+    }
+
+    .message.sent {
+      background-color: rgba(1, 65, 28, 0.3);
+      margin-left: auto;
+      border-left: 3px solid var(--or);
+    }
+
+    .message-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .message-sender {
+      font-weight: bold;
       color: var(--or);
     }
 
-    footer {
-      background: linear-gradient(to left, var(--noir), var(--vert-fonce));
-      color: white;
-      text-align: center;
-      padding: 2rem;
-      margin-top: auto;
+    .message-time {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-right: 1rem;
+    }
+
+    .message-content {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    .message-media {
+      margin-top: 0.5rem;
+      max-width: 100%;
+      border-radius: 6px;
+    }
+
+    /* Input zone */
+    .chat-input-container {
+      padding: 1rem;
+      background-color: rgba(26, 26, 26, 0.9);
       border-top: 1px solid var(--or);
+      display: flex;
+      flex-direction: column;
     }
 
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background-color: var(--vert-fonce);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      transform: translateY(100px);
-      opacity: 0;
+    .input-toolbar {
+      display: flex;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-button {
+      background: none;
+      border: none;
+      color: var(--or);
+      font-size: 1.2rem;
+      margin-left: 0.8rem;
+      cursor: pointer;
       transition: all 0.3s;
+    }
+
+    .tool-button:hover {
+      transform: scale(1.1);
+    }
+
+    .chat-input {
+      width: 100%;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--or);
+      border-radius: 8px;
+      color: var(--ivoire);
+      font-family: 'Gaganti', sans-serif;
+      font-size: 1.1rem;
+      resize: none;
+      direction: rtl;
+    }
+
+    .chat-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+    }
+
+    .send-button {
+      align-self: flex-end;
+      margin-top: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      background-color: var(--or);
+      color: var(--noir);
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .send-button:hover {
+      background-color: #e6c200;
+    }
+
+    /* Modal de connexion */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 1000;
-      border-left: 4px solid var(--or);
     }
 
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
+    .modal-content {
+      background-color: var(--noir);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--or);
+      width: 90%;
+      max-width: 500px;
     }
 
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--or);
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--or);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--or);
+      border-radius: 6px;
+      color: var(--ivoire);
+      font-family: 'Gaganti', sans-serif;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--or);
+      color: var(--noir);
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-submit:hover {
+      background-color: #e6c200;
+    }
+
+    /* Décoration */
     .adinkra-symbol {
       font-size: 1.5rem;
       margin: 0 0.3rem;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
-      .keyboard {
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      .forum-container {
+        flex-direction: column;
+        height: auto;
       }
-      .keyboard button {
-        height: 60px;
-        font-size: 1.5rem;
+      
+      .participants-sidebar {
+        width: 100%;
+        border-left: none;
+        border-bottom: 1px solid var(--or);
       }
-      #editor {
-        font-size: 1.5rem;
-        min-height: 50vh;
+      
+      .message {
+        max-width: 85%;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <span class="logo-icon">✍️</span>
-      <h1>Gaganti Pro <span class="adinkra-symbol">✊</span></h1>
-    </div>
-  </header>
+  <!-- Navigation -->
+  <div class="nav-container">
+    <button class="nav-button active" onclick="showSection('editor')">
+      <i class="fas fa-edit"></i> Éditeur
+    </button>
+    <button class="nav-button" onclick="showSection('forum')">
+      <i class="fas fa-comments"></i> Forum Gaganti
+    </button>
+  </div>
 
-  <div class="container">
-    <div class="editor-container">
-      <textarea id="editor" placeholder="...اكتب هنا"></textarea>
-      <div class="editor-footer">
-        <div class="character-count">0 caractères</div>
-        <button onclick="toggleFullscreen()" class="outline">
-          <i class="fas fa-expand"></i>
-        </button>
-      </div>
-    </div>
-
-    <div class="keyboard-container">
-      <h2 class="keyboard-title">
-        <i class="fas fa-keyboard"></i> Clavier Gaganti
-      </h2>
-      
-      <div class="tab-buttons">
-        <button class="tab-btn active" onclick="openTab('letters')">Lettres</button>
-        <button class="tab-btn" onclick="openTab('numbers')">Chiffres</button>
-        <button class="tab-btn" onclick="openTab('symbols')">Symboles</button>
+  <!-- Éditeur -->
+  <div class="main-content active" id="editor-section">
+    <div class="container">
+      <div class="editor-container">
+        <textarea id="editor" placeholder="...اكتب هنا"></textarea>
+        <div class="editor-footer">
+          <div class="character-count">0 caractères</div>
+          <button onclick="toggleFullscreen()" class="outline">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
       </div>
 
-      <div id="letters" class="tab-content active">
+      <div class="keyboard-container">
+        <h2 class="keyboard-title">
+          <i class="fas fa-keyboard"></i> Clavier Gaganti
+        </h2>
+        
         <div class="keyboard">
-          <!-- Lettres Gaganti (à remplacer par vos glyphes exacts) -->
+          <!-- Lettres Gaganti -->
           <button onclick="insertAtCursor('G')">G</button>
           <button onclick="insertAtCursor('A')">A</button>
           <button onclick="insertAtCursor('N')">N</button>
           <button onclick="insertAtCursor('T')">T</button>
           <button onclick="insertAtCursor('I')">I</button>
-          <button onclick="insertAtCursor('B')">B</button>
-          <button onclick="insertAtCursor('D')">D</button>
-          <button onclick="insertAtCursor('E')">E</button>
-          <button onclick="insertAtCursor('F')">F</button>
-          <button onclick="insertAtCursor('H')">H</button>
-          <button onclick="insertAtCursor('J')">J</button>
-          <button onclick="insertAtCursor('K')">K</button>
-          <button onclick="insertAtCursor('L')">L</button>
-          <button onclick="insertAtCursor('M')">M</button>
-          <button onclick="insertAtCursor('O')">O</button>
-          <button onclick="insertAtCursor('P')">P</button>
-          <button onclick="insertAtCursor('R')">R</button>
-          <button onclick="insertAtCursor('S')">S</button>
-          <button onclick="insertAtCursor('U')">U</button>
-          <button onclick="insertAtCursor('V')">V</button>
-          <button onclick="insertAtCursor('W')">W</button>
-          <button onclick="insertAtCursor('Y')">Y</button>
-          <button onclick="insertAtCursor('Z')">Z</button>
           <button onclick="insertAtCursor(' ')">␣</button>
           <button onclick="insertAtCursor('\n')">↵</button>
           <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
         </div>
       </div>
 
-      <div id="numbers" class="tab-content">
-        <div class="keyboard">
-          <button onclick="insertAtCursor('0')">0</button>
-          <button onclick="insertAtCursor('1')">1</button>
-          <button onclick="insertAtCursor('2')">2</button>
-          <button onclick="insertAtCursor('3')">3</button>
-          <button onclick="insertAtCursor('4')">4</button>
-          <button onclick="insertAtCursor('5')">5</button>
-          <button onclick="insertAtCursor('6')">6</button>
-          <button onclick="insertAtCursor('7')">7</button>
-          <button onclick="insertAtCursor('8')">8</button>
-          <button onclick="insertAtCursor('9')">9</button>
-          <button onclick="insertAtCursor('٠')">٠</button>
-          <button onclick="insertAtCursor('١')">١</button>
-          <button onclick="insertAtCursor('٢')">٢</button>
-          <button onclick="insertAtCursor('٣')">٣</button>
-          <button onclick="insertAtCursor('٤')">٤</button>
-          <button onclick="insertAtCursor('٥')">٥</button>
-          <button onclick="insertAtCursor('٦')">٦</button>
-          <button onclick="insertAtCursor('٧')">٧</button>
-          <button onclick="insertAtCursor('٨')">٨</button>
-          <button onclick="insertAtCursor('٩')">٩</button>
-          <button onclick="insertAtCursor('+')">+</button>
-          <button onclick="insertAtCursor('-')">-</button>
-          <button onclick="insertAtCursor('=')">=</button>
-          <button onclick="insertAtCursor('×')">×</button>
-          <button onclick="insertAtCursor('÷')">÷</button>
-        </div>
+      <div class="action-buttons">
+        <button onclick="copyText()" class="secondary">
+          <i class="fas fa-copy"></i> Copier
+        </button>
+        <button onclick="downloadText()" class="secondary">
+          <i class="fas fa-download"></i> TXT
+        </button>
+        <button onclick="downloadPDF()" class="accent">
+          <i class="fas fa-file-pdf"></i> PDF
+        </button>
+        <button onclick="downloadPNG()" class="accent">
+          <i class="fas fa-image"></i> PNG
+        </button>
+        <button onclick="clearText()" class="outline">
+          <i class="fas fa-trash-alt"></i> Effacer
+        </button>
       </div>
+    </div>
+  </div>
 
-      <div id="symbols" class="tab-content">
-        <div class="keyboard">
-          <button onclick="insertAtCursor('،')">،</button>
-          <button onclick="insertAtCursor('؛')">؛</button>
-          <button onclick="insertAtCursor('؟')">؟</button>
-          <button onclick="insertAtCursor('!')">!</button>
-          <button onclick="insertAtCursor('@')">@</button>
-          <button onclick="insertAtCursor('#')">#</button>
-          <button onclick="insertAtCursor('$')">$</button>
-          <button onclick="insertAtCursor('%')">%</button>
-          <button onclick="insertAtCursor('&')">&</button>
-          <button onclick="insertAtCursor('*')">*</button>
-          <button onclick="insertAtCursor('(')">(</button>
-          <button onclick="insertAtCursor(')')">)</button>
-          <button onclick="insertAtCursor('-')">-</button>
-          <button onclick="insertAtCursor('_')">_</button>
-          <button onclick="insertAtCursor('+')">+</button>
-          <button onclick="insertAtCursor('=')">=</button>
-          <button onclick="insertAtCursor('[')">[</button>
-          <button onclick="insertAtCursor(']')">]</button>
-          <button onclick="insertAtCursor('{')">{</button>
-          <button onclick="insertAtCursor('}')">}</button>
-          <button onclick="insertAtCursor('|')">|</button>
-          <button onclick="insertAtCursor(';')">;</button>
-          <button onclick="insertAtCursor(':')">:</button>
-          <button onclick="insertAtCursor('"')">"</button>
-          <button onclick="insertAtCursor('\'')">'</button>
-          <button onclick="insertAtCursor('<')"><</button>
-          <button onclick="insertAtCursor('>')">></button>
-          <button onclick="insertAtCursor('/')">/</button>
-          <button onclick="insertAtCursor('?')">?</button>
+  <!-- Forum -->
+  <div class="main-content" id="forum-section">
+    <div class="container">
+      <div class="forum-container">
+        <div class="chat-area">
+          <div class="messages-container" id="messages-container">
+            <!-- Messages seront ajoutés ici dynamiquement -->
+          </div>
+          
+          <div class="chat-input-container">
+            <div class="input-toolbar">
+              <button class="tool-button" onclick="showMediaPicker('image')">
+                <i class="fas fa-image"></i>
+              </button>
+              <button class="tool-button" onclick="showMediaPicker('video')">
+                <i class="fas fa-video"></i>
+              </button>
+              <button class="tool-button" onclick="startVoiceRecording()">
+                <i class="fas fa-microphone"></i>
+              </button>
+            </div>
+            
+            <textarea class="chat-input" id="chat-input" placeholder="Écrivez votre message..."></textarea>
+            <button class="send-button" onclick="sendMessage()">
+              Envoyer <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="participants-sidebar">
+          <h3>Participants <span id="online-count">(0 en ligne)</span></h3>
+          <div id="participants-list">
+            <!-- Participants seront ajoutés ici dynamiquement -->
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="action-buttons">
-      <button onclick="copyText()" class="secondary">
-        <i class="fas fa-copy"></i> Copier
-      </button>
-      <button onclick="downloadText()" class="secondary">
-        <i class="fas fa-download"></i> TXT
-      </button>
-      <button onclick="downloadPDF()" class="accent">
-        <i class="fas fa-file-pdf"></i> PDF
-      </button>
-      <button onclick="downloadPNG()" class="accent">
-        <i class="fas fa-image"></i> PNG
-      </button>
-      <button onclick="clearText()" class="outline">
-        <i class="fas fa-trash-alt"></i> Effacer
+  <!-- Modal de connexion -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal-content">
+      <h2 class="modal-title">Rejoindre le Forum Gaganti</h2>
+      
+      <div class="form-group">
+        <label class="form-label">Votre nom</label>
+        <input type="text" class="form-input" id="user-name" placeholder="Votre nom">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Votre pronom</label>
+        <input type="text" class="form-input" id="user-pronoun" placeholder="Ex: Il/Elle/Iel">
+      </div>
+      
+      <button class="form-submit" onclick="joinForum()">
+        Rejoindre <i class="fas fa-sign-in-alt"></i>
       </button>
     </div>
   </div>
 
-  <footer>
-    <div class="footer-content">
-      <p>Éditeur Gaganti Pro - Préservation de l'écriture Wolof <span class="adinkra-symbol">✊</span></p>
-    </div>
-  </footer>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script>
+    // Variables globales
+    let currentUser = null;
+    let participants = [];
+    let messages = [];
+    
     // Initialisation
     document.addEventListener('DOMContentLoaded', function() {
+      // Cacher le modal si on est sur l'éditeur
+      if (window.location.hash !== '#forum') {
+        document.getElementById('login-modal').style.display = 'none';
+      }
+      
+      // Initialiser l'éditeur
       updateCharacterCount();
       document.getElementById('editor').addEventListener('input', updateCharacterCount);
-      document.getElementById('editor').focus();
+      
+      // Simuler des participants et messages (en production, utiliser une base de données)
+      simulateData();
     });
-
-    // Fonction d'insertion RTL
+    
+    // Simuler des données pour la démo
+    function simulateData() {
+      participants = [
+        { id: 1, name: "Awa", pronoun: "Elle", avatar: "A", online: true },
+        { id: 2, name: "Ibrahima", pronoun: "Il", avatar: "I", online: true },
+        { id: 3, name: "Fatou", pronoun: "Elle", avatar: "F", online: false },
+        { id: 4, name: "Moussa", pronoun: "Il", avatar: "M", online: true }
+      ];
+      
+      messages = [
+        { 
+          id: 1, 
+          senderId: 2, 
+          senderName: "Ibrahima", 
+          content: "سلام عليكم كيف الحال؟", 
+          timestamp: new Date(Date.now() - 3600000),
+          type: 'text'
+        },
+        { 
+          id: 2, 
+          senderId: 1, 
+          senderName: "Awa", 
+          content: "أنا بخير الحمد لله! هل تعلمون أي شيء عن اللغة الغاغانتية؟", 
+          timestamp: new Date(Date.now() - 1800000),
+          type: 'text'
+        },
+        { 
+          id: 3, 
+          senderId: 4, 
+          senderName: "Moussa", 
+          content: "نعم، إنها لغة رائعة من السنغال!", 
+          timestamp: new Date(Date.now() - 900000),
+          type: 'text'
+        }
+      ];
+      
+      if (window.location.hash === '#forum') {
+        updateParticipantsList();
+        updateMessages();
+      }
+    }
+    
+    // Fonctions de navigation
+    function showSection(sectionId) {
+      document.querySelectorAll('.main-content').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.nav-button').forEach(button => {
+        button.classList.remove('active');
+      });
+      
+      document.getElementById(sectionId + '-section').classList.add('active');
+      document.querySelector(`.nav-button[onclick="showSection('${sectionId}')"]`).classList.add('active');
+      
+      if (sectionId === 'forum' && !currentUser) {
+        document.getElementById('login-modal').style.display = 'flex';
+      } else {
+        document.getElementById('login-modal').style.display = 'none';
+      }
+    }
+    
+    // Fonctions du forum
+    function joinForum() {
+      const userName = document.getElementById('user-name').value;
+      const userPronoun = document.getElementById('user-pronoun').value;
+      
+      if (!userName || !userPronoun) {
+        alert('Veuillez entrer votre nom et pronom');
+        return;
+      }
+      
+      currentUser = {
+        id: Date.now(),
+        name: userName,
+        pronoun: userPronoun,
+        avatar: userName.charAt(0).toUpperCase(),
+        online: true
+      };
+      
+      participants.push(currentUser);
+      document.getElementById('login-modal').style.display = 'none';
+      
+      // Afficher un message de bienvenue
+      const welcomeMessage = {
+        id: Date.now(),
+        senderId: currentUser.id,
+        senderName: currentUser.name,
+        content: `${userName} a rejoint la conversation!`,
+        timestamp: new Date(),
+        type: 'system'
+      };
+      
+      messages.push(welcomeMessage);
+      updateParticipantsList();
+      updateMessages();
+    }
+    
+    function updateParticipantsList() {
+      const container = document.getElementById('participants-list');
+      const onlineCount = participants.filter(p => p.online).length;
+      
+      document.getElementById('online-count').textContent = `(${onlineCount} en ligne)`;
+      
+      container.innerHTML = '';
+      
+      participants.forEach(participant => {
+        const participantEl = document.createElement('div');
+        participantEl.className = 'participant';
+        participantEl.innerHTML = `
+          <div class="participant-avatar">${participant.avatar}</div>
+          <div class="participant-name">
+            ${participant.name} <small>(${participant.pronoun})</small>
+          </div>
+          <div class="participant-status ${participant.online ? 'online' : ''}"></div>
+        `;
+        
+        container.appendChild(participantEl);
+      });
+    }
+    
+    function updateMessages() {
+      const container = document.getElementById('messages-container');
+      container.innerHTML = '';
+      
+      // Trier les messages par date
+      const sortedMessages = [...messages].sort((a, b) => a.timestamp - b.timestamp);
+      
+      sortedMessages.forEach(message => {
+        const isCurrentUser = currentUser && message.senderId === currentUser.id;
+        const isSystem = message.type === 'system';
+        
+        if (isSystem) {
+          const systemMsg = document.createElement('div');
+          systemMsg.className = 'message system';
+          systemMsg.innerHTML = `
+            <div class="message-content" style="text-align: center; color: var(--or);">
+              ${message.content}
+            </div>
+          `;
+          container.appendChild(systemMsg);
+          return;
+        }
+        
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+        
+        let contentHtml = '';
+        if (message.type === 'text') {
+          contentHtml = `<div class="message-content">${message.content}</div>`;
+        } else if (message.type === 'image') {
+          contentHtml = `
+            <div class="message-content">${message.caption || ''}</div>
+            <img src="${message.content}" class="message-media" alt="Image envoyée">
+          `;
+        } else if (message.type === 'video') {
+          contentHtml = `
+            <div class="message-content">${message.caption || ''}</div>
+            <video controls class="message-media">
+              <source src="${message.content}" type="video/mp4">
+            </video>
+          `;
+        } else if (message.type === 'audio') {
+          contentHtml = `
+            <div class="message-content">${message.caption || ''}</div>
+            <audio controls class="message-media">
+              <source src="${message.content}" type="audio/mpeg">
+            </audio>
+          `;
+        }
+        
+        messageEl.innerHTML = `
+          <div class="message-header">
+            <div class="message-sender">${message.senderName}</div>
+            <div class="message-time">${formatTime(message.timestamp)}</div>
+          </div>
+          ${contentHtml}
+        `;
+        
+        container.appendChild(messageEl);
+      });
+      
+      // Faire défiler vers le bas
+      container.scrollTop = container.scrollHeight;
+    }
+    
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const content = input.value.trim();
+      
+      if (!content && !currentMedia) return;
+      
+      const newMessage = {
+        id: Date.now(),
+        senderId: currentUser.id,
+        senderName: currentUser.name,
+        content: content,
+        timestamp: new Date(),
+        type: currentMedia ? currentMedia.type : 'text'
+      };
+      
+      if (currentMedia) {
+        newMessage.content = currentMedia.url;
+        newMessage.caption = content;
+        currentMedia = null;
+      }
+      
+      messages.push(newMessage);
+      input.value = '';
+      updateMessages();
+      
+      // Simuler une réponse
+      setTimeout(() => {
+        if (Math.random() > 0.5) {
+          const randomParticipant = participants.filter(p => p.id !== currentUser.id && p.online)[0];
+          if (randomParticipant) {
+            const responses = [
+              "أهلا بك في المحادثة!",
+              "كيف حالك اليوم؟",
+              "هل لديك أسئلة عن اللغة الغاغانتية؟",
+              "أنا سعيد بالتواصل معك!",
+              "هذه منصة رائعة للتعلم"
+            ];
+            
+            const responseMessage = {
+              id: Date.now(),
+              senderId: randomParticipant.id,
+              senderName: randomParticipant.name,
+              content: responses[Math.floor(Math.random() * responses.length)],
+              timestamp: new Date(),
+              type: 'text'
+            };
+            
+            messages.push(responseMessage);
+            updateMessages();
+          }
+        }
+      }, 2000 + Math.random() * 3000);
+    }
+    
+    // Gestion des médias
+    let currentMedia = null;
+    
+    function showMediaPicker(type) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = type === 'image' ? 'image/*' : 'video/*';
+      
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (file) {
+          const url = URL.createObjectURL(file);
+          currentMedia = { type, url };
+          document.getElementById('chat-input').placeholder = `Ajouter une légende... (${type === 'image' ? 'Image' : 'Vidéo'} prête)`;
+        }
+      };
+      
+      input.click();
+    }
+    
+    function startVoiceRecording() {
+      alert("Fonctionnalité d'enregistrement vocal sera implémentée bientôt!");
+    }
+    
+    // Fonctions de l'éditeur (existantes)
     function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
@@ -516,7 +851,6 @@
       doc.setFontSize(12);
       doc.text(lines, 200, 20, { align: 'right' });
       
-      // Ajouter un en-tête culturel
       doc.setFontSize(10);
       doc.setTextColor(100);
       doc.text('Document créé avec Gaganti Pro - Éditeur Wolof', 105, 10, { align: 'center' });
@@ -556,22 +890,6 @@
       }
     }
 
-    function openTab(tabId) {
-      // Masquer tous les onglets
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.style.display = 'none';
-      });
-      
-      // Désactiver tous les boutons d'onglet
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      // Activer l'onglet sélectionné
-      document.getElementById(tabId).style.display = 'block';
-      document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
-    }
-
     function showToast(message, type) {
       const toast = document.createElement('div');
       toast.className = `toast toast-${type}`;
@@ -589,6 +907,15 @@
         }, 300);
       }, 3000);
     }
+    
+    // Gestion du hash URL
+    window.addEventListener('hashchange', function() {
+      if (window.location.hash === '#forum') {
+        showSection('forum');
+      } else {
+        showSection('editor');
+      }
+    });
   </script>
 </body>
 </html>
