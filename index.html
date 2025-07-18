@@ -1,25 +1,31 @@
 <!DOCTYPE html>
-<html lang="wo">
+<html lang="wo" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Éditeur de texte Gaganti pour l'écriture Wolof">
   <title>Gaganti Pro - Éditeur Wolof</title>
-  <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --noir: #121212;
-      --or: #D4AF37;
-      --terre: #8B4513;
-      --ivoire: #FFFFF0;
-      --vert-fonce: #01411C;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --noir-profond: #0a0a0a;
+      --or-pale: #D4AF37;
+      --terre-foncee: #5e301f;
+      --ivoire: #FFF8E8;
+      --vert-sombre: #1e3d25;
+      --gris-sombre: #1e1e1e;
+      --ombre: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --transition: all 0.3s ease;
+      --espacement: 1.5rem;
     }
 
     @font-face {
       font-family: 'Gaganti';
       src: url('gaganti.ttf') format('truetype');
       font-display: swap;
+      font-weight: normal;
+      font-style: normal;
     }
 
     * {
@@ -30,36 +36,52 @@
 
     body {
       font-family: 'Gaganti', 'Segoe UI', Tahoma, sans-serif;
-      background-color: var(--noir);
+      background-color: var(--noir-profond);
       color: var(--ivoire);
-      direction: rtl;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      line-height: 1.6;
+      position: relative;
       overflow-x: hidden;
     }
 
-    /* Décoration */
-    .wolof-pattern {
+    /* Arrière-plan avec baobab */
+    .baobab-background {
       position: fixed;
-      top: 0;
       right: 0;
-      width: 100%;
+      top: 0;
       height: 100%;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
-      background-size: 300px;
+      width: 300px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 1000" preserveAspectRatio="none"><path fill="%235e301f" d="M150,0 C200,50 250,100 250,150 L250,300 C250,350 200,400 150,450 C100,400 50,350 50,300 L50,150 C50,100 100,50 150,0 Z M150,500 C250,500 300,600 300,700 L300,900 C300,950 250,1000 150,1000 C50,1000 0,950 0,900 L0,700 C0,600 50,500 150,500 Z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.1;
       z-index: -1;
       pointer-events: none;
     }
 
+    /* Motif subtil */
+    .subtle-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+      z-index: -2;
+      pointer-events: none;
+    }
+
     header {
-      background: linear-gradient(to left, var(--vert-fonce), var(--noir));
-      padding: 1.5rem;
+      background: linear-gradient(90deg, var(--vert-sombre), var(--noir-profond));
+      padding: var(--espacement);
       text-align: center;
-      box-shadow: var(--shadow);
+      box-shadow: var(--ombre);
       position: relative;
       z-index: 10;
-      border-bottom: 1px solid var(--or);
+      border-bottom: 1px solid var(--or-pale);
     }
 
     .logo {
@@ -71,61 +93,63 @@
 
     .logo-icon {
       font-size: 2.5rem;
-      color: var(--or);
+      color: var(--or-pale);
     }
 
     h1 {
-      font-size: 2.2rem;
-      background: linear-gradient(to right, var(--or), #F5F5DC);
-      -webkit-background-clip: text;
+      font-family: 'Gaganti', sans-serif;
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      background: linear-gradient(270deg, var(--or-pale), var(--ivoire));
       background-clip: text;
       color: transparent;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .container {
       flex: 1;
       width: 100%;
       max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
+      margin: 0 auto;
+      padding: var(--espacement);
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: var(--espacement);
     }
 
     .editor-container {
-      background-color: rgba(26, 26, 26, 0.8);
+      background-color: var(--gris-sombre);
       border-radius: 12px;
-      box-shadow: var(--shadow);
-      padding: 2rem;
-      border: 1px solid var(--or);
-      backdrop-filter: blur(5px);
+      box-shadow: var(--ombre);
+      padding: var(--espacement);
+      border: 1px solid var(--or-pale);
       position: relative;
       overflow: hidden;
+      margin-bottom: 1rem;
     }
 
     #editor {
       width: 100%;
-      min-height: 40vh;
+      min-height: 50vh;
+      max-height: 70vh;
       padding: 1.5rem;
-      font-size: 1.8rem;
+      font-size: clamp(1.3rem, 2vw, 1.8rem);
       background-color: transparent;
       color: var(--ivoire);
       border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 8px;
-      resize: none;
+      resize: vertical;
       font-family: 'Gaganti', sans-serif;
-      text-align: right;
-      direction: rtl;
       line-height: 1.8;
-      transition: all 0.3s;
-      unicode-bidi: bidi-override; /* Force le sens RTL */
+      transition: var(--transition);
+      direction: rtl;
+      unicode-bidi: bidi-override;
+      overflow-y: auto;
     }
 
     #editor:focus {
       outline: none;
-      border-color: var(--or);
+      border-color: var(--or-pale);
       box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
     }
 
@@ -135,81 +159,88 @@
       align-items: center;
       margin-top: 1rem;
       font-size: 0.9rem;
-      color: var(--or);
+      color: var(--or-pale);
     }
 
     .character-count {
-      font-family: monospace;
+      font-family: 'Gaganti', monospace;
       letter-spacing: 1px;
     }
 
     .keyboard-container {
-      background-color: rgba(26, 26, 26, 0.9);
+      background-color: var(--gris-sombre);
       border-radius: 12px;
-      box-shadow: var(--shadow);
-      padding: 1.5rem;
-      border: 1px solid var(--or);
-      margin-bottom: 2rem;
+      box-shadow: var(--ombre);
+      padding: 1rem;
+      border: 1px solid var(--or-pale);
+      margin-top: auto;
     }
 
     .keyboard-title {
+      font-family: 'Gaganti', sans-serif;
       font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: var(--or);
+      margin-bottom: 1rem;
+      color: var(--or-pale);
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 1rem;
-      text-align: right;
     }
 
     .keyboard {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      gap: 0.5rem;
+      justify-content: center;
     }
 
     .keyboard button {
-      height: 70px;
+      height: 60px;
       font-size: 1.8rem;
-      background-color: var(--vert-fonce);
-      color: white;
+      background-color: var(--vert-sombre);
+      color: var(--ivoire);
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: var(--transition);
+      font-family: 'Gaganti', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .keyboard button:hover {
-      background-color: var(--or);
-      color: var(--noir);
-      transform: translateY(-3px);
+      background-color: var(--or-pale);
+      color: var(--noir-profond);
+      transform: translateY(-2px);
     }
 
     .action-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1rem;
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
 
     button {
       padding: 1rem;
       font-size: 1.1rem;
-      background-color: var(--vert-fonce);
-      color: white;
+      background-color: var(--vert-sombre);
+      color: var(--ivoire);
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: var(--transition);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.8rem;
+      font-family: 'Gaganti', sans-serif;
     }
 
-    button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    button:hover:not(.outline) {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
     }
 
     button i {
@@ -217,43 +248,45 @@
     }
 
     button.secondary {
-      background-color: var(--terre);
+      background-color: var(--terre-foncee);
     }
 
     button.accent {
-      background-color: var(--or);
-      color: var(--noir);
+      background-color: var(--or-pale);
+      color: var(--noir-profond);
     }
 
     button.outline {
       background-color: transparent;
-      border: 1px solid var(--or);
-      color: var(--or);
+      border: 1px solid var(--or-pale);
+      color: var(--or-pale);
     }
 
     footer {
-      background: linear-gradient(to left, var(--noir), var(--vert-fonce));
-      color: white;
+      background: linear-gradient(90deg, var(--noir-profond), var(--vert-sombre));
+      color: var(--ivoire);
       text-align: center;
-      padding: 2rem;
+      padding: 1.5rem;
       margin-top: auto;
-      border-top: 1px solid var(--or);
+      border-top: 1px solid var(--or-pale);
+      font-family: 'Gaganti', sans-serif;
     }
 
     .toast {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background-color: var(--vert-fonce);
-      color: white;
+      background-color: var(--vert-sombre);
+      color: var(--ivoire);
       padding: 1rem 2rem;
       border-radius: 8px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--ombre);
       transform: translateY(100px);
       opacity: 0;
-      transition: all 0.3s;
+      transition: var(--transition);
       z-index: 1000;
-      border-left: 4px solid var(--or);
+      border-left: 4px solid var(--or-pale);
+      font-family: 'Gaganti', sans-serif;
     }
 
     .toast.show {
@@ -261,196 +294,198 @@
       opacity: 1;
     }
 
+    /* Adaptation mobile */
     @media (max-width: 768px) {
+      .baobab-background {
+        width: 150px;
+        opacity: 0.07;
+      }
+
       .keyboard {
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        gap: 0.3rem;
       }
+
       .keyboard button {
-        height: 60px;
+        height: 50px;
         font-size: 1.5rem;
+        padding: 0;
       }
+
       #editor {
-        font-size: 1.5rem;
-        min-height: 50vh;
+        min-height: 40vh;
+        font-size: 1.4rem;
+      }
+
+      .action-buttons {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .container {
+        padding: 1rem;
+        gap: 1rem;
+      }
+
+      .editor-container {
+        padding: 1rem;
+      }
+
+      #editor {
+        padding: 1rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        animation: none !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="wolof-pattern"></div>
-  
+  <div class="baobab-background"></div>
+  <div class="subtle-pattern"></div>
+
   <header>
     <div class="logo">
-      <span class="logo-icon">✍️</span>
+      <span class="logo-icon" aria-hidden="true">✍️</span>
       <h1>Gaganti Pro</h1>
     </div>
   </header>
 
   <div class="container">
     <div class="editor-container">
-      <textarea id="editor" placeholder="اكتب هنا..."></textarea>
+      <textarea id="editor" placeholder="Jëfandiko ci kan..." aria-label="Zone d'édition de texte en Gaganti"></textarea>
       <div class="editor-footer">
-        <div class="character-count">0 caractères</div>
-        <button onclick="toggleFullscreen()" class="outline">
-          <i class="fas fa-expand"></i>
+        <div class="character-count" aria-live="polite">0 xar-xar</div>
+        <button onclick="toggleFullscreen()" class="outline" aria-label="Plein écran">
+          <i class="fas fa-expand" aria-hidden="true"></i>
         </button>
       </div>
     </div>
 
     <div class="keyboard-container">
       <h2 class="keyboard-title">
-        <i class="fas fa-keyboard"></i> Clavier Gaganti
+        <i class="fas fa-keyboard" aria-hidden="true"></i> Klavyee bi Gaganti
       </h2>
-      
-      <div class="keyboard">
-        <!-- Exemple avec lettres arabes (à remplacer par vos glyphes Gaganti) -->
-        <button onclick="insertAtCursor('ا')">ا</button>
-        <button onclick="insertAtCursor('ب')">ب</button>
-        <button onclick="insertAtCursor('ت')">ت</button>
-        <button onclick="insertAtCursor('ث')">ث</button>
-        <button onclick="insertAtCursor('ج')">ج</button>
-        <button onclick="insertAtCursor('ح')">ح</button>
-        <button onclick="insertAtCursor('خ')">خ</button>
-        <button onclick="insertAtCursor('د')">د</button>
-        <button onclick="insertAtCursor('ذ')">ذ</button>
-        <button onclick="insertAtCursor('ر')">ر</button>
-        <button onclick="insertAtCursor('ز')">ز</button>
-        <button onclick="insertAtCursor('س')">س</button>
-        <button onclick="insertAtCursor('ش')">ش</button>
-        <button onclick="insertAtCursor('ص')">ص</button>
-        <button onclick="insertAtCursor('ض')">ض</button>
-        <button onclick="insertAtCursor('ط')">ط</button>
-        <button onclick="insertAtCursor('ظ')">ظ</button>
-        <button onclick="insertAtCursor('ع')">ع</button>
-        <button onclick="insertAtCursor('غ')">غ</button>
-        <button onclick="insertAtCursor('ف')">ف</button>
-        <button onclick="insertAtCursor('ق')">ق</button>
-        <button onclick="insertAtCursor('ك')">ك</button>
-        <button onclick="insertAtCursor('ل')">ل</button>
-        <button onclick="insertAtCursor('م')">م</button>
-        <button onclick="insertAtCursor('ن')">ن</button>
-        <button onclick="insertAtCursor('ه')">ه</button>
-        <button onclick="insertAtCursor('و')">و</button>
-        <button onclick="insertAtCursor('ي')">ي</button>
-        <button onclick="insertAtCursor(' ')">␣</button>
-        <button onclick="insertAtCursor('\n')">↵</button>
+
+      <div class="keyboard" role="group" aria-label="Clavier Gaganti">
+        <!-- Les lettres doivent être remplacées par les caractères Gaganti réels -->
+        <button onclick="insertAtCursor('A')" aria-label="Lettre A">A</button>
+        <button onclick="insertAtCursor('B')" aria-label="Lettre B">B</button>
+        <button onclick="insertAtCursor('Ñ')" aria-label="Lettre Ñ">Ñ</button>
+        <button onclick="insertAtCursor('D')" aria-label="Lettre D">D</button>
+        <button onclick="insertAtCursor('E')" aria-label="Lettre E">E</button>
+        <button onclick="insertAtCursor('F')" aria-label="Lettre F">F</button>
+        <button onclick="insertAtCursor('G')" aria-label="Lettre G">G</button>
+        <button onclick="insertAtCursor('H')" aria-label="Lettre H">H</button>
+        <button onclick="insertAtCursor('I')" aria-label="Lettre I">I</button>
+        <button onclick="insertAtCursor('J')" aria-label="Lettre J">J</button>
+        <button onclick="insertAtCursor('K')" aria-label="Lettre K">K</button>
+        <button onclick="insertAtCursor('L')" aria-label="Lettre L">L</button>
+        <button onclick="insertAtCursor('M')" aria-label="Lettre M">M</button>
+        <button onclick="insertAtCursor('N')" aria-label="Lettre N">N</button>
+        <button onclick="insertAtCursor('O')" aria-label="Lettre O">O</button>
+        <button onclick="insertAtCursor('P')" aria-label="Lettre P">P</button>
+        <button onclick="insertAtCursor('Q')" aria-label="Lettre Q">Q</button>
+        <button onclick="insertAtCursor('R')" aria-label="Lettre R">R</button>
+        <button onclick="insertAtCursor('S')" aria-label="Lettre S">S</button>
+        <button onclick="insertAtCursor('T')" aria-label="Lettre T">T</button>
+        <button onclick="insertAtCursor('U')" aria-label="Lettre U">U</button>
+        <button onclick="insertAtCursor('V')" aria-label="Lettre V">V</button>
+        <button onclick="insertAtCursor('W')" aria-label="Lettre W">W</button>
+        <button onclick="insertAtCursor('X')" aria-label="Lettre X">X</button>
+        <button onclick="insertAtCursor('Y')" aria-label="Lettre Y">Y</button>
+        <button onclick="insertAtCursor('Z')" aria-label="Lettre Z">Z</button>
+        <button onclick="insertAtCursor(' ')" aria-label="Espace">␣</button>
+        <button onclick="insertAtCursor('\n')" aria-label="Nouvelle ligne">↵</button>
       </div>
     </div>
 
     <div class="action-buttons">
-      <button onclick="copyText()" class="secondary">
-        <i class="fas fa-copy"></i> Copier
+      <button onclick="copyText()" class="secondary" aria-label="Copier le texte">
+        <i class="fas fa-copy" aria-hidden="true"></i> Kopi
       </button>
-      <button onclick="downloadText()" class="secondary">
-        <i class="fas fa-download"></i> TXT
+      <button onclick="downloadText()" class="secondary" aria-label="Télécharger en TXT">
+        <i class="fas fa-download" aria-hidden="true"></i> TXT
       </button>
-      <button onclick="downloadPDF()" class="accent">
-        <i class="fas fa-file-pdf"></i> PDF
+      <button onclick="downloadPDF()" class="accent" aria-label="Télécharger en PDF">
+        <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF
       </button>
-      <button onclick="clearText()" class="outline">
-        <i class="fas fa-trash-alt"></i> Effacer
+      <button onclick="clearText()" class="outline" aria-label="Effacer le texte">
+        <i class="fas fa-trash-alt" aria-hidden="true"></i> Tudd
       </button>
     </div>
   </div>
 
   <footer>
     <div class="footer-content">
-      <p>Éditeur Gaganti Pro - Préservation de l'écriture Wolof</p>
+      <p>Gaganti Pro - Jëfandikoo ci yoon wi</p>
     </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    // Initialisation
+    // Initialisation différée
     document.addEventListener('DOMContentLoaded', function() {
+      const editor = document.getElementById('editor');
       updateCharacterCount();
-      document.getElementById('editor').addEventListener('input', updateCharacterCount);
-      document.getElementById('editor').focus();
+      editor.addEventListener('input', updateCharacterCount);
+      editor.focus();
+
+      // Chargement différé de la police
+      document.fonts.ready.then(function() {
+        console.log('Police Gaganti chargée');
+      });
+
+      // Gestion du clavier mobile
+      if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        document.querySelector('.keyboard-container').style.position = 'fixed';
+        document.querySelector('.keyboard-container').style.bottom = '0';
+        document.querySelector('.keyboard-container').style.width = '100%';
+        document.querySelector('.keyboard-container').style.borderRadius = '12px 12px 0 0';
+        document.querySelector('.container').style.marginBottom = '300px';
+      }
     });
 
-    // Fonction d'insertion RTL corrigée
+    // Fonction d'insertion optimisée pour RTL
     function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
-      const text = editor.value;
-      
-      // Insère le caractère à la position actuelle
-      editor.value = text.substring(0, cursorPos) + char + text.substring(cursorPos);
-      
-      // Place le curseur après le caractère inséré (à gauche en RTL)
+      const textBefore = editor.value.substring(0, cursorPos);
+      const textAfter = editor.value.substring(cursorPos);
+
+      editor.value = textBefore + char + textAfter;
       editor.selectionStart = editor.selectionEnd = cursorPos + char.length;
-      
       updateCharacterCount();
       editor.focus();
     }
 
-    // Exemple : "BONJOUR" s'affichera comme "RUOJNOB"
+    // Mise à jour du compteur de caractères avec debounce
+    let debounceTimer;
     function updateCharacterCount() {
-      const editor = document.getElementById('editor');
-      const count = editor.value.length;
-      document.querySelector('.character-count').textContent = `${count} caractères`;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() {
+        const editor = document.getElementById('editor');
+        const count = editor.value.length;
+        document.querySelector('.character-count').textContent = `${count} xar-xar`;
+      }, 50);
     }
 
-    function copyText() {
-      const textArea = document.getElementById('editor');
-      navigator.clipboard.writeText(textArea.value)
-        .then(() => showToast('Texte copié avec succès!', 'success'))
-        .catch(err => showToast('Erreur lors de la copie', 'error'));
-    }
-
-    function downloadText() {
-      const text = document.getElementById('editor').value;
-      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `gaganti-${new Date().toISOString().slice(0,10)}.txt`;
-      link.click();
-      showToast('Téléchargement TXT démarré', 'success');
-    }
-
-    function downloadPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4"
-      });
-      
-      const text = document.getElementById('editor').value;
-      const lines = doc.splitTextToSize(text, 180);
-      
-      doc.setFontSize(12);
-      doc.text(lines, 200, 20, { align: 'right' });
-      doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
-      showToast('PDF généré avec succès', 'success');
-    }
-
-    function clearText() {
-      if (confirm('Voulez-vous vraiment effacer tout le texte?')) {
-        document.getElementById('editor').value = '';
-        updateCharacterCount();
-        showToast('Texte effacé', 'info');
-      }
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
-
+    // Fonction utilitaire pour les notifications
     function showToast(message, type) {
       const toast = document.createElement('div');
       toast.className = `toast toast-${type}`;
       toast.textContent = message;
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('aria-live', 'assertive');
       document.body.appendChild(toast);
-      
-      setTimeout(() => {
+
+      requestAnimationFrame(() => {
         toast.classList.add('show');
-      }, 10);
-      
+      });
+
       setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => {
@@ -458,6 +493,99 @@
         }, 300);
       }, 3000);
     }
+
+    // Copier le texte
+    function copyText() {
+      const textArea = document.getElementById('editor');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(textArea.value)
+          .then(() => showToast('Texte copié!', 'success'))
+          .catch(err => {
+            console.error('Erreur de copie: ', err);
+            showToast('Erreur lors de la copie', 'error');
+          });
+      } else {
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          showToast('Texte copié!', 'success');
+        } catch (err) {
+          showToast('Erreur lors de la copie', 'error');
+        }
+      }
+    }
+
+    // Télécharger en TXT
+    function downloadText() {
+      const text = document.getElementById('editor').value;
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `gaganti-${new Date().toISOString().slice(0,10)}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Téléchargement démarré', 'success');
+    }
+
+    // Télécharger en PDF
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      });
+
+      const text = document.getElementById('editor').value;
+      const lines = doc.splitTextToSize(text, 180);
+
+      doc.setFontSize(12);
+      doc.text(lines, 20, 20, { align: 'right' });
+      doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
+      showToast('PDF généré!', 'success');
+    }
+
+    // Effacer le texte
+    function clearText() {
+      if (confirm('Tudd naa ci kan bi?')) {
+        document.getElementById('editor').value = '';
+        updateCharacterCount();
+        showToast('Texte effacé', 'info');
+      }
+    }
+
+    // Mode plein écran
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error('Erreur en plein écran: ', err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Gestion des erreurs
+    window.addEventListener('error', function(e) {
+      console.error('Erreur capturée:', e.error);
+      showToast('Une erreur est survenue', 'error');
+    });
+
+    // Adaptation pour mobile
+    function checkMobile() {
+      if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        const keyboard = document.querySelector('.keyboard-container');
+        keyboard.style.position = 'fixed';
+        keyboard.style.bottom = '0';
+        keyboard.style.width = '100%';
+        keyboard.style.borderRadius = '12px 12px 0 0';
+        document.querySelector('.container').style.marginBottom = '300px';
+      }
+    }
+
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
   </script>
 </body>
 </html>
