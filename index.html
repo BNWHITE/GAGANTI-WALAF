@@ -1,31 +1,25 @@
 <!DOCTYPE html>
-<html lang="wo" dir="rtl">
+<html lang="wo">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Éditeur de texte Gaganti pour l'écriture Wolof">
   <title>Gaganti Pro - Éditeur Wolof</title>
-  <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --noir-profond: #0a0a0a;
-      --or-pale: #D4AF37;
-      --terre-foncee: #5e301f;
-      --ivoire: #FFF8E8;
-      --vert-sombre: #1e3d25;
-      --gris-sombre: #1e1e1e;
-      --ombre: 0 4px 20px rgba(0, 0, 0, 0.4);
-      --transition: all 0.3s ease;
-      --espacement: 1.5rem;
+      --noir: #121212;
+      --or: #D4AF37;
+      --terre: #8B4513;
+      --ivoire: #FFFFF0;
+      --vert-fonce: #01411C;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     @font-face {
       font-family: 'Gaganti';
       src: url('gaganti.ttf') format('truetype');
       font-display: swap;
-      font-weight: normal;
-      font-style: normal;
     }
 
     * {
@@ -36,52 +30,25 @@
 
     body {
       font-family: 'Gaganti', 'Segoe UI', Tahoma, sans-serif;
-      background-color: var(--noir-profond);
+      background-color: var(--noir);
       color: var(--ivoire);
+      direction: rtl;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      line-height: 1.6;
-      position: relative;
       overflow-x: hidden;
-    }
-
-    /* Arrière-plan avec baobab */
-    .baobab-background {
-      position: fixed;
-      right: 0;
-      top: 0;
-      height: 100%;
-      width: 300px;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 1000" preserveAspectRatio="none"><path fill="%235e301f" d="M150,0 C200,50 250,100 250,150 L250,300 C250,350 200,400 150,450 C100,400 50,350 50,300 L50,150 C50,100 100,50 150,0 Z M150,500 C250,500 300,600 300,700 L300,900 C300,950 250,1000 150,1000 C50,1000 0,950 0,900 L0,700 C0,600 50,500 150,500 Z"/></svg>');
-      background-repeat: no-repeat;
-      background-position: center;
-      opacity: 0.1;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* Motif subtil */
-    .subtle-pattern {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
-      background-size: 30px 30px;
-      z-index: -2;
-      pointer-events: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M20,10 Q30,50 20,90 Q50,80 80,90 Q70,50 80,10 Q50,20 20,10 Z"/></svg>');
+      background-size: 300px;
     }
 
     header {
-      background: linear-gradient(90deg, var(--vert-sombre), var(--noir-profond));
-      padding: var(--espacement);
+      background: linear-gradient(to left, var(--vert-fonce), var(--noir));
+      padding: 1.5rem;
       text-align: center;
-      box-shadow: var(--ombre);
+      box-shadow: var(--shadow);
       position: relative;
       z-index: 10;
-      border-bottom: 1px solid var(--or-pale);
+      border-bottom: 1px solid var(--or);
     }
 
     .logo {
@@ -93,63 +60,61 @@
 
     .logo-icon {
       font-size: 2.5rem;
-      color: var(--or-pale);
+      color: var(--or);
     }
 
     h1 {
-      font-family: 'Gaganti', sans-serif;
-      font-size: clamp(2rem, 5vw, 2.5rem);
-      background: linear-gradient(270deg, var(--or-pale), var(--ivoire));
+      font-size: 2.2rem;
+      background: linear-gradient(to right, var(--or), #F5F5DC);
+      -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      letter-spacing: 3px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      letter-spacing: 2px;
     }
 
     .container {
       flex: 1;
       width: 100%;
       max-width: 1200px;
-      margin: 0 auto;
-      padding: var(--espacement);
+      margin: 2rem auto;
+      padding: 0 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: var(--espacement);
+      gap: 2rem;
     }
 
     .editor-container {
-      background-color: var(--gris-sombre);
+      background-color: rgba(26, 26, 26, 0.8);
       border-radius: 12px;
-      box-shadow: var(--ombre);
-      padding: var(--espacement);
-      border: 1px solid var(--or-pale);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      border: 1px solid var(--or);
+      backdrop-filter: blur(5px);
       position: relative;
       overflow: hidden;
-      margin-bottom: 1rem;
     }
 
     #editor {
       width: 100%;
-      min-height: 50vh;
-      max-height: 70vh;
+      min-height: 40vh;
       padding: 1.5rem;
-      font-size: clamp(1.3rem, 2vw, 1.8rem);
+      font-size: 1.8rem;
       background-color: transparent;
       color: var(--ivoire);
       border: 1px solid rgba(212, 175, 55, 0.3);
       border-radius: 8px;
-      resize: vertical;
+      resize: none;
       font-family: 'Gaganti', sans-serif;
-      line-height: 1.8;
-      transition: var(--transition);
+      text-align: right;
       direction: rtl;
+      line-height: 1.8;
+      transition: all 0.3s;
       unicode-bidi: bidi-override;
-      overflow-y: auto;
     }
 
     #editor:focus {
       outline: none;
-      border-color: var(--or-pale);
+      border-color: var(--or);
       box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
     }
 
@@ -159,88 +124,102 @@
       align-items: center;
       margin-top: 1rem;
       font-size: 0.9rem;
-      color: var(--or-pale);
+      color: var(--or);
     }
 
     .character-count {
-      font-family: 'Gaganti', monospace;
+      font-family: monospace;
       letter-spacing: 1px;
     }
 
     .keyboard-container {
-      background-color: var(--gris-sombre);
+      background-color: rgba(26, 26, 26, 0.9);
       border-radius: 12px;
-      box-shadow: var(--ombre);
-      padding: 1rem;
-      border: 1px solid var(--or-pale);
-      margin-top: auto;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      border: 1px solid var(--or);
+      margin-bottom: 2rem;
     }
 
     .keyboard-title {
-      font-family: 'Gaganti', sans-serif;
       font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--or-pale);
+      margin-bottom: 1.5rem;
+      color: var(--or);
       display: flex;
       align-items: center;
-      justify-content: flex-end;
       gap: 1rem;
+      text-align: right;
+    }
+
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--or);
+    }
+
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      color: var(--ivoire);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-btn.active {
+      border-bottom-color: var(--or);
+      color: var(--or);
     }
 
     .keyboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-      gap: 0.5rem;
-      justify-content: center;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 0.8rem;
     }
 
     .keyboard button {
-      height: 60px;
+      height: 70px;
       font-size: 1.8rem;
-      background-color: var(--vert-sombre);
-      color: var(--ivoire);
+      background-color: var(--vert-fonce);
+      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s;
       font-family: 'Gaganti', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .keyboard button:hover {
-      background-color: var(--or-pale);
-      color: var(--noir-profond);
-      transform: translateY(-2px);
+      background-color: var(--or);
+      color: var(--noir);
+      transform: translateY(-3px);
     }
 
     .action-buttons {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 1rem;
-      margin-top: 1rem;
+      margin-top: 2rem;
     }
 
     button {
       padding: 1rem;
       font-size: 1.1rem;
-      background-color: var(--vert-sombre);
-      color: var(--ivoire);
+      background-color: var(--vert-fonce);
+      color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.8rem;
-      font-family: 'Gaganti', sans-serif;
     }
 
-    button:hover:not(.outline) {
-      transform: translateY(-2px);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
 
     button i {
@@ -248,45 +227,43 @@
     }
 
     button.secondary {
-      background-color: var(--terre-foncee);
+      background-color: var(--terre);
     }
 
     button.accent {
-      background-color: var(--or-pale);
-      color: var(--noir-profond);
+      background-color: var(--or);
+      color: var(--noir);
     }
 
     button.outline {
       background-color: transparent;
-      border: 1px solid var(--or-pale);
-      color: var(--or-pale);
+      border: 1px solid var(--or);
+      color: var(--or);
     }
 
     footer {
-      background: linear-gradient(90deg, var(--noir-profond), var(--vert-sombre));
-      color: var(--ivoire);
+      background: linear-gradient(to left, var(--noir), var(--vert-fonce));
+      color: white;
       text-align: center;
-      padding: 1.5rem;
+      padding: 2rem;
       margin-top: auto;
-      border-top: 1px solid var(--or-pale);
-      font-family: 'Gaganti', sans-serif;
+      border-top: 1px solid var(--or);
     }
 
     .toast {
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background-color: var(--vert-sombre);
-      color: var(--ivoire);
+      background-color: var(--vert-fonce);
+      color: white;
       padding: 1rem 2rem;
       border-radius: 8px;
-      box-shadow: var(--ombre);
+      box-shadow: var(--shadow);
       transform: translateY(100px);
       opacity: 0;
-      transition: var(--transition);
+      transition: all 0.3s;
       z-index: 1000;
-      border-left: 4px solid var(--or-pale);
-      font-family: 'Gaganti', sans-serif;
+      border-left: 4px solid var(--or);
     }
 
     .toast.show {
@@ -294,241 +271,237 @@
       opacity: 1;
     }
 
-    /* Adaptation mobile */
-    @media (max-width: 768px) {
-      .baobab-background {
-        width: 150px;
-        opacity: 0.07;
-      }
-
-      .keyboard {
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-        gap: 0.3rem;
-      }
-
-      .keyboard button {
-        height: 50px;
-        font-size: 1.5rem;
-        padding: 0;
-      }
-
-      #editor {
-        min-height: 40vh;
-        font-size: 1.4rem;
-      }
-
-      .action-buttons {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .container {
-        padding: 1rem;
-        gap: 1rem;
-      }
-
-      .editor-container {
-        padding: 1rem;
-      }
-
-      #editor {
-        padding: 1rem;
-      }
+    .adinkra-symbol {
+      font-size: 1.5rem;
+      margin: 0 0.3rem;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        transition: none !important;
-        animation: none !important;
+    @media (max-width: 768px) {
+      .keyboard {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      }
+      .keyboard button {
+        height: 60px;
+        font-size: 1.5rem;
+      }
+      #editor {
+        font-size: 1.5rem;
+        min-height: 50vh;
       }
     }
   </style>
 </head>
 <body>
-  <div class="baobab-background"></div>
-  <div class="subtle-pattern"></div>
-
   <header>
     <div class="logo">
-      <span class="logo-icon" aria-hidden="true">✍️</span>
-      <h1>Gaganti Pro</h1>
+      <span class="logo-icon">✍️</span>
+      <h1>Gaganti Pro <span class="adinkra-symbol">✊</span></h1>
     </div>
   </header>
 
   <div class="container">
     <div class="editor-container">
-      <textarea id="editor" placeholder="Jëfandiko ci kan..." aria-label="Zone d'édition de texte en Gaganti"></textarea>
+      <textarea id="editor" placeholder="...اكتب هنا"></textarea>
       <div class="editor-footer">
-        <div class="character-count" aria-live="polite">0 xar-xar</div>
-        <button onclick="toggleFullscreen()" class="outline" aria-label="Plein écran">
-          <i class="fas fa-expand" aria-hidden="true"></i>
+        <div class="character-count">0 caractères</div>
+        <button onclick="toggleFullscreen()" class="outline">
+          <i class="fas fa-expand"></i>
         </button>
       </div>
     </div>
 
     <div class="keyboard-container">
       <h2 class="keyboard-title">
-        <i class="fas fa-keyboard" aria-hidden="true"></i> Klavyee bi Gaganti
+        <i class="fas fa-keyboard"></i> Clavier Gaganti
       </h2>
+      
+      <div class="tab-buttons">
+        <button class="tab-btn active" onclick="openTab('letters')">Lettres</button>
+        <button class="tab-btn" onclick="openTab('numbers')">Chiffres</button>
+        <button class="tab-btn" onclick="openTab('symbols')">Symboles</button>
+      </div>
 
-      <div class="keyboard" role="group" aria-label="Clavier Gaganti">
-        <!-- Les lettres doivent être remplacées par les caractères Gaganti réels -->
-        <button onclick="insertAtCursor('A')" aria-label="Lettre A">A</button>
-        <button onclick="insertAtCursor('B')" aria-label="Lettre B">B</button>
-        <button onclick="insertAtCursor('Ñ')" aria-label="Lettre Ñ">Ñ</button>
-        <button onclick="insertAtCursor('D')" aria-label="Lettre D">D</button>
-        <button onclick="insertAtCursor('E')" aria-label="Lettre E">E</button>
-        <button onclick="insertAtCursor('F')" aria-label="Lettre F">F</button>
-        <button onclick="insertAtCursor('G')" aria-label="Lettre G">G</button>
-        <button onclick="insertAtCursor('H')" aria-label="Lettre H">H</button>
-        <button onclick="insertAtCursor('I')" aria-label="Lettre I">I</button>
-        <button onclick="insertAtCursor('J')" aria-label="Lettre J">J</button>
-        <button onclick="insertAtCursor('K')" aria-label="Lettre K">K</button>
-        <button onclick="insertAtCursor('L')" aria-label="Lettre L">L</button>
-        <button onclick="insertAtCursor('M')" aria-label="Lettre M">M</button>
-        <button onclick="insertAtCursor('N')" aria-label="Lettre N">N</button>
-        <button onclick="insertAtCursor('O')" aria-label="Lettre O">O</button>
-        <button onclick="insertAtCursor('P')" aria-label="Lettre P">P</button>
-        <button onclick="insertAtCursor('Q')" aria-label="Lettre Q">Q</button>
-        <button onclick="insertAtCursor('R')" aria-label="Lettre R">R</button>
-        <button onclick="insertAtCursor('S')" aria-label="Lettre S">S</button>
-        <button onclick="insertAtCursor('T')" aria-label="Lettre T">T</button>
-        <button onclick="insertAtCursor('U')" aria-label="Lettre U">U</button>
-        <button onclick="insertAtCursor('V')" aria-label="Lettre V">V</button>
-        <button onclick="insertAtCursor('W')" aria-label="Lettre W">W</button>
-        <button onclick="insertAtCursor('X')" aria-label="Lettre X">X</button>
-        <button onclick="insertAtCursor('Y')" aria-label="Lettre Y">Y</button>
-        <button onclick="insertAtCursor('Z')" aria-label="Lettre Z">Z</button>
-        <button onclick="insertAtCursor(' ')" aria-label="Espace">␣</button>
-        <button onclick="insertAtCursor('\n')" aria-label="Nouvelle ligne">↵</button>
+      <div id="letters" class="tab-content active">
+        <div class="keyboard">
+          <!-- Lettres Gaganti (à remplacer par vos glyphes exacts) -->
+          <button onclick="insertAtCursor('G')">G</button>
+          <button onclick="insertAtCursor('A')">A</button>
+          <button onclick="insertAtCursor('N')">N</button>
+          <button onclick="insertAtCursor('T')">T</button>
+          <button onclick="insertAtCursor('I')">I</button>
+          <button onclick="insertAtCursor('B')">B</button>
+          <button onclick="insertAtCursor('D')">D</button>
+          <button onclick="insertAtCursor('E')">E</button>
+          <button onclick="insertAtCursor('F')">F</button>
+          <button onclick="insertAtCursor('H')">H</button>
+          <button onclick="insertAtCursor('J')">J</button>
+          <button onclick="insertAtCursor('K')">K</button>
+          <button onclick="insertAtCursor('L')">L</button>
+          <button onclick="insertAtCursor('M')">M</button>
+          <button onclick="insertAtCursor('O')">O</button>
+          <button onclick="insertAtCursor('P')">P</button>
+          <button onclick="insertAtCursor('R')">R</button>
+          <button onclick="insertAtCursor('S')">S</button>
+          <button onclick="insertAtCursor('U')">U</button>
+          <button onclick="insertAtCursor('V')">V</button>
+          <button onclick="insertAtCursor('W')">W</button>
+          <button onclick="insertAtCursor('Y')">Y</button>
+          <button onclick="insertAtCursor('Z')">Z</button>
+          <button onclick="insertAtCursor(' ')">␣</button>
+          <button onclick="insertAtCursor('\n')">↵</button>
+          <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
+        </div>
+      </div>
+
+      <div id="numbers" class="tab-content">
+        <div class="keyboard">
+          <button onclick="insertAtCursor('0')">0</button>
+          <button onclick="insertAtCursor('1')">1</button>
+          <button onclick="insertAtCursor('2')">2</button>
+          <button onclick="insertAtCursor('3')">3</button>
+          <button onclick="insertAtCursor('4')">4</button>
+          <button onclick="insertAtCursor('5')">5</button>
+          <button onclick="insertAtCursor('6')">6</button>
+          <button onclick="insertAtCursor('7')">7</button>
+          <button onclick="insertAtCursor('8')">8</button>
+          <button onclick="insertAtCursor('9')">9</button>
+          <button onclick="insertAtCursor('٠')">٠</button>
+          <button onclick="insertAtCursor('١')">١</button>
+          <button onclick="insertAtCursor('٢')">٢</button>
+          <button onclick="insertAtCursor('٣')">٣</button>
+          <button onclick="insertAtCursor('٤')">٤</button>
+          <button onclick="insertAtCursor('٥')">٥</button>
+          <button onclick="insertAtCursor('٦')">٦</button>
+          <button onclick="insertAtCursor('٧')">٧</button>
+          <button onclick="insertAtCursor('٨')">٨</button>
+          <button onclick="insertAtCursor('٩')">٩</button>
+          <button onclick="insertAtCursor('+')">+</button>
+          <button onclick="insertAtCursor('-')">-</button>
+          <button onclick="insertAtCursor('=')">=</button>
+          <button onclick="insertAtCursor('×')">×</button>
+          <button onclick="insertAtCursor('÷')">÷</button>
+        </div>
+      </div>
+
+      <div id="symbols" class="tab-content">
+        <div class="keyboard">
+          <button onclick="insertAtCursor('،')">،</button>
+          <button onclick="insertAtCursor('؛')">؛</button>
+          <button onclick="insertAtCursor('؟')">؟</button>
+          <button onclick="insertAtCursor('!')">!</button>
+          <button onclick="insertAtCursor('@')">@</button>
+          <button onclick="insertAtCursor('#')">#</button>
+          <button onclick="insertAtCursor('$')">$</button>
+          <button onclick="insertAtCursor('%')">%</button>
+          <button onclick="insertAtCursor('&')">&</button>
+          <button onclick="insertAtCursor('*')">*</button>
+          <button onclick="insertAtCursor('(')">(</button>
+          <button onclick="insertAtCursor(')')">)</button>
+          <button onclick="insertAtCursor('-')">-</button>
+          <button onclick="insertAtCursor('_')">_</button>
+          <button onclick="insertAtCursor('+')">+</button>
+          <button onclick="insertAtCursor('=')">=</button>
+          <button onclick="insertAtCursor('[')">[</button>
+          <button onclick="insertAtCursor(']')">]</button>
+          <button onclick="insertAtCursor('{')">{</button>
+          <button onclick="insertAtCursor('}')">}</button>
+          <button onclick="insertAtCursor('|')">|</button>
+          <button onclick="insertAtCursor(';')">;</button>
+          <button onclick="insertAtCursor(':')">:</button>
+          <button onclick="insertAtCursor('"')">"</button>
+          <button onclick="insertAtCursor('\'')">'</button>
+          <button onclick="insertAtCursor('<')"><</button>
+          <button onclick="insertAtCursor('>')">></button>
+          <button onclick="insertAtCursor('/')">/</button>
+          <button onclick="insertAtCursor('?')">?</button>
+        </div>
       </div>
     </div>
 
     <div class="action-buttons">
-      <button onclick="copyText()" class="secondary" aria-label="Copier le texte">
-        <i class="fas fa-copy" aria-hidden="true"></i> Kopi
+      <button onclick="copyText()" class="secondary">
+        <i class="fas fa-copy"></i> Copier
       </button>
-      <button onclick="downloadText()" class="secondary" aria-label="Télécharger en TXT">
-        <i class="fas fa-download" aria-hidden="true"></i> TXT
+      <button onclick="downloadText()" class="secondary">
+        <i class="fas fa-download"></i> TXT
       </button>
-      <button onclick="downloadPDF()" class="accent" aria-label="Télécharger en PDF">
-        <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF
+      <button onclick="downloadPDF()" class="accent">
+        <i class="fas fa-file-pdf"></i> PDF
       </button>
-      <button onclick="clearText()" class="outline" aria-label="Effacer le texte">
-        <i class="fas fa-trash-alt" aria-hidden="true"></i> Tudd
+      <button onclick="downloadPNG()" class="accent">
+        <i class="fas fa-image"></i> PNG
+      </button>
+      <button onclick="clearText()" class="outline">
+        <i class="fas fa-trash-alt"></i> Effacer
       </button>
     </div>
   </div>
 
   <footer>
     <div class="footer-content">
-      <p>Gaganti Pro - Jëfandikoo ci yoon wi</p>
+      <p>Éditeur Gaganti Pro - Préservation de l'écriture Wolof <span class="adinkra-symbol">✊</span></p>
     </div>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script>
-    // Initialisation différée
+    // Initialisation
     document.addEventListener('DOMContentLoaded', function() {
-      const editor = document.getElementById('editor');
       updateCharacterCount();
-      editor.addEventListener('input', updateCharacterCount);
-      editor.focus();
-
-      // Chargement différé de la police
-      document.fonts.ready.then(function() {
-        console.log('Police Gaganti chargée');
-      });
-
-      // Gestion du clavier mobile
-      if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        document.querySelector('.keyboard-container').style.position = 'fixed';
-        document.querySelector('.keyboard-container').style.bottom = '0';
-        document.querySelector('.keyboard-container').style.width = '100%';
-        document.querySelector('.keyboard-container').style.borderRadius = '12px 12px 0 0';
-        document.querySelector('.container').style.marginBottom = '300px';
-      }
+      document.getElementById('editor').addEventListener('input', updateCharacterCount);
+      document.getElementById('editor').focus();
     });
 
-    // Fonction d'insertion optimisée pour RTL
+    // Fonction d'insertion RTL
     function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
-      const textBefore = editor.value.substring(0, cursorPos);
-      const textAfter = editor.value.substring(cursorPos);
-
-      editor.value = textBefore + char + textAfter;
+      const text = editor.value;
+      
+      editor.value = text.substring(0, cursorPos) + char + text.substring(cursorPos);
       editor.selectionStart = editor.selectionEnd = cursorPos + char.length;
+      
       updateCharacterCount();
       editor.focus();
     }
 
-    // Mise à jour du compteur de caractères avec debounce
-    let debounceTimer;
+    function deleteChar() {
+      const editor = document.getElementById('editor');
+      const cursorPos = editor.selectionStart;
+      const text = editor.value;
+      
+      if (cursorPos > 0) {
+        editor.value = text.substring(0, cursorPos - 1) + text.substring(cursorPos);
+        editor.selectionStart = editor.selectionEnd = cursorPos - 1;
+        updateCharacterCount();
+      }
+      editor.focus();
+    }
+
     function updateCharacterCount() {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(function() {
-        const editor = document.getElementById('editor');
-        const count = editor.value.length;
-        document.querySelector('.character-count').textContent = `${count} xar-xar`;
-      }, 50);
+      const editor = document.getElementById('editor');
+      const count = editor.value.length;
+      document.querySelector('.character-count').textContent = `${count} caractères`;
     }
 
-    // Fonction utilitaire pour les notifications
-    function showToast(message, type) {
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      toast.textContent = message;
-      toast.setAttribute('role', 'alert');
-      toast.setAttribute('aria-live', 'assertive');
-      document.body.appendChild(toast);
-
-      requestAnimationFrame(() => {
-        toast.classList.add('show');
-      });
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(toast);
-        }, 300);
-      }, 3000);
-    }
-
-    // Copier le texte
     function copyText() {
       const textArea = document.getElementById('editor');
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(textArea.value)
-          .then(() => showToast('Texte copié!', 'success'))
-          .catch(err => {
-            console.error('Erreur de copie: ', err);
-            showToast('Erreur lors de la copie', 'error');
-          });
-      } else {
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          showToast('Texte copié!', 'success');
-        } catch (err) {
-          showToast('Erreur lors de la copie', 'error');
-        }
-      }
+      navigator.clipboard.writeText(textArea.value)
+        .then(() => showToast('Texte copié avec succès!', 'success'))
+        .catch(err => showToast('Erreur lors de la copie', 'error'));
     }
 
-    // Télécharger en TXT
     function downloadText() {
       const text = document.getElementById('editor').value;
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = `gaganti-${new Date().toISOString().slice(0,10)}.txt`;
-      document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
-      showToast('Téléchargement démarré', 'success');
+      showToast('Téléchargement TXT démarré', 'success');
     }
 
-    // Télécharger en PDF
     function downloadPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({
@@ -536,56 +509,86 @@
         unit: "mm",
         format: "a4"
       });
-
+      
       const text = document.getElementById('editor').value;
       const lines = doc.splitTextToSize(text, 180);
-
+      
       doc.setFontSize(12);
-      doc.text(lines, 20, 20, { align: 'right' });
+      doc.text(lines, 200, 20, { align: 'right' });
+      
+      // Ajouter un en-tête culturel
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text('Document créé avec Gaganti Pro - Éditeur Wolof', 105, 10, { align: 'center' });
+      
       doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
-      showToast('PDF généré!', 'success');
+      showToast('PDF généré avec succès', 'success');
     }
 
-    // Effacer le texte
+    function downloadPNG() {
+      const editor = document.getElementById('editor');
+      
+      html2canvas(editor, {
+        backgroundColor: '#121212',
+        scale: 2
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = `gaganti-${new Date().toISOString().slice(0,10)}.png`;
+        link.click();
+        showToast('PNG généré avec succès', 'success');
+      });
+    }
+
     function clearText() {
-      if (confirm('Tudd naa ci kan bi?')) {
+      if (confirm('Voulez-vous vraiment effacer tout le texte?')) {
         document.getElementById('editor').value = '';
         updateCharacterCount();
         showToast('Texte effacé', 'info');
       }
     }
 
-    // Mode plein écran
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.error('Erreur en plein écran: ', err);
-        });
+        document.documentElement.requestFullscreen();
       } else {
         document.exitFullscreen();
       }
     }
 
-    // Gestion des erreurs
-    window.addEventListener('error', function(e) {
-      console.error('Erreur capturée:', e.error);
-      showToast('Une erreur est survenue', 'error');
-    });
-
-    // Adaptation pour mobile
-    function checkMobile() {
-      if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        const keyboard = document.querySelector('.keyboard-container');
-        keyboard.style.position = 'fixed';
-        keyboard.style.bottom = '0';
-        keyboard.style.width = '100%';
-        keyboard.style.borderRadius = '12px 12px 0 0';
-        document.querySelector('.container').style.marginBottom = '300px';
-      }
+    function openTab(tabId) {
+      // Masquer tous les onglets
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.style.display = 'none';
+      });
+      
+      // Désactiver tous les boutons d'onglet
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Activer l'onglet sélectionné
+      document.getElementById(tabId).style.display = 'block';
+      document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
     }
 
-    window.addEventListener('resize', checkMobile);
-    checkMobile();
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
   </script>
 </body>
 </html>
