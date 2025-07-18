@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html lang="wo" dir="rtl">
+<html lang="wo">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Éditeur de texte Gaganti - Préservation de l'écriture wolof">
-  <title>Gaganti Writer - Édition Wolof Royale</title>
+  <title>Gaganti Pro - Éditeur Wolof</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #01411C; /* Vert profond wolof */
-      --secondary: #F4A460; /* Terre sénégalaise */
-      --accent: #FFD700; /* Or des griots */
-      --dark: #1A1A1A;
-      --light: #F5F5DC;
-      --text: #333333;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --noir: #1A1A1A;
+      --or: #D4AF37;
+      --terre: #8B4513;
+      --ivoire: #FFFFF0;
+      --vert-fonce: #01411C;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     @font-face {
@@ -31,74 +29,71 @@
     }
 
     body {
-      font-family: 'Gaganti', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--light);
-      color: var(--text);
+      font-family: 'Gaganti', 'Segoe UI', Tahoma, sans-serif;
+      background-color: var(--noir);
+      color: var(--ivoire);
       direction: rtl;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%2301411C" fill-opacity="0.05" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
-      background-size: 200px;
+      overflow-x: hidden;
+    }
+
+    /* Décoration baobab */
+    .baobab-decoration {
+      position: fixed;
+      left: -150px;
+      bottom: -50px;
+      width: 400px;
+      height: 400px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%2301411C" fill-opacity="0.15" d="M100,10 C70,40 60,80 70,120 C50,110 30,100 20,120 C10,140 30,160 60,170 C40,180 30,190 40,200 C60,190 80,180 100,180 C120,180 140,190 160,200 C170,190 160,180 140,170 C170,160 190,140 180,120 C170,100 150,110 130,120 C140,80 130,40 100,10 Z"/></svg>');
+      background-size: contain;
+      background-repeat: no-repeat;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .wolof-pattern {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
+      background-size: 300px;
+      z-index: -1;
+      pointer-events: none;
     }
 
     header {
-      background: linear-gradient(135deg, var(--primary), #02733E);
-      color: white;
-      padding: 1rem;
+      background: linear-gradient(to left, var(--vert-fonce), var(--noir));
+      padding: 1.5rem;
       text-align: center;
       box-shadow: var(--shadow);
       position: relative;
       z-index: 10;
-    }
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
+      border-bottom: 1px solid var(--or);
     }
 
     .logo {
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 0.5rem;
+      gap: 1rem;
     }
 
     .logo-icon {
-      font-size: 2rem;
-      color: var(--accent);
+      font-size: 2.5rem;
+      color: var(--or);
     }
 
     h1 {
-      font-size: 1.8rem;
-      margin: 0;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .language-switcher {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .lang-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      color: white;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .lang-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .lang-btn.active {
-      background: var(--accent);
-      color: var(--dark);
+      font-size: 2.2rem;
+      background: linear-gradient(to right, var(--or), #F5F5DC);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 2px;
     }
 
     .container {
@@ -106,217 +101,183 @@
       width: 100%;
       max-width: 1200px;
       margin: 2rem auto;
-      padding: 0 1rem;
+      padding: 0 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 2rem;
     }
 
     .editor-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      background-color: white;
-      border-radius: 8px;
+      background-color: rgba(26, 26, 26, 0.8);
+      border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 1.5rem;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      border: 1px solid var(--or);
+      backdrop-filter: blur(5px);
+      position: relative;
+      overflow: hidden;
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .tool-group {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .tool-group:not(:last-child)::after {
+    .editor-container::before {
       content: "";
-      display: block;
-      width: 1px;
-      height: 24px;
-      background: rgba(0, 0, 0, 0.1);
-      margin-left: 0.5rem;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent 70%);
+      pointer-events: none;
     }
 
     #editor {
       width: 100%;
-      min-height: 50vh;
-      padding: 1rem;
-      font-size: 1.5rem;
-      background-color: white;
-      color: var(--text);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
+      min-height: 40vh;
+      padding: 1.5rem;
+      font-size: 1.8rem;
+      background-color: transparent;
+      color: var(--ivoire);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
       resize: none;
       font-family: 'Gaganti', sans-serif;
       text-align: right;
       direction: rtl;
+      line-height: 1.8;
       transition: all 0.3s;
-      line-height: 1.6;
     }
 
     #editor:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(1, 65, 28, 0.2);
+      border-color: var(--or);
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
     }
 
     .editor-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      margin-top: 1rem;
       font-size: 0.9rem;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--or);
+    }
+
+    .character-count {
+      font-family: monospace;
+      letter-spacing: 1px;
     }
 
     .keyboard-container {
-      background-color: white;
-      border-radius: 8px;
+      background-color: rgba(26, 26, 26, 0.9);
+      border-radius: 12px;
       box-shadow: var(--shadow);
       padding: 1.5rem;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--or);
+      margin-bottom: 2rem;
     }
 
     .keyboard-title {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--or);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 1rem;
+      text-align: right;
     }
 
-    .keyboard-title i {
-      color: var(--secondary);
+    .keyboard-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to left, var(--or), transparent);
     }
 
     .keyboard {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-      gap: 0.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 0.8rem;
     }
 
-    .keyboard-row {
-      display: contents;
-    }
-
-    .emoji-panel {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-      gap: 0.5rem;
-      margin-top: 1rem;
+    .keyboard button {
+      height: 70px;
+      font-size: 1.8rem;
     }
 
     .action-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: center;
-      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
     }
 
     button {
-      padding: 0.75rem 1.25rem;
-      font-size: 1rem;
-      background-color: var(--primary);
+      padding: 1rem;
+      font-size: 1.1rem;
+      background-color: var(--vert-fonce);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      min-width: 60px;
       justify-content: center;
+      gap: 0.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.2));
+      transform: translateX(-100%);
+      transition: transform 0.3s;
     }
 
     button:hover {
-      background-color: #02582D;
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover::before {
+      transform: translateX(0);
     }
 
     button:active {
       transform: translateY(0);
     }
 
-    button.secondary {
-      background-color: var(--secondary);
+    button i {
+      font-size: 1.2rem;
     }
 
-    button.secondary:hover {
-      background-color: #E69558;
+    button.secondary {
+      background-color: var(--terre);
     }
 
     button.accent {
-      background-color: var(--accent);
-      color: var(--dark);
-    }
-
-    button.accent:hover {
-      background-color: #E6C200;
+      background-color: var(--or);
+      color: var(--noir);
     }
 
     button.outline {
       background-color: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-    }
-
-    button.outline:hover {
-      background-color: rgba(1, 65, 28, 0.1);
-    }
-
-    .tab-buttons {
-      display: flex;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      margin-bottom: 1rem;
-    }
-
-    .tab-btn {
-      padding: 0.5rem 1rem;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text);
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .tab-btn.active {
-      border-bottom-color: var(--primary);
-      color: var(--primary);
-      font-weight: bold;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .character-count {
-      font-family: monospace;
+      border: 1px solid var(--or);
+      color: var(--or);
     }
 
     footer {
-      background-color: var(--dark);
+      background: linear-gradient(to left, var(--noir), var(--vert-fonce));
       color: white;
       text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
+      padding: 2rem;
+      margin-top: auto;
+      border-top: 1px solid var(--or);
     }
 
     .footer-content {
@@ -324,317 +285,232 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 1.5rem;
     }
 
     .footer-links {
       display: flex;
       justify-content: center;
-      gap: 1rem;
+      gap: 2rem;
       flex-wrap: wrap;
     }
 
     .footer-link {
-      color: white;
+      color: var(--or);
       text-decoration: none;
-      transition: color 0.3s;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .footer-link::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--or);
+      transition: width 0.3s;
     }
 
     .footer-link:hover {
-      color: var(--accent);
+      color: white;
+    }
+
+    .footer-link:hover::after {
+      width: 100%;
+      left: 0;
     }
 
     .copyright {
       font-size: 0.9rem;
       opacity: 0.8;
+      margin-top: 1rem;
     }
 
-    /* Animations */
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--vert-fonce);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+      border-left: 4px solid var(--or);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Mobile optimisations */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+        gap: 1.5rem;
+      }
+
+      .editor-container {
+        padding: 1rem;
+      }
+
+      #editor {
+        font-size: 1.5rem;
+        min-height: 50vh;
+      }
+
+      .keyboard {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 0.6rem;
+      }
+
+      .keyboard button {
+        height: 60px;
+        font-size: 1.5rem;
+      }
+
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .baobab-decoration {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      #editor {
+        font-size: 1.3rem;
+        padding: 1rem;
+      }
+
+      .keyboard {
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        gap: 0.5rem;
+      }
+
+      .keyboard button {
+        height: 50px;
+        font-size: 1.3rem;
+      }
+
+      button {
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    /* Animation pour l'écriture */
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .animate {
       animation: fadeIn 0.5s ease-out forwards;
     }
-
-    .animate-up {
-      animation: slideUp 0.5s ease-out forwards;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .keyboard {
-        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-      }
-
-      #editor {
-        font-size: 1.2rem;
-      }
-
-      button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .toolbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .tool-group:not(:last-child)::after {
-        display: none;
-      }
-
-      .keyboard {
-        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-      }
-    }
-
-    /* Wolof decorative elements */
-    .wolof-pattern {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-      opacity: 0.03;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%2301411C" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z M20,50 C30,50 40,60 40,70 C40,80 30,90 20,90 C10,90 0,80 0,70 C0,60 10,50 20,50 Z M80,50 C90,50 100,60 100,70 C100,80 90,90 80,90 C70,90 60,80 60,70 C60,60 70,50 80,50 Z"/></svg>');
-      background-size: 300px;
-    }
-
-    .adinkra-symbol {
-      font-size: 1.2rem;
-      margin: 0 0.2rem;
-    }
   </style>
 </head>
 <body>
+  <div class="baobab-decoration"></div>
   <div class="wolof-pattern"></div>
   
   <header class="animate">
-    <div class="header-content">
-      <div class="logo">
-        <span class="logo-icon">📜</span>
-        <h1>Gaganti Writer <span class="adinkra-symbol">✊</span></h1>
-      </div>
-      <div class="language-switcher">
-        <button class="lang-btn active">Wolof</button>
-        <button class="lang-btn">Français</button>
-        <button class="lang-btn">English</button>
-      </div>
+    <div class="logo">
+      <span class="logo-icon">✍️</span>
+      <h1>Gaganti Pro</h1>
     </div>
   </header>
 
   <div class="container">
-    <div class="editor-container animate-up">
-      <div class="toolbar">
-        <div class="tool-group">
-          <button onclick="formatText('bold')" title="Gras"><i class="fas fa-bold"></i></button>
-          <button onclick="formatText('italic')" title="Italique"><i class="fas fa-italic"></i></button>
-          <button onclick="formatText('underline')" title="Souligner"><i class="fas fa-underline"></i></button>
-        </div>
-        <div class="tool-group">
-          <button onclick="alignText('right')" title="Aligner à droite"><i class="fas fa-align-right"></i></button>
-          <button onclick="alignText('center')" title="Centrer"><i class="fas fa-align-center"></i></button>
-          <button onclick="alignText('left')" title="Aligner à gauche"><i class="fas fa-align-left"></i></button>
-        </div>
-        <div class="tool-group">
-          <button onclick="changeFontSize('increase')" title="Augmenter taille"><i class="fas fa-text-height"></i></button>
-          <button onclick="changeFontSize('decrease')" title="Diminuer taille"><i class="fas fa-text-width"></i></button>
-        </div>
-        <div class="tool-group">
-          <button onclick="insertDate()" title="Insérer date"><i class="far fa-calendar-alt"></i></button>
-          <button onclick="insertTime()" title="Insérer heure"><i class="far fa-clock"></i></button>
-        </div>
-      </div>
-
-      <textarea id="editor" placeholder="Tapez votre texte ici..."></textarea>
-
+    <div class="editor-container animate">
+      <textarea id="editor" placeholder="Tapez votre texte en Gaganti ici..."></textarea>
       <div class="editor-footer">
         <div class="character-count">0 caractères</div>
-        <div>
-          <button onclick="toggleFullscreen()" class="outline" title="Plein écran"><i class="fas fa-expand"></i></button>
-        </div>
+        <button onclick="toggleFullscreen()" class="outline">
+          <i class="fas fa-expand"></i>
+        </button>
       </div>
     </div>
 
-    <div class="keyboard-container animate-up">
-      <h2 class="keyboard-title"><i class="fas fa-keyboard"></i> Clavier Wolof</h2>
+    <div class="keyboard-container animate">
+      <h2 class="keyboard-title">
+        <i class="fas fa-keyboard"></i> Clavier Gaganti
+      </h2>
       
-      <div class="tab-buttons">
-        <button class="tab-btn active" onclick="openTab('letters')">Lettres</button>
-        <button class="tab-btn" onclick="openTab('numbers')">Nombres</button>
-        <button class="tab-btn" onclick="openTab('symbols')">Symboles</button>
-        <button class="tab-btn" onclick="openTab('emojis')">Emojis</button>
-      </div>
-
-      <div id="letters" class="tab-content active">
-        <div class="keyboard">
-          <!-- Consonnes wolof -->
-          <button onclick="addChar('ب')">ب</button>
-          <button onclick="addChar('ت')">ت</button>
-          <button onclick="addChar('ث')">ث</button>
-          <button onclick="addChar('ج')">ج</button>
-          <button onclick="addChar('ح')">ح</button>
-          <button onclick="addChar('خ')">خ</button>
-          <button onclick="addChar('د')">د</button>
-          <button onclick="addChar('ذ')">ذ</button>
-          <button onclick="addChar('ر')">ر</button>
-          <button onclick="addChar('ز')">ز</button>
-          <button onclick="addChar('س')">س</button>
-          <button onclick="addChar('ش')">ش</button>
-          <button onclick="addChar('ص')">ص</button>
-          <button onclick="addChar('ض')">ض</button>
-          <button onclick="addChar('ط')">ط</button>
-          <button onclick="addChar('ظ')">ظ</button>
-          <button onclick="addChar('ع')">ع</button>
-          <button onclick="addChar('غ')">غ</button>
-          <button onclick="addChar('ف')">ف</button>
-          <button onclick="addChar('ق')">ق</button>
-          <button onclick="addChar('ك')">ك</button>
-          <button onclick="addChar('ل')">ل</button>
-          <button onclick="addChar('م')">م</button>
-          <button onclick="addChar('ن')">ن</button>
-          <button onclick="addChar('ه')">ه</button>
-          <button onclick="addChar('و')">و</button>
-          <button onclick="addChar('ي')">ي</button>
-          <button onclick="addChar(' ')">Espace</button>
-        </div>
-      </div>
-
-      <div id="numbers" class="tab-content">
-        <div class="keyboard">
-          <button onclick="addChar('1')">1</button>
-          <button onclick="addChar('2')">2</button>
-          <button onclick="addChar('3')">3</button>
-          <button onclick="addChar('4')">4</button>
-          <button onclick="addChar('5')">5</button>
-          <button onclick="addChar('6')">6</button>
-          <button onclick="addChar('7')">7</button>
-          <button onclick="addChar('8')">8</button>
-          <button onclick="addChar('9')">9</button>
-          <button onclick="addChar('0')">0</button>
-          <button onclick="addChar('٠')">٠</button>
-          <button onclick="addChar('١')">١</button>
-          <button onclick="addChar('٢')">٢</button>
-          <button onclick="addChar('٣')">٣</button>
-          <button onclick="addChar('٤')">٤</button>
-          <button onclick="addChar('٥')">٥</button>
-          <button onclick="addChar('٦')">٦</button>
-          <button onclick="addChar('٧')">٧</button>
-          <button onclick="addChar('٨')">٨</button>
-          <button onclick="addChar('٩')">٩</button>
-        </div>
-      </div>
-
-      <div id="symbols" class="tab-content">
-        <div class="keyboard">
-          <button onclick="addChar('،')">،</button>
-          <button onclick="addChar('؛')">؛</button>
-          <button onclick="addChar('؟')">؟</button>
-          <button onclick="addChar('!')">!</button>
-          <button onclick="addChar('@')">@</button>
-          <button onclick="addChar('#')">#</button>
-          <button onclick="addChar('$')">$</button>
-          <button onclick="addChar('%')">%</button>
-          <button onclick="addChar('^')">^</button>
-          <button onclick="addChar('&')">&</button>
-          <button onclick="addChar('*')">*</button>
-          <button onclick="addChar('(')">(</button>
-          <button onclick="addChar(')')">)</button>
-          <button onclick="addChar('-')">-</button>
-          <button onclick="addChar('_')">_</button>
-          <button onclick="addChar('+')">+</button>
-          <button onclick="addChar('=')">=</button>
-          <button onclick="addChar('[')">[</button>
-          <button onclick="addChar(']')">]</button>
-          <button onclick="addChar('{')">{</button>
-          <button onclick="addChar('}')">}</button>
-          <button onclick="addChar('\\')">\</button>
-          <button onclick="addChar('|')">|</button>
-          <button onclick="addChar(';')">;</button>
-          <button onclick="addChar(':')">:</button>
-          <button onclick="addChar('\'')">'</button>
-          <button onclick="addChar('"')">"</button>
-          <button onclick="addChar('<')"><</button>
-          <button onclick="addChar('>')">></button>
-          <button onclick="addChar('/')">/</button>
-          <button onclick="addChar('?')">?</button>
-        </div>
-      </div>
-
-      <div id="emojis" class="tab-content">
-        <div class="emoji-panel">
-          <button onclick="addChar('😊')">😊</button>
-          <button onclick="addChar('😂')">😂</button>
-          <button onclick="addChar('❤️')">❤️</button>
-          <button onclick="addChar('👍')">👍</button>
-          <button onclick="addChar('🙏')">🙏</button>
-          <button onclick="addChar('🎉')">🎉</button>
-          <button onclick="addChar('🤔')">🤔</button>
-          <button onclick="addChar('😍')">😍</button>
-          <button onclick="addChar('😎')">😎</button>
-          <button onclick="addChar('🤗')">🤗</button>
-          <button onclick="addChar('😢')">😢</button>
-          <button onclick="addChar('🤩')">🤩</button>
-          <button onclick="addChar('🥳')">🥳</button>
-          <button onclick="addChar('🤯')">🤯</button>
-          <button onclick="addChar('👏')">👏</button>
-          <button onclick="addChar('🙌')">🙌</button>
-          <button onclick="addChar('✌️')">✌️</button>
-          <button onclick="addChar('🤝')">🤝</button>
-          <button onclick="addChar('💪')">💪</button>
-          <button onclick="addChar('🧠')">🧠</button>
-          <button onclick="addChar('🌍')">🌍</button>
-          <button onclick="addChar('🌞')">🌞</button>
-          <button onclick="addChar('🌙')">🌙</button>
-          <button onclick="addChar('⭐')">⭐</button>
-          <button onclick="addChar('🔥')">🔥</button>
-          <button onclick="addChar('💧')">💧</button>
-          <button onclick="addChar('🌹')">🌹</button>
-          <button onclick="addChar('🍵')">🍵</button>
-          <button onclick="addChar('🍫')">🍫</button>
-          <button onclick="addChar('🎶')">🎶</button>
-        </div>
+      <div class="keyboard">
+        <!-- Lettres Gaganti - À adapter avec votre police -->
+        <button onclick="addChar('G')">G</button>
+        <button onclick="addChar('A')">A</button>
+        <button onclick="addChar('N')">N</button>
+        <button onclick="addChar('T')">T</button>
+        <button onclick="addChar('I')">I</button>
+        <button onclick="addChar('B')">B</button>
+        <button onclick="addChar('D')">D</button>
+        <button onclick="addChar('E')">E</button>
+        <button onclick="addChar('F')">F</button>
+        <button onclick="addChar('H')">H</button>
+        <button onclick="addChar('J')">J</button>
+        <button onclick="addChar('K')">K</button>
+        <button onclick="addChar('L')">L</button>
+        <button onclick="addChar('M')">M</button>
+        <button onclick="addChar('O')">O</button>
+        <button onclick="addChar('P')">P</button>
+        <button onclick="addChar('R')">R</button>
+        <button onclick="addChar('S')">S</button>
+        <button onclick="addChar('U')">U</button>
+        <button onclick="addChar('V')">V</button>
+        <button onclick="addChar('W')">W</button>
+        <button onclick="addChar('Y')">Y</button>
+        <button onclick="addChar('Z')">Z</button>
+        <button onclick="addChar(' ')">␣</button>
+        <button onclick="addChar('\n')">↵</button>
       </div>
     </div>
 
-    <div class="action-buttons animate-up">
-      <button onclick="copyText()" class="secondary"><i class="fas fa-copy"></i> Copier</button>
-      <button onclick="downloadText()" class="secondary"><i class="fas fa-download"></i> Télécharger TXT</button>
-      <button onclick="downloadPDF()" class="accent"><i class="fas fa-file-pdf"></i> Exporter PDF</button>
-      <button onclick="printText()" class="outline"><i class="fas fa-print"></i> Imprimer</button>
-      <button onclick="clearText()" class="outline"><i class="fas fa-trash-alt"></i> Effacer</button>
-      <button onclick="speakText()" class="accent"><i class="fas fa-volume-up"></i> Lire</button>
+    <div class="action-buttons animate">
+      <button onclick="copyText()" class="secondary">
+        <i class="fas fa-copy"></i> Copier
+      </button>
+      <button onclick="downloadText()" class="secondary">
+        <i class="fas fa-download"></i> TXT
+      </button>
+      <button onclick="downloadPDF()" class="accent">
+        <i class="fas fa-file-pdf"></i> PDF
+      </button>
+      <button onclick="clearText()" class="outline">
+        <i class="fas fa-trash-alt"></i> Effacer
+      </button>
     </div>
   </div>
 
   <footer class="animate">
     <div class="footer-content">
       <div class="footer-links">
-        <a href="#" class="footer-link">À propos</a>
-        <a href="#" class="footer-link">Histoire Wolof</a>
-        <a href="#" class="footer-link">Guide d'utilisation</a>
-        <a href="#" class="footer-link">Contact</a>
+        <a href="#" class="footer-link">À propos du Gaganti</a>
+        <a href="#" class="footer-link">Tutoriels</a>
+        <a href="#" class="footer-link">Communauté</a>
+        <a href="#" class="footer-link">Support</a>
       </div>
       <div class="copyright">
-        &copy; 2023 Gaganti Writer - Préservation de la culture Wolof | Dakar, Sénégal
+        &copy; 2023 Éditeur Gaganti Pro - Préservation de l'écriture Wolof
       </div>
     </div>
   </footer>
@@ -645,19 +521,28 @@
     document.addEventListener('DOMContentLoaded', function() {
       updateCharacterCount();
       document.getElementById('editor').addEventListener('input', updateCharacterCount);
+      
+      // Focus sur l'éditeur au chargement
+      document.getElementById('editor').focus();
     });
 
-    // Fonctions de base
+    // Fonction d'ajout de caractère (droite à gauche)
     function addChar(char) {
       const editor = document.getElementById('editor');
-      const startPos = editor.selectionStart;
-      const endPos = editor.selectionEnd;
+      const cursorPos = editor.selectionStart;
       const text = editor.value;
       
-      editor.value = text.substring(0, startPos) + char + text.substring(endPos);
-      editor.selectionStart = editor.selectionEnd = startPos + char.length;
-      editor.focus();
+      // Insère le caractère à la position du curseur
+      editor.value = text.substring(0, cursorPos) + char + text.substring(cursorPos);
+      
+      // Place le curseur après le caractère inséré
+      editor.selectionStart = editor.selectionEnd = cursorPos + char.length;
+      
+      // Met à jour le compteur
       updateCharacterCount();
+      
+      // Garde le focus sur l'éditeur
+      editor.focus();
     }
 
     function updateCharacterCount() {
@@ -678,7 +563,7 @@
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `gaganti-text-${new Date().toISOString().slice(0,10)}.txt`;
+      link.download = `gaganti-${new Date().toISOString().slice(0,10)}.txt`;
       link.click();
       showToast('Téléchargement TXT démarré', 'success');
     }
@@ -701,45 +586,10 @@
       // Ajouter un en-tête culturel
       doc.setFontSize(10);
       doc.setTextColor(100);
-      doc.text('Document créé avec Gaganti Writer - Préservation de la culture Wolof', 105, 10, { align: 'center' });
+      doc.text('Document créé avec Gaganti Pro - Éditeur Wolof', 105, 10, { align: 'center' });
       
-      doc.save(`gaganti-text-${new Date().toISOString().slice(0,10)}.pdf`);
+      doc.save(`gaganti-${new Date().toISOString().slice(0,10)}.pdf`);
       showToast('PDF généré avec succès', 'success');
-    }
-
-    function printText() {
-      const text = document.getElementById('editor').value;
-      const printWindow = window.open('', '', 'width=800,height=600');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Impression - Gaganti Writer</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            .print-header { text-align: center; margin-bottom: 20px; }
-            .print-content { direction: rtl; text-align: right; font-size: 14px; line-height: 1.6; }
-            .print-footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
-          </style>
-        </head>
-        <body>
-          <div class="print-header">
-            <h2>Gaganti Writer</h2>
-            <p>Document imprimé le ${new Date().toLocaleDateString()}</p>
-          </div>
-          <div class="print-content">${text.replace(/\n/g, '<br>')}</div>
-          <div class="print-footer">
-            <p>Créé avec Gaganti Writer - Préservation de la culture Wolof</p>
-          </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 500);
     }
 
     function clearText() {
@@ -748,102 +598,6 @@
         updateCharacterCount();
         showToast('Texte effacé', 'info');
       }
-    }
-
-    function speakText() {
-      const text = document.getElementById('editor').value;
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ar'; // Arabe comme approximation pour le wolof écrit en arabe
-        speechSynthesis.speak(utterance);
-        showToast('Lecture du texte en cours', 'info');
-      } else {
-        showToast('La synthèse vocale n\'est pas supportée', 'error');
-      }
-    }
-
-    // Fonctions de formatage
-    function formatText(format) {
-      const editor = document.getElementById('editor');
-      const startPos = editor.selectionStart;
-      const endPos = editor.selectionEnd;
-      const selectedText = editor.value.substring(startPos, endPos);
-      
-      if (selectedText) {
-        let newText;
-        switch(format) {
-          case 'bold':
-            newText = `<b>${selectedText}</b>`;
-            break;
-          case 'italic':
-            newText = `<i>${selectedText}</i>`;
-            break;
-          case 'underline':
-            newText = `<u>${selectedText}</u>`;
-            break;
-          default:
-            newText = selectedText;
-        }
-        
-        editor.value = editor.value.substring(0, startPos) + newText + editor.value.substring(endPos);
-        editor.selectionStart = startPos;
-        editor.selectionEnd = startPos + newText.length;
-        editor.focus();
-        showToast('Texte formaté', 'success');
-      } else {
-        showToast('Sélectionnez du texte à formater', 'warning');
-      }
-    }
-
-    function alignText(alignment) {
-      const editor = document.getElementById('editor');
-      editor.style.textAlign = alignment;
-      showToast(`Alignement ${alignment} appliqué`, 'success');
-    }
-
-    function changeFontSize(action) {
-      const editor = document.getElementById('editor');
-      const currentSize = parseInt(window.getComputedStyle(editor).fontSize);
-      let newSize;
-      
-      if (action === 'increase') {
-        newSize = Math.min(currentSize + 2, 32);
-      } else {
-        newSize = Math.max(currentSize - 2, 12);
-      }
-      
-      editor.style.fontSize = `${newSize}px`;
-      showToast(`Taille de police: ${newSize}px`, 'info');
-    }
-
-    function insertDate() {
-      const now = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const dateString = now.toLocaleDateString('fr-FR', options);
-      addChar(dateString);
-    }
-
-    function insertTime() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('fr-FR');
-      addChar(timeString);
-    }
-
-    // Fonctions d'interface
-    function openTab(tabId) {
-      // Masquer tous les onglets
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      // Désactiver tous les boutons d'onglet
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      
-      // Activer l'onglet sélectionné
-      document.getElementById(tabId).classList.add('active');
-      document.querySelector(`.tab-btn[onclick="openTab('${tabId}')"]`).classList.add('active');
     }
 
     function toggleFullscreen() {
@@ -876,15 +630,13 @@
       }, 3000);
     }
 
-    // Gestion des langues
-    document.querySelectorAll('.lang-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Ici vous pourriez ajouter la logique de changement de langue
-        showToast(`Langue changée: ${this.textContent}`, 'info');
-      });
+    // Gestion du clavier physique pour mobile
+    document.getElementById('editor').addEventListener('keydown', function(e) {
+      // Empêche le comportement par défaut pour certaines touches
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addChar('\n');
+      }
     });
   </script>
 </body>
