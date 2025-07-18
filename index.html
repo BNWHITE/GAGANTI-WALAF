@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaganti Pro - Communauté</title>
+  <title>Gaganti Pro - Éditeur</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --noir: #121212;
+      --noir: #0a0a0a;
       --or: #D4AF37;
-      --terre: #8B4513;
-      --ivoire: #FFFFF0;
-      --vert-fonce: #01411C;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --terre: #7c4d1e;
+      --ivoire: #F5F5DC;
+      --vert-fonce: #013220;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     @font-face {
@@ -32,41 +32,90 @@
       font-family: 'Gaganti', 'Segoe UI', Tahoma, sans-serif;
       background-color: var(--noir);
       color: var(--ivoire);
-      direction: rtl;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M20,10 Q30,50 20,90 Q50,80 80,90 Q70,50 80,10 Q50,20 20,10 Z"/></svg>');
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.03" d="M100,20 C120,60 180,80 180,120 C140,120 100,160 100,200 C100,160 60,120 20,120 C20,80 80,60 100,20 Z"/></svg>');
       background-size: 300px;
     }
 
-    /* Navigation */
-    .nav-container {
-      display: flex;
-      background: linear-gradient(to left, var(--vert-fonce), var(--noir));
-      border-bottom: 1px solid var(--or);
+    /* En-tête avec motif africain */
+    header {
+      background: linear-gradient(to right, var(--noir), var(--vert-fonce));
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--or);
       box-shadow: var(--shadow);
     }
 
-    .nav-button {
-      padding: 1.2rem 2rem;
-      background: none;
-      border: none;
-      color: var(--ivoire);
-      cursor: pointer;
-      font-family: 'Gaganti', sans-serif;
-      font-size: 1.1rem;
-      position: relative;
-      transition: all 0.3s;
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path fill="%23D4AF37" fill-opacity="0.1" d="M0,10 Q25,20 50,10 T100,10"/></svg>');
+      background-size: 100px;
+      opacity: 0.5;
     }
 
-    .nav-button.active {
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .logo-icon {
+      font-size: 2.8rem;
+      color: var(--or);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(to right, var(--or), #F5DEB3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* Navigation principale */
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      background-color: rgba(1, 50, 32, 0.8);
+      border-bottom: 1px solid var(--or);
+    }
+
+    .nav-link {
+      padding: 1.2rem 2.5rem;
+      color: var(--ivoire);
+      text-decoration: none;
+      font-size: 1.2rem;
+      position: relative;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .nav-link:hover {
       background-color: rgba(212, 175, 55, 0.1);
       color: var(--or);
     }
 
-    .nav-button.active::after {
+    .nav-link.active {
+      background-color: rgba(212, 175, 55, 0.2);
+      color: var(--or);
+    }
+
+    .nav-link.active::after {
       content: "";
       position: absolute;
       bottom: 0;
@@ -78,717 +127,507 @@
 
     /* Contenu principal */
     .main-content {
-      display: none;
       flex: 1;
       padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
     }
 
-    .main-content.active {
-      display: block;
-    }
-
-    /* Éditeur (existant) */
+    /* Éditeur */
     .editor-container {
-      background-color: rgba(26, 26, 26, 0.8);
+      background-color: rgba(10, 10, 10, 0.9);
       border-radius: 12px;
       box-shadow: var(--shadow);
-      padding: 2rem;
+      padding: 2.5rem;
       border: 1px solid var(--or);
-      backdrop-filter: blur(5px);
-      margin-bottom: 2rem;
-    }
-
-    /* Forum */
-    .forum-container {
-      display: flex;
-      height: 70vh;
-      background-color: rgba(26, 26, 26, 0.8);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--or);
+      position: relative;
       overflow: hidden;
     }
 
-    /* Liste des participants */
-    .participants-sidebar {
-      width: 250px;
-      background-color: rgba(1, 65, 28, 0.2);
-      border-left: 1px solid var(--or);
-      padding: 1rem;
-      overflow-y: auto;
-    }
-
-    .participant {
-      display: flex;
-      align-items: center;
-      padding: 0.8rem;
-      margin-bottom: 0.5rem;
-      border-radius: 6px;
-      transition: all 0.3s;
-    }
-
-    .participant:hover {
-      background-color: rgba(212, 175, 55, 0.1);
-    }
-
-    .participant-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: var(--or);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: 1rem;
-      font-weight: bold;
-      color: var(--noir);
-    }
-
-    .participant-name {
-      flex: 1;
-    }
-
-    .participant-status {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #888;
-    }
-
-    .participant-status.online {
-      background-color: #4CAF50;
-    }
-
-    /* Zone de discussion */
-    .chat-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .messages-container {
-      flex: 1;
-      padding: 1.5rem;
-      overflow-y: auto;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
-    .message {
-      margin-bottom: 1.5rem;
-      max-width: 70%;
-      padding: 1rem;
-      border-radius: 8px;
-      position: relative;
-    }
-
-    .message.received {
-      background-color: rgba(139, 69, 19, 0.3);
-      margin-right: auto;
-      border-right: 3px solid var(--or);
-    }
-
-    .message.sent {
-      background-color: rgba(1, 65, 28, 0.3);
-      margin-left: auto;
-      border-left: 3px solid var(--or);
-    }
-
-    .message-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .message-sender {
-      font-weight: bold;
-      color: var(--or);
-    }
-
-    .message-time {
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-right: 1rem;
-    }
-
-    .message-content {
-      font-size: 1.1rem;
-      line-height: 1.5;
-    }
-
-    .message-media {
-      margin-top: 0.5rem;
-      max-width: 100%;
-      border-radius: 6px;
-    }
-
-    /* Input zone */
-    .chat-input-container {
-      padding: 1rem;
-      background-color: rgba(26, 26, 26, 0.9);
-      border-top: 1px solid var(--or);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .input-toolbar {
-      display: flex;
-      margin-bottom: 0.5rem;
-    }
-
-    .tool-button {
-      background: none;
-      border: none;
-      color: var(--or);
-      font-size: 1.2rem;
-      margin-left: 0.8rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .tool-button:hover {
-      transform: scale(1.1);
-    }
-
-    .chat-input {
-      width: 100%;
-      padding: 1rem;
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--or);
-      border-radius: 8px;
-      color: var(--ivoire);
-      font-family: 'Gaganti', sans-serif;
-      font-size: 1.1rem;
-      resize: none;
-      direction: rtl;
-    }
-
-    .chat-input:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
-    }
-
-    .send-button {
-      align-self: flex-end;
-      margin-top: 0.5rem;
-      padding: 0.5rem 1.5rem;
-      background-color: var(--or);
-      color: var(--noir);
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .send-button:hover {
-      background-color: #e6c200;
-    }
-
-    /* Modal de connexion */
-    .modal-overlay {
-      position: fixed;
+    .editor-container::before {
+      content: "";
+      position: absolute;
       top: 0;
       right: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
+      background-size: 200px;
+      opacity: 0.3;
+      pointer-events: none;
     }
 
-    .modal-content {
-      background-color: var(--noir);
-      padding: 2rem;
-      border-radius: 12px;
-      border: 1px solid var(--or);
-      width: 90%;
-      max-width: 500px;
-    }
-
-    .modal-title {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: var(--or);
-      text-align: center;
-    }
-
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--or);
-    }
-
-    .form-input {
+    #editor {
       width: 100%;
-      padding: 0.8rem;
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--or);
-      border-radius: 6px;
+      min-height: 50vh;
+      padding: 1.5rem;
+      font-size: 1.8rem;
+      background-color: transparent;
       color: var(--ivoire);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+      resize: none;
       font-family: 'Gaganti', sans-serif;
+      text-align: right;
+      direction: rtl;
+      line-height: 1.8;
+      transition: all 0.3s;
+      unicode-bidi: bidi-override;
     }
 
-    .form-submit {
+    #editor:focus {
+      outline: none;
+      border-color: var(--or);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+    }
+
+    .editor-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: var(--or);
+    }
+
+    .character-count {
+      font-family: monospace;
+      letter-spacing: 1px;
+      font-size: 1.1rem;
+    }
+
+    /* Clavier */
+    .keyboard-container {
+      background-color: rgba(10, 10, 10, 0.9);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      border: 1px solid var(--or);
+      margin: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .keyboard-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
       width: 100%;
-      padding: 1rem;
-      background-color: var(--or);
-      color: var(--noir);
+      height: 100%;
+      background: linear-gradient(135deg, transparent 60%, rgba(212, 175, 55, 0.05));
+      pointer-events: none;
+    }
+
+    .keyboard-title {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      color: var(--or);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-align: right;
+    }
+
+    .keyboard-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to left, var(--or), transparent);
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 1rem;
+    }
+
+    .keyboard button {
+      height: 80px;
+      font-size: 2rem;
+      background-color: var(--vert-fonce);
+      color: white;
       border: none;
-      border-radius: 6px;
-      font-weight: bold;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s;
+      font-family: 'Gaganti', sans-serif;
+      position: relative;
+      overflow: hidden;
     }
 
-    .form-submit:hover {
-      background-color: #e6c200;
+    .keyboard button:hover {
+      background-color: var(--or);
+      color: var(--noir);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
 
-    /* Décoration */
-    .adinkra-symbol {
-      font-size: 1.5rem;
-      margin: 0 0.3rem;
+    .keyboard button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+    }
+
+    .keyboard button:hover::before {
+      transform: translateX(0);
+    }
+
+    /* Boutons d'action */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    button {
+      padding: 1.2rem;
+      font-size: 1.2rem;
+      background-color: var(--vert-fonce);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button i {
+      font-size: 1.3rem;
+    }
+
+    button.secondary {
+      background-color: var(--terre);
+    }
+
+    button.accent {
+      background-color: var(--or);
+      color: var(--noir);
+      font-weight: bold;
+    }
+
+    button.outline {
+      background-color: transparent;
+      border: 2px solid var(--or);
+      color: var(--or);
+    }
+
+    /* Pied de page */
+    footer {
+      background: linear-gradient(to right, var(--noir), var(--vert-fonce));
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--or);
+      position: relative;
+    }
+
+    footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path fill="%23D4AF37" fill-opacity="0.1" d="M0,10 Q25,0 50,10 T100,10"/></svg>');
+      background-size: 100px;
+      opacity: 0.5;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-link {
+      color: var(--or);
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .footer-link::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--or);
+      transition: width 0.3s;
+    }
+
+    .footer-link:hover {
+      color: white;
+    }
+
+    .footer-link:hover::after {
+      width: 100%;
+      left: 0;
+    }
+
+    .copyright {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 1.5rem;
+    }
+
+    /* Animation pour le clavier */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate {
+      animation: fadeIn 0.5s ease-out forwards;
     }
 
     /* Responsive */
+    @media (max-width: 992px) {
+      .keyboard {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      }
+      
+      .keyboard button {
+        height: 70px;
+        font-size: 1.8rem;
+      }
+    }
+
     @media (max-width: 768px) {
-      .forum-container {
-        flex-direction: column;
-        height: auto;
+      header {
+        padding: 1.2rem;
       }
       
-      .participants-sidebar {
-        width: 100%;
-        border-left: none;
-        border-bottom: 1px solid var(--or);
+      h1 {
+        font-size: 2rem;
       }
       
-      .message {
-        max-width: 85%;
+      .nav-link {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .main-content {
+        padding: 1.5rem;
+      }
+      
+      .editor-container, .keyboard-container {
+        padding: 1.5rem;
+      }
+      
+      #editor {
+        font-size: 1.6rem;
+        min-height: 40vh;
+      }
+      
+      .keyboard {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 0.8rem;
+      }
+      
+      .keyboard button {
+        height: 60px;
+        font-size: 1.6rem;
+      }
+      
+      .action-buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .nav-link {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      #editor {
+        font-size: 1.4rem;
+        padding: 1rem;
+      }
+      
+      .keyboard button {
+        height: 50px;
+        font-size: 1.4rem;
+      }
+      
+      button {
+        padding: 1rem;
+        font-size: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <div class="nav-container">
-    <button class="nav-button active" onclick="showSection('editor')">
+  <!-- En-tête avec logo -->
+  <header>
+    <div class="logo">
+      <span class="logo-icon">✍️</span>
+      <h1>Gaganti Pro</h1>
+    </div>
+  </header>
+
+  <!-- Navigation principale -->
+  <nav class="main-nav">
+    <a href="#" class="nav-link active">
       <i class="fas fa-edit"></i> Éditeur
-    </button>
-    <button class="nav-button" onclick="showSection('forum')">
-      <i class="fas fa-comments"></i> Forum Gaganti
-    </button>
-  </div>
+    </a>
+    <a href="#" class="nav-link" id="forum-link">
+      <i class="fas fa-users"></i> Forum Communautaire
+    </a>
+  </nav>
 
-  <!-- Éditeur -->
-  <div class="main-content active" id="editor-section">
-    <div class="container">
-      <div class="editor-container">
-        <textarea id="editor" placeholder="...اكتب هنا"></textarea>
-        <div class="editor-footer">
-          <div class="character-count">0 caractères</div>
-          <button onclick="toggleFullscreen()" class="outline">
-            <i class="fas fa-expand"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="keyboard-container">
-        <h2 class="keyboard-title">
-          <i class="fas fa-keyboard"></i> Clavier Gaganti
-        </h2>
-        
-        <div class="keyboard">
-          <!-- Lettres Gaganti -->
-          <button onclick="insertAtCursor('G')">G</button>
-          <button onclick="insertAtCursor('A')">A</button>
-          <button onclick="insertAtCursor('N')">N</button>
-          <button onclick="insertAtCursor('T')">T</button>
-          <button onclick="insertAtCursor('I')">I</button>
-          <button onclick="insertAtCursor(' ')">␣</button>
-          <button onclick="insertAtCursor('\n')">↵</button>
-          <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
-        </div>
-      </div>
-
-      <div class="action-buttons">
-        <button onclick="copyText()" class="secondary">
-          <i class="fas fa-copy"></i> Copier
-        </button>
-        <button onclick="downloadText()" class="secondary">
-          <i class="fas fa-download"></i> TXT
-        </button>
-        <button onclick="downloadPDF()" class="accent">
-          <i class="fas fa-file-pdf"></i> PDF
-        </button>
-        <button onclick="downloadPNG()" class="accent">
-          <i class="fas fa-image"></i> PNG
-        </button>
-        <button onclick="clearText()" class="outline">
-          <i class="fas fa-trash-alt"></i> Effacer
+  <!-- Contenu principal -->
+  <main class="main-content">
+    <!-- Éditeur de texte -->
+    <div class="editor-container">
+      <textarea id="editor" placeholder="...اكتب هنا باللغة الغاغانتية"></textarea>
+      <div class="editor-footer">
+        <div class="character-count">0 caractères</div>
+        <button onclick="toggleFullscreen()" class="outline">
+          <i class="fas fa-expand"></i> Plein écran
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- Forum -->
-  <div class="main-content" id="forum-section">
-    <div class="container">
-      <div class="forum-container">
-        <div class="chat-area">
-          <div class="messages-container" id="messages-container">
-            <!-- Messages seront ajoutés ici dynamiquement -->
-          </div>
-          
-          <div class="chat-input-container">
-            <div class="input-toolbar">
-              <button class="tool-button" onclick="showMediaPicker('image')">
-                <i class="fas fa-image"></i>
-              </button>
-              <button class="tool-button" onclick="showMediaPicker('video')">
-                <i class="fas fa-video"></i>
-              </button>
-              <button class="tool-button" onclick="startVoiceRecording()">
-                <i class="fas fa-microphone"></i>
-              </button>
-            </div>
-            
-            <textarea class="chat-input" id="chat-input" placeholder="Écrivez votre message..."></textarea>
-            <button class="send-button" onclick="sendMessage()">
-              Envoyer <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
-        </div>
+    <!-- Clavier Gaganti -->
+    <div class="keyboard-container animate">
+      <h2 class="keyboard-title">
+        <i class="fas fa-keyboard"></i> Clavier Gaganti
+      </h2>
+      
+      <div class="keyboard">
+        <!-- Rangée 1 -->
+        <button onclick="insertAtCursor('G')">G</button>
+        <button onclick="insertAtCursor('A')">A</button>
+        <button onclick="insertAtCursor('N')">N</button>
+        <button onclick="insertAtCursor('T')">T</button>
+        <button onclick="insertAtCursor('I')">I</button>
+        <button onclick="insertAtCursor('B')">B</button>
+        <button onclick="insertAtCursor('D')">D</button>
         
-        <div class="participants-sidebar">
-          <h3>Participants <span id="online-count">(0 en ligne)</span></h3>
-          <div id="participants-list">
-            <!-- Participants seront ajoutés ici dynamiquement -->
-          </div>
-        </div>
+        <!-- Rangée 2 -->
+        <button onclick="insertAtCursor('E')">E</button>
+        <button onclick="insertAtCursor('F')">F</button>
+        <button onclick="insertAtCursor('H')">H</button>
+        <button onclick="insertAtCursor('J')">J</button>
+        <button onclick="insertAtCursor('K')">K</button>
+        <button onclick="insertAtCursor('L')">L</button>
+        <button onclick="insertAtCursor('M')">M</button>
+        
+        <!-- Rangée 3 -->
+        <button onclick="insertAtCursor('O')">O</button>
+        <button onclick="insertAtCursor('P')">P</button>
+        <button onclick="insertAtCursor('R')">R</button>
+        <button onclick="insertAtCursor('S')">S</button>
+        <button onclick="insertAtCursor('U')">U</button>
+        <button onclick="insertAtCursor('V')">V</button>
+        <button onclick="insertAtCursor('W')">W</button>
+        
+        <!-- Rangée 4 -->
+        <button onclick="insertAtCursor('Y')">Y</button>
+        <button onclick="insertAtCursor('Z')">Z</button>
+        <button onclick="insertAtCursor(' ')">␣</button>
+        <button onclick="insertAtCursor('\n')">↵</button>
+        <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
       </div>
     </div>
-  </div>
 
-  <!-- Modal de connexion -->
-  <div class="modal-overlay" id="login-modal">
-    <div class="modal-content">
-      <h2 class="modal-title">Rejoindre le Forum Gaganti</h2>
-      
-      <div class="form-group">
-        <label class="form-label">Votre nom</label>
-        <input type="text" class="form-input" id="user-name" placeholder="Votre nom">
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Votre pronom</label>
-        <input type="text" class="form-input" id="user-pronoun" placeholder="Ex: Il/Elle/Iel">
-      </div>
-      
-      <button class="form-submit" onclick="joinForum()">
-        Rejoindre <i class="fas fa-sign-in-alt"></i>
+    <!-- Boutons d'action -->
+    <div class="action-buttons">
+      <button onclick="copyText()" class="secondary">
+        <i class="fas fa-copy"></i> Copier le texte
+      </button>
+      <button onclick="downloadText()" class="secondary">
+        <i class="fas fa-file-alt"></i> Exporter en TXT
+      </button>
+      <button onclick="downloadPDF()" class="accent">
+        <i class="fas fa-file-pdf"></i> Exporter en PDF
+      </button>
+      <button onclick="downloadPNG()" class="accent">
+        <i class="fas fa-image"></i> Exporter en PNG
+      </button>
+      <button onclick="clearText()" class="outline">
+        <i class="fas fa-trash-alt"></i> Effacer tout
       </button>
     </div>
-  </div>
+  </main>
+
+  <!-- Pied de page -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#" class="footer-link">À propos</a>
+        <a href="#" class="footer-link">Documentation</a>
+        <a href="#" class="footer-link">Contribuer</a>
+        <a href="#" class="footer-link">Contact</a>
+      </div>
+      <div class="copyright">
+        &copy; 2023 Gaganti Pro - Préservation de l'écriture Wolof
+      </div>
+    </div>
+  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script>
-    // Variables globales
-    let currentUser = null;
-    let participants = [];
-    let messages = [];
-    
     // Initialisation
     document.addEventListener('DOMContentLoaded', function() {
-      // Cacher le modal si on est sur l'éditeur
-      if (window.location.hash !== '#forum') {
-        document.getElementById('login-modal').style.display = 'none';
-      }
-      
-      // Initialiser l'éditeur
       updateCharacterCount();
       document.getElementById('editor').addEventListener('input', updateCharacterCount);
+      document.getElementById('editor').focus();
       
-      // Simuler des participants et messages (en production, utiliser une base de données)
-      simulateData();
+      // Gestionnaire pour le lien du forum
+      document.getElementById('forum-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert("Le forum communautaire sera disponible dans la prochaine version!");
+      });
     });
-    
-    // Simuler des données pour la démo
-    function simulateData() {
-      participants = [
-        { id: 1, name: "Awa", pronoun: "Elle", avatar: "A", online: true },
-        { id: 2, name: "Ibrahima", pronoun: "Il", avatar: "I", online: true },
-        { id: 3, name: "Fatou", pronoun: "Elle", avatar: "F", online: false },
-        { id: 4, name: "Moussa", pronoun: "Il", avatar: "M", online: true }
-      ];
-      
-      messages = [
-        { 
-          id: 1, 
-          senderId: 2, 
-          senderName: "Ibrahima", 
-          content: "سلام عليكم كيف الحال؟", 
-          timestamp: new Date(Date.now() - 3600000),
-          type: 'text'
-        },
-        { 
-          id: 2, 
-          senderId: 1, 
-          senderName: "Awa", 
-          content: "أنا بخير الحمد لله! هل تعلمون أي شيء عن اللغة الغاغانتية؟", 
-          timestamp: new Date(Date.now() - 1800000),
-          type: 'text'
-        },
-        { 
-          id: 3, 
-          senderId: 4, 
-          senderName: "Moussa", 
-          content: "نعم، إنها لغة رائعة من السنغال!", 
-          timestamp: new Date(Date.now() - 900000),
-          type: 'text'
-        }
-      ];
-      
-      if (window.location.hash === '#forum') {
-        updateParticipantsList();
-        updateMessages();
-      }
-    }
-    
-    // Fonctions de navigation
-    function showSection(sectionId) {
-      document.querySelectorAll('.main-content').forEach(section => {
-        section.classList.remove('active');
-      });
-      
-      document.querySelectorAll('.nav-button').forEach(button => {
-        button.classList.remove('active');
-      });
-      
-      document.getElementById(sectionId + '-section').classList.add('active');
-      document.querySelector(`.nav-button[onclick="showSection('${sectionId}')"]`).classList.add('active');
-      
-      if (sectionId === 'forum' && !currentUser) {
-        document.getElementById('login-modal').style.display = 'flex';
-      } else {
-        document.getElementById('login-modal').style.display = 'none';
-      }
-    }
-    
-    // Fonctions du forum
-    function joinForum() {
-      const userName = document.getElementById('user-name').value;
-      const userPronoun = document.getElementById('user-pronoun').value;
-      
-      if (!userName || !userPronoun) {
-        alert('Veuillez entrer votre nom et pronom');
-        return;
-      }
-      
-      currentUser = {
-        id: Date.now(),
-        name: userName,
-        pronoun: userPronoun,
-        avatar: userName.charAt(0).toUpperCase(),
-        online: true
-      };
-      
-      participants.push(currentUser);
-      document.getElementById('login-modal').style.display = 'none';
-      
-      // Afficher un message de bienvenue
-      const welcomeMessage = {
-        id: Date.now(),
-        senderId: currentUser.id,
-        senderName: currentUser.name,
-        content: `${userName} a rejoint la conversation!`,
-        timestamp: new Date(),
-        type: 'system'
-      };
-      
-      messages.push(welcomeMessage);
-      updateParticipantsList();
-      updateMessages();
-    }
-    
-    function updateParticipantsList() {
-      const container = document.getElementById('participants-list');
-      const onlineCount = participants.filter(p => p.online).length;
-      
-      document.getElementById('online-count').textContent = `(${onlineCount} en ligne)`;
-      
-      container.innerHTML = '';
-      
-      participants.forEach(participant => {
-        const participantEl = document.createElement('div');
-        participantEl.className = 'participant';
-        participantEl.innerHTML = `
-          <div class="participant-avatar">${participant.avatar}</div>
-          <div class="participant-name">
-            ${participant.name} <small>(${participant.pronoun})</small>
-          </div>
-          <div class="participant-status ${participant.online ? 'online' : ''}"></div>
-        `;
-        
-        container.appendChild(participantEl);
-      });
-    }
-    
-    function updateMessages() {
-      const container = document.getElementById('messages-container');
-      container.innerHTML = '';
-      
-      // Trier les messages par date
-      const sortedMessages = [...messages].sort((a, b) => a.timestamp - b.timestamp);
-      
-      sortedMessages.forEach(message => {
-        const isCurrentUser = currentUser && message.senderId === currentUser.id;
-        const isSystem = message.type === 'system';
-        
-        if (isSystem) {
-          const systemMsg = document.createElement('div');
-          systemMsg.className = 'message system';
-          systemMsg.innerHTML = `
-            <div class="message-content" style="text-align: center; color: var(--or);">
-              ${message.content}
-            </div>
-          `;
-          container.appendChild(systemMsg);
-          return;
-        }
-        
-        const messageEl = document.createElement('div');
-        messageEl.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
-        
-        let contentHtml = '';
-        if (message.type === 'text') {
-          contentHtml = `<div class="message-content">${message.content}</div>`;
-        } else if (message.type === 'image') {
-          contentHtml = `
-            <div class="message-content">${message.caption || ''}</div>
-            <img src="${message.content}" class="message-media" alt="Image envoyée">
-          `;
-        } else if (message.type === 'video') {
-          contentHtml = `
-            <div class="message-content">${message.caption || ''}</div>
-            <video controls class="message-media">
-              <source src="${message.content}" type="video/mp4">
-            </video>
-          `;
-        } else if (message.type === 'audio') {
-          contentHtml = `
-            <div class="message-content">${message.caption || ''}</div>
-            <audio controls class="message-media">
-              <source src="${message.content}" type="audio/mpeg">
-            </audio>
-          `;
-        }
-        
-        messageEl.innerHTML = `
-          <div class="message-header">
-            <div class="message-sender">${message.senderName}</div>
-            <div class="message-time">${formatTime(message.timestamp)}</div>
-          </div>
-          ${contentHtml}
-        `;
-        
-        container.appendChild(messageEl);
-      });
-      
-      // Faire défiler vers le bas
-      container.scrollTop = container.scrollHeight;
-    }
-    
-    function formatTime(date) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    
-    function sendMessage() {
-      const input = document.getElementById('chat-input');
-      const content = input.value.trim();
-      
-      if (!content && !currentMedia) return;
-      
-      const newMessage = {
-        id: Date.now(),
-        senderId: currentUser.id,
-        senderName: currentUser.name,
-        content: content,
-        timestamp: new Date(),
-        type: currentMedia ? currentMedia.type : 'text'
-      };
-      
-      if (currentMedia) {
-        newMessage.content = currentMedia.url;
-        newMessage.caption = content;
-        currentMedia = null;
-      }
-      
-      messages.push(newMessage);
-      input.value = '';
-      updateMessages();
-      
-      // Simuler une réponse
-      setTimeout(() => {
-        if (Math.random() > 0.5) {
-          const randomParticipant = participants.filter(p => p.id !== currentUser.id && p.online)[0];
-          if (randomParticipant) {
-            const responses = [
-              "أهلا بك في المحادثة!",
-              "كيف حالك اليوم؟",
-              "هل لديك أسئلة عن اللغة الغاغانتية؟",
-              "أنا سعيد بالتواصل معك!",
-              "هذه منصة رائعة للتعلم"
-            ];
-            
-            const responseMessage = {
-              id: Date.now(),
-              senderId: randomParticipant.id,
-              senderName: randomParticipant.name,
-              content: responses[Math.floor(Math.random() * responses.length)],
-              timestamp: new Date(),
-              type: 'text'
-            };
-            
-            messages.push(responseMessage);
-            updateMessages();
-          }
-        }
-      }, 2000 + Math.random() * 3000);
-    }
-    
-    // Gestion des médias
-    let currentMedia = null;
-    
-    function showMediaPicker(type) {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = type === 'image' ? 'image/*' : 'video/*';
-      
-      input.onchange = e => {
-        const file = e.target.files[0];
-        if (file) {
-          const url = URL.createObjectURL(file);
-          currentMedia = { type, url };
-          document.getElementById('chat-input').placeholder = `Ajouter une légende... (${type === 'image' ? 'Image' : 'Vidéo'} prête)`;
-        }
-      };
-      
-      input.click();
-    }
-    
-    function startVoiceRecording() {
-      alert("Fonctionnalité d'enregistrement vocal sera implémentée bientôt!");
-    }
-    
-    // Fonctions de l'éditeur (existantes)
+
+    // Fonction d'insertion RTL
     function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
@@ -851,6 +690,7 @@
       doc.setFontSize(12);
       doc.text(lines, 200, 20, { align: 'right' });
       
+      // Ajouter un en-tête culturel
       doc.setFontSize(10);
       doc.setTextColor(100);
       doc.text('Document créé avec Gaganti Pro - Éditeur Wolof', 105, 10, { align: 'center' });
@@ -863,7 +703,7 @@
       const editor = document.getElementById('editor');
       
       html2canvas(editor, {
-        backgroundColor: '#121212',
+        backgroundColor: '#0a0a0a',
         scale: 2
       }).then(canvas => {
         const link = document.createElement('a');
@@ -907,15 +747,6 @@
         }, 300);
       }, 3000);
     }
-    
-    // Gestion du hash URL
-    window.addEventListener('hashchange', function() {
-      if (window.location.hash === '#forum') {
-        showSection('forum');
-      } else {
-        showSection('editor');
-      }
-    });
   </script>
 </body>
 </html>
