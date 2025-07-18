@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gaganti - Wolof ci Mbind</title>
+  <title>Itnagag - Wolof ci Mbind</title>
   <link rel="preload" href="gaganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* === VARIABLES CSS === */
     :root {
       --noir: #0a0a0a;
       --or: #D4AF37;
@@ -18,18 +19,21 @@
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
+    /* === POLICE GAGANTI === */
     @font-face {
       font-family: 'Gaganti';
       src: url('gaganti.ttf') format('truetype');
       font-display: swap;
     }
 
+    /* === RESET CSS === */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    /* === STRUCTURE PRINCIPALE === */
     body {
       font-family: 'Gaganti', 'Segoe UI', Tahoma, sans-serif;
       background-color: var(--noir);
@@ -41,6 +45,7 @@
       overflow-x: hidden;
     }
 
+    /* === DÉCORATIONS === */
     /* Fond avec motifs africains */
     body::before {
       content: "";
@@ -71,7 +76,7 @@
       opacity: 0.15;
     }
 
-    /* Motifs latéraux inspirés des tissus wax */
+    /* Motifs latéraux */
     .decoration-left, .decoration-right {
       position: fixed;
       top: 0;
@@ -82,16 +87,10 @@
       z-index: -1;
     }
 
-    .decoration-left {
-      left: 0;
-    }
+    .decoration-left { left: 0; }
+    .decoration-right { right: 0; transform: rotate(180deg); }
 
-    .decoration-right {
-      right: 0;
-      transform: rotate(180deg);
-    }
-
-    /* En-tête avec motif de tissu africain */
+    /* === EN-TÊTE === */
     header {
       background: linear-gradient(to right, var(--noir), var(--indigo));
       padding: 1.5rem;
@@ -137,7 +136,7 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    /* Navigation principale avec motif de bordure */
+    /* === NAVIGATION === */
     .main-nav {
       display: flex;
       justify-content: center;
@@ -190,7 +189,7 @@
       background-color: var(--or);
     }
 
-    /* Contenu principal avec bordure inspirée des motifs wolof */
+    /* === CONTENU PRINCIPAL === */
     .main-content {
       flex: 1;
       padding: 2rem;
@@ -200,32 +199,7 @@
       position: relative;
     }
 
-    .main-content::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: -30px;
-      width: 60px;
-      height: 100%;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="%23D4AF37" fill-opacity="0.05" d="M30,0 C40,15 50,20 60,30 C50,40 40,45 30,60 C20,45 10,40 0,30 C10,20 20,15 30,0 Z"/></svg>');
-      background-size: 60px;
-      background-repeat: repeat-y;
-    }
-
-    .main-content::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -30px;
-      width: 60px;
-      height: 100%;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path fill="%23D4AF37" fill-opacity="0.05" d="M30,0 C40,15 50,20 60,30 C50,40 40,45 30,60 C20,45 10,40 0,30 C10,20 20,15 30,0 Z"/></svg>');
-      background-size: 60px;
-      background-repeat: repeat-y;
-      transform: rotate(180deg);
-    }
-
-    /* Éditeur avec motif de case traditionnelle */
+    /* === ÉDITEUR DE TEXTE === */
     .editor-container {
       background-color: rgba(10, 10, 10, 0.9);
       border-radius: 8px;
@@ -248,17 +222,6 @@
       background-size: 200px;
       opacity: 0.3;
       pointer-events: none;
-    }
-
-    .editor-container::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 10px;
-      background: linear-gradient(90deg, var(--ocre), var(--or), var(--ocre));
-      opacity: 0.2;
     }
 
     #editor {
@@ -300,7 +263,7 @@
       font-size: 1.1rem;
     }
 
-    /* Clavier avec motif de tissu africain */
+    /* === CLAVIER === */
     .keyboard-container {
       background-color: rgba(10, 10, 10, 0.9);
       border-radius: 8px;
@@ -311,28 +274,6 @@
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(5px);
-    }
-
-    .keyboard-container::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, transparent 60%, rgba(212, 175, 55, 0.05));
-      pointer-events: none;
-    }
-
-    .keyboard-container::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 10px;
-      background: linear-gradient(90deg, var(--ocre), var(--or), var(--ocre));
-      opacity: 0.2;
     }
 
     .keyboard-title {
@@ -380,65 +321,7 @@
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     }
 
-    .keyboard button::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
-      transform: translateX(-100%);
-      transition: transform 0.3s;
-    }
-
-    .keyboard button:hover::before {
-      transform: translateX(0);
-    }
-
-    /* Menu émojis avec motif africain */
-    .emoji-panel {
-      display: none;
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      background-color: var(--vert-fonce);
-      border: 1px solid var(--or);
-      border-radius: 8px;
-      padding: 1rem;
-      z-index: 100;
-      max-width: 400px;
-      max-height: 300px;
-      overflow-y: auto;
-      box-shadow: var(--shadow);
-    }
-
-    .emoji-panel.show {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-      gap: 0.5rem;
-    }
-
-    .emoji-btn {
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .emoji-btn:hover {
-      background-color: rgba(212, 175, 55, 0.2);
-      transform: scale(1.2);
-    }
-
-    .emoji-toggle {
-      position: relative;
-    }
-
-    /* Boutons d'action avec style africain */
+    /* === BOUTONS D'ACTION === */
     .action-buttons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -470,14 +353,6 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
-    button:active {
-      transform: translateY(0);
-    }
-
-    button i {
-      font-size: 1.3rem;
-    }
-
     button.secondary {
       background-color: var(--terre);
       border-bottom-color: #5a2d0c;
@@ -497,7 +372,7 @@
       border-bottom: 3px solid var(--or);
     }
 
-    /* Pied de page avec motif de case */
+    /* === PIED DE PAGE === */
     footer {
       background: linear-gradient(to right, var(--noir), var(--indigo));
       color: white;
@@ -518,17 +393,6 @@
       background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><path fill="%23D4AF37" fill-opacity="0.08" d="M60,0C80,30 120,30 120,60C90,80 120,120 60,120C30,80 0,120 0,60C30,30 0,30 60,0Z"/></svg>');
       background-size: 120px;
       opacity: 0.3;
-    }
-
-    footer::after {
-      content: "";
-      position: absolute;
-      top: -10px;
-      left: 0;
-      width: 100%;
-      height: 10px;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10"><path fill="%23D4AF37" d="M0,10 Q5,0 10,10 T20,10" opacity="0.3"/></svg>');
-      background-size: 20px;
     }
 
     .footer-content {
@@ -554,24 +418,8 @@
       text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
-    .footer-link::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      right: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--or);
-      transition: width 0.3s;
-    }
-
     .footer-link:hover {
       color: white;
-    }
-
-    .footer-link:hover::after {
-      width: 100%;
-      left: 0;
     }
 
     .copyright {
@@ -580,7 +428,7 @@
       margin-top: 1.5rem;
     }
 
-    /* Animation pour le clavier */
+    /* === ANIMATIONS === */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -590,7 +438,39 @@
       animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Responsive */
+    /* === TOAST === */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      color: white;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .toast-success {
+      background-color: var(--vert-fonce);
+      border-left: 5px solid var(--or);
+    }
+
+    .toast-error {
+      background-color: var(--terre);
+      border-left: 5px solid #ff3333;
+    }
+
+    .toast-info {
+      background-color: var(--indigo);
+      border-left: 5px solid #8888ff;
+    }
+
+    /* === RESPONSIVE === */
     @media (max-width: 992px) {
       .keyboard {
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
@@ -624,11 +504,6 @@
         padding: 1.5rem;
       }
 
-      .main-content::before, 
-      .main-content::after {
-        display: none;
-      }
-      
       .editor-container, .keyboard-container {
         padding: 1.5rem;
       }
@@ -690,39 +565,53 @@
         width: 20px;
       }
     }
+
+    /* === CONTENEUR DE CAPTURE === */
+    .capture-container {
+      position: absolute;
+      left: -9999px;
+      width: 800px;
+      padding: 2rem;
+      background-color: var(--noir);
+      color: var(--ivoire);
+      border: 1px solid var(--or);
+      border-radius: 8px;
+      font-family: 'Gaganti';
+      font-size: 1.8rem;
+      text-align: right;
+      direction: rtl;
+      white-space: pre-wrap;
+      line-height: 1.8;
+    }
   </style>
 </head>
 <body>
-  <!-- Décorations latérales -->
+  <!-- === STRUCTURE HTML === -->
   <div class="decoration-left"></div>
   <div class="decoration-right"></div>
 
-  <!-- En-tête avec logo -->
   <header>
     <div class="logo">
-      <span class="logo-icon">✍️🇸🇳'</span>
-      <h1>Itnagag - dnibM ic foloW</h1>
+      <span class="logo-icon">✍️🇸🇳</span>
+      <h1>Itnagag - Wolof ci Mbind</h1>
     </div>
   </header>
 
-  <!-- Navigation principale -->
   <nav class="main-nav">
     <a href="#" class="nav-link active">
-      <i class="fas fa-edit"></i> dniB
+      <i class="fas fa-edit"></i> Bind
     </a>
     <a href="#" class="nav-link" id="forum-link">
-      <i class="fas fa-users"></i> naatxaW
+      <i class="fas fa-users"></i> Waxtaan
     </a>
     <a href="#" class="nav-link">
-      <i class="fas fa-book"></i> maX-maX
+      <i class="fas fa-book"></i> Xam-xam
     </a>
   </nav>
 
-  <!-- Contenu principal -->
   <main class="main-content">
-    <!-- Éditeur de texte -->
     <div class="editor-container">
-      <textarea id="editor" placeholder="...Itnagag ic ladniB"></textarea>
+      <textarea id="editor" placeholder="...Itnagag ci Bindal"></textarea>
       <div class="editor-footer">
         <div class="character-count">0 xatt</div>
         <button onclick="toggleFullscreen()" class="outline">
@@ -731,14 +620,13 @@
       </div>
     </div>
 
-    <!-- Clavier Itnagag -->
     <div class="keyboard-container animate">
       <h2 class="keyboard-title">
         <i class="fas fa-keyboard"></i> Itnagag ci Pangeeru
       </h2>
       
       <div class="keyboard">
-        <!-- Rangée 1 - Lettres -->
+        <!-- Rangée 1 -->
         <button onclick="insertAtCursor('G')">G</button>
         <button onclick="insertAtCursor('A')">A</button>
         <button onclick="insertAtCursor('N')">N</button>
@@ -747,7 +635,7 @@
         <button onclick="insertAtCursor('B')">B</button>
         <button onclick="insertAtCursor('D')">D</button>
         
-        <!-- Rangée 2 - Lettres -->
+        <!-- Rangée 2 -->
         <button onclick="insertAtCursor('E')">E</button>
         <button onclick="insertAtCursor('F')">F</button>
         <button onclick="insertAtCursor('H')">H</button>
@@ -756,7 +644,7 @@
         <button onclick="insertAtCursor('L')">L</button>
         <button onclick="insertAtCursor('M')">M</button>
         
-        <!-- Rangée 3 - Lettres -->
+        <!-- Rangée 3 -->
         <button onclick="insertAtCursor('O')">O</button>
         <button onclick="insertAtCursor('P')">P</button>
         <button onclick="insertAtCursor('R')">R</button>
@@ -772,14 +660,14 @@
         <button onclick="insertAtCursor('4')">4</button>
         <button onclick="insertAtCursor('5')">5</button>
         
-        <!-- Rangée 5 - Chiffres et actions -->
+        <!-- Rangée 5 - Chiffres -->
         <button onclick="insertAtCursor('6')">6</button>
         <button onclick="insertAtCursor('7')">7</button>
         <button onclick="insertAtCursor('8')">8</button>
         <button onclick="insertAtCursor('9')">9</button>
         <button onclick="insertAtCursor('0')">0</button>
         
-        <!-- Rangée 6 - Actions spéciales -->
+        <!-- Rangée 6 - Actions -->
         <button onclick="insertAtCursor(' ')">␣</button>
         <button onclick="insertAtCursor('\n')">↵</button>
         <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
@@ -788,7 +676,6 @@
       
       <!-- Panel émojis -->
       <div class="emoji-panel" id="emojiPanel">
-        <!-- Émojis communs -->
         <button class="emoji-btn" onclick="insertAtCursor('😀')">😀</button>
         <button class="emoji-btn" onclick="insertAtCursor('😂')">😂</button>
         <button class="emoji-btn" onclick="insertAtCursor('😊')">😊</button>
@@ -801,13 +688,9 @@
         <button class="emoji-btn" onclick="insertAtCursor('🍲')">🍲</button>
         <button class="emoji-btn" onclick="insertAtCursor('🥘')">🥘</button>
         <button class="emoji-btn" onclick="insertAtCursor('💪')">💪</button>
-        <button class="emoji-btn" onclick="insertAtCursor('👨‍👩‍👧‍👦')">👨‍👩‍👧‍👦</button>
-        <button class="emoji-btn" onclick="insertAtCursor('📚')">📚</button>
-        <button class="emoji-btn" onclick="insertAtCursor('✍️')">✍️</button>
       </div>
     </div>
 
-    <!-- Boutons d'action -->
     <div class="action-buttons">
       <button onclick="copyText()" class="secondary">
         <i class="fas fa-copy"></i> Mbind ci Nàppal
@@ -815,10 +698,10 @@
       <button onclick="downloadText()" class="secondary">
         <i class="fas fa-file-alt"></i> Mbind ci .txt
       </button>
-      <button onclick="downloadPNG()" class="accent">
+      <button onclick="exportAsImage('png')" class="accent">
         <i class="fas fa-image"></i> Mbind ci .png
       </button>
-      <button onclick="downloadJPG()" class="accent">
+      <button onclick="exportAsImage('jpeg')" class="accent">
         <i class="fas fa-image"></i> Mbind ci .jpg
       </button>
       <button onclick="clearText()" class="outline">
@@ -827,7 +710,6 @@
     </div>
   </main>
 
-  <!-- Pied de page -->
   <footer>
     <div class="footer-content">
       <div class="footer-links">
@@ -837,28 +719,15 @@
         <a href="#" class="footer-link">Natte bi</a>
       </div>
       <div class="copyright">
-        &copy; 2025 Itnagag - falaW
+        &copy; 2023 Itnagag - Wolof ci Défaraayu
       </div>
     </div>
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <!-- === SCRIPT JS === -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
-    // Initialisation
-    document.addEventListener('DOMContentLoaded', function() {
-      updateCharacterCount();
-      document.getElementById('editor').addEventListener('input', updateCharacterCount);
-      document.getElementById('editor').focus();
-      
-      // Gestionnaire pour le lien du forum
-      document.getElementById('forum-link').addEventListener('click', function(e) {
-        e.preventDefault();
-        alert("Waxtaan gi dinañu ko def ci wàll wi!");
-      });
-    });
-
-    // Fonction d'insertion RTL
+    // ===== FONCTIONS PRINCIPALES =====
     function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
@@ -866,12 +735,8 @@
       
       editor.value = text.substring(0, cursorPos) + char + text.substring(cursorPos);
       editor.selectionStart = editor.selectionEnd = cursorPos + char.length;
-      
       updateCharacterCount();
       editor.focus();
-      
-      // Fermer le panel émoji si ouvert
-      document.getElementById('emojiPanel').classList.remove('show');
     }
 
     function deleteChar() {
@@ -893,11 +758,44 @@
       document.querySelector('.character-count').textContent = `${count} xatt`;
     }
 
-    function copyText() {
-      const textArea = document.getElementById('editor');
-      navigator.clipboard.writeText(textArea.value)
-        .then(() => showToast('Mbind bi nàpp na!', 'success'))
-        .catch(err => showToast('Jàpp na jàkkaarloo', 'error'));
+    // ===== FONCTIONS D'EXPORT =====
+    async function exportAsImage(format) {
+      const editor = document.getElementById('editor');
+      
+      // Créer un conteneur de capture
+      const captureDiv = document.createElement('div');
+      captureDiv.className = 'capture-container';
+      captureDiv.textContent = editor.value;
+      
+      document.body.appendChild(captureDiv);
+      
+      try {
+        // Configuration html2canvas
+        const options = {
+          backgroundColor: '#0a0a0a',
+          scale: 2,
+          logging: true,
+          useCORS: true,
+          allowTaint: true
+        };
+        
+        const canvas = await html2canvas(captureDiv, options);
+        const mimeType = `image/${format}`;
+        const quality = format === 'jpeg' ? 0.9 : 1;
+        
+        // Créer le lien de téléchargement
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL(mimeType, quality);
+        link.download = `itnagag-${new Date().toISOString().slice(0,10)}.${format}`;
+        link.click();
+        
+        showToast(`Mbind ci .${format} généré na`, 'success');
+      } catch (error) {
+        console.error("Erreur d'export:", error);
+        showToast("Jàpp na jàkkaarloo", 'error');
+      } finally {
+        document.body.removeChild(captureDiv);
+      }
     }
 
     function downloadText() {
@@ -910,95 +808,12 @@
       showToast('Mbind ci .txt dinañu ko yóbbu', 'success');
     }
 
-    function downloadPDF() {
-    downloadPNG(); // Utiliser la même fonction que PNG car plus fiable pour la police
-  }
-
-  // Option alternative pour JPG
-  function downloadJPG() {
-    // Même code que downloadPNG mais avec 'image/jpeg' et qualité
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.backgroundColor = '#0a0a0a';
-    container.style.padding = '2rem';
-    container.style.border = '1px solid #D4AF37';
-    container.style.borderRadius = '8px';
-    container.style.fontFamily = 'Gaganti, sans-serif';
-    container.style.color = '#F5F5DC';
-    container.style.textAlign = 'right';
-    container.style.direction = 'rtl';
-    
-    const content = document.createElement('div');
-    content.style.whiteSpace = 'pre-wrap';
-    content.style.fontSize = '1.8rem';
-    content.style.lineHeight = '1.8';
-    content.textContent = document.getElementById('editor').value;
-    
-    container.appendChild(content);
-    document.body.appendChild(container);
-    
-    html2canvas(container, {
-      backgroundColor: '#0a0a0a',
-      scale: 2,
-      logging: false,
-      useCORS: true
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/jpeg', 0.9);
-      link.download = `itnagag-${new Date().toISOString().slice(0,10)}.jpg`;
-      link.click();
-      showToast('JPG bi généré na', 'success');
-      document.body.removeChild(container);
-    });
-  }
-
-   function downloadPNG() {
-    // Créer un conteneur temporaire pour la capture
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.left = '-9999px';
-    container.style.backgroundColor = '#0a0a0a';
-    container.style.padding = '2rem';
-    container.style.border = '1px solid #D4AF37';
-    container.style.borderRadius = '8px';
-    container.style.fontFamily = 'Gaganti, sans-serif';
-    container.style.color = '#F5F5DC';
-    container.style.textAlign = 'right';
-    container.style.direction = 'rtl';
-    
-    // Ajouter le contenu de l'éditeur
-    const content = document.createElement('div');
-    content.style.whiteSpace = 'pre-wrap';
-    content.style.fontSize = '1.8rem';
-    content.style.lineHeight = '1.8';
-    content.textContent = document.getElementById('editor').value;
-    
-    container.appendChild(content);
-    document.body.appendChild(container);
-    
-    // Capturer avec html2canvas
-    html2canvas(container, {
-      backgroundColor: '#0a0a0a',
-      scale: 2
-
-      logging: false,
-      useCORS: true
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png');
-      link.download = `itnagag-${new Date().toISOString().slice(0,10)}.png`;
-      link.click();
-      showToast('PNG bi généré na', 'success');
-      
-      // Nettoyer
-      document.body.removeChild(container);
-    }).catch(err => {
-      console.error('Erreur de génération PNG:', err);
-      showToast('Jàpp na jàkkaarloo', 'error');
-      document.body.removeChild(container);
-    });
-  }
+    function copyText() {
+      const textArea = document.getElementById('editor');
+      navigator.clipboard.writeText(textArea.value)
+        .then(() => showToast('Mbind bi nàpp na!', 'success'))
+        .catch(err => showToast('Jàpp na jàkkaarloo', 'error'));
+    }
 
     function clearText() {
       if (confirm('Danga bëgg fàyyi mbind mi ci dëgg?')) {
@@ -1021,23 +836,31 @@
       panel.classList.toggle('show');
     }
 
+    // ===== FONCTIONS UTILITAIRES =====
     function showToast(message, type) {
       const toast = document.createElement('div');
       toast.className = `toast toast-${type}`;
       toast.textContent = message;
       document.body.appendChild(toast);
       
-      setTimeout(() => {
-        toast.classList.add('show');
-      }, 10);
-      
+      setTimeout(() => toast.classList.add('show'), 10);
       setTimeout(() => {
         toast.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(toast);
-        }, 300);
+        setTimeout(() => document.body.removeChild(toast), 300);
       }, 3000);
     }
+
+    // ===== INITIALISATION =====
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCharacterCount();
+      document.getElementById('editor').addEventListener('input', updateCharacterCount);
+      document.getElementById('editor').focus();
+      
+      document.getElementById('forum-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        alert("Waxtaan gi dinañu ko def ci wàll wi!");
+      });
+    });
   </script>
 </body>
 </html>
