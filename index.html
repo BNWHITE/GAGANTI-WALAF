@@ -772,7 +772,7 @@
         mirrorDiv.id = 'gagganti-mirror';
         document.body.appendChild(mirrorDiv);
     
-        // Style de base
+        // Style de base RTL
         mirrorDiv.style.cssText = `
           position: fixed;
           top: 0;
@@ -786,38 +786,36 @@
           line-height: 1.8;
           white-space: pre-wrap;
           text-align: right;
-          direction: rtl;
-          unicode-bidi: bidi-override;
           z-index: 99999;
           visibility: hidden;
           box-sizing: border-box;
         `;
     
-        // Traitement spécial pour Gagganti
-        const processGaggantiText = (text) => {
-          return text.split('').reverse().join(''); // Inverse seulement les caractères
+        // Traitement spécial Gagganti
+        const processLine = (line) => {
+          return line.split(' ').map(word => 
+            word.split('').reverse().join('') // Inverse les lettres
+          ).reverse().join(' '); // Inverse l'ordre des mots
         };
     
-        // Conserver les sauts de ligne originaux
+        // Traiter chaque ligne indépendamment
         const lines = text.split('\n');
-        lines.forEach((line, index) => {
-          if (index > 0) mirrorDiv.appendChild(document.createElement('br'));
+        lines.forEach((line, i) => {
+          if (i > 0) mirrorDiv.appendChild(document.createElement('br'));
           
+          const processed = processLine(line);
           const lineDiv = document.createElement('span');
-          lineDiv.textContent = processGaggantiText(line);
+          lineDiv.textContent = processed;
           mirrorDiv.appendChild(lineDiv);
         });
     
-        // Calculer la taille nécessaire
-        mirrorDiv.style.visibility = 'hidden';
+        // Calculer la taille
+        mirrorDiv.style.visibility = 'visible';
         await new Promise(resolve => setTimeout(resolve, 50));
         await document.fonts.ready;
         
         const width = Math.min(mirrorDiv.scrollWidth + 80, window.innerWidth);
         const height = mirrorDiv.scrollHeight + 80;
-        
-        mirrorDiv.style.width = `${width}px`;
-        mirrorDiv.style.visibility = 'visible';
     
         const options = {
           backgroundColor: null,
@@ -828,9 +826,7 @@
           width: width,
           height: height,
           windowWidth: width,
-          windowHeight: height,
-          scrollX: 0,
-          scrollY: 0
+          windowHeight: height
         };
     
         const canvas = await html2canvas(mirrorDiv, options);
@@ -841,7 +837,7 @@
     
       } catch (error) {
         console.error("Erreur d'export:", error);
-        alert("Erreur lors de l'export: " + error.message);
+        alert("Jàpp na jàkkaarloo");
       } finally {
         const mirror = document.getElementById('gagganti-mirror');
         if (mirror) document.body.removeChild(mirror);
