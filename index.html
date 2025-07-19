@@ -766,20 +766,18 @@
       const editor = document.getElementById('editor');
       
       // Créer un conteneur de capture
-      const captureDiv = document.createElement('div');
-      captureDiv.style.position = 'absolute';
-      captureDiv.style.left = '-9999px';
-      captureDiv.style.width = '800px';
-      captureDiv.style.padding = '2rem';
-      captureDiv.style.backgroundColor = '#0a0a0a';
-      captureDiv.style.color = '#F5F5DC';
-      captureDiv.style.border = '1px solid #D4AF37';
-      captureDiv.style.borderRadius = '8px';
-      captureDiv.style.fontFamily = 'Gagganti, sans-serif';
-      captureDiv.style.fontSize = '1.8rem';
-      captureDiv.style.lineHeight = '1.8';
-      captureDiv.style.whiteSpace = 'pre-wrap';
+      captureDiv.style.direction = 'ltr';
+      captureDiv.style.textAlign = 'right';
+      captureDiv.style.unicodeBidi = 'bidi-override';
       
+      const pre = document.createElement('pre');
+      pre.style.direction = 'rtl';
+      pre.style.textAlign = 'right';
+      pre.style.unicodeBidi = 'bidi-override';
+      pre.textContent = editor.value;
+      
+      captureDiv.appendChild(pre);
+            
       // Gestion parfaite du RTL
       captureDiv.style.direction = 'rtl';
       captureDiv.style.textAlign = 'right';
