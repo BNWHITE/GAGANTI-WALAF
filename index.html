@@ -812,6 +812,17 @@
     }
 
     // ===== FONCTIONS D'EXPORT =====
+    function mirrorWordsOnly(text) {
+      return text
+        .split('\n')
+        .map(line =>
+          line.split(' ')
+              .map(word => word.split('').reverse().join(''))
+              .join(' ')
+        )
+        .join('\n');
+    }
+    
     async function exportAsImage(format) {
       try {
         const text = document.getElementById('editor').value;
@@ -821,10 +832,10 @@
           return;
         }
     
+        const gagantiText = mirrorWordsOnly(text);
+    
         const mirrorDiv = document.getElementById('mirrorContainer');
-        
-        // === Afficher le texte TEL QUEL ===
-        mirrorDiv.textContent = text;
+        mirrorDiv.textContent = gagantiText;
         mirrorDiv.style.fontFamily = "'Gagganti', sans-serif";
         mirrorDiv.style.visibility = 'visible';
         mirrorDiv.style.direction = 'rtl';
@@ -862,6 +873,7 @@
         showToast("Jàpp na jàkkaarloo", 'error');
       }
     }
+
 
     async function exportAsPDF() {
       try {
