@@ -877,54 +877,30 @@
 
 
     async function exportAsPDF() {
-      try {
-        const text = document.getElementById('editor').value;
-        
-        if (!text.trim()) {
-          showToast("Mbindul dara, bindal dara!", 'error');
-          return;
-        }
-
-        const captureContainer = document.getElementById('captureContainer');
-        captureContainer.textContent = processGaggantiText(text);
-        captureContainer.style.display = 'block';
-
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await document.fonts.ready;
-
-        const options = {
-          scale: 2,
-          logging: false,
-          useCORS: true,
-          allowTaint: true,
-          width: captureContainer.scrollWidth,
-          height: captureContainer.scrollHeight
-        };
-
-        const canvas = await html2canvas(captureContainer, options);
-        captureContainer.style.display = 'none';
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4'
-        });
-
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`itnagag-${new Date().toISOString().slice(0,10)}.pdf`);
-
-        showToast('Mbind bi nàpp na ci .pdf', 'success');
-
-      } catch (error) {
-        console.error("Erreur PDF:", error);
-        showToast("Jàpp na jàkkaarloo", 'error');
+      const text = document.getElementById('editor').value;
+    
+      if (!text.trim()) {
+        showToast("Mbindul dara, bindal dara!", 'error');
+        return;
       }
+    
+      const mirroredText = mirrorWordsOnly(text);
+    
+      const doc = new jspdf.jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4'
+      });
+    
+      doc.setFontSize(12);
+      doc.setFont('times', 'normal');
+      const lines = doc.splitTextToSize(mirroredText, 500);
+      doc.text(lines, 50, 50);
+      doc.save(`itnagag-${new Date().toISOString().slice(0, 10)}.pdf`);
+    
+      showToast("Mbind bi nàpp na ci .pdf", 'success');
     }
+
 
     async function captureEditorArea() {
       try {
@@ -954,22 +930,25 @@
       }
     }
 
-    function downloadText() {
+    function exportAsTXT() {
       const text = document.getElementById('editor').value;
-      
+    
       if (!text.trim()) {
         showToast("Mbindul dara, bindal dara!", 'error');
         return;
       }
-
-      const processedText = processGaggantiText(text);
-      const blob = new Blob([processedText], { type: 'text/plain;charset=utf-8' });
+    
+      const mirroredText = mirrorWordsOnly(text);
+    
+      const blob = new Blob([mirroredText], { type: 'text/plain;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `itnagag-${new Date().toISOString().slice(0,10)}.txt`;
+      link.download = `itnagag-${new Date().toISOString().slice(0, 10)}.txt`;
       link.click();
-      showToast('Mbind bi nàpp na ci .txt', 'success');
+    
+      showToast("Mbind bi nàpp na ci .txt", 'success');
     }
+
 
     function copyText() {
       const textArea = document.getElementById('editor');
