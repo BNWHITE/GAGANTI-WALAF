@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="wo" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waxtaan ci Gagganti</title>
+  <link rel="preload" href="gagganti.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* === VARIABLES CSS === */
+    :root {
+      --noir: #0a0a0a;
+      --or: #D4AF37;
+      --or-clair: #F5DEB3;
+      --terre: #7c4d1e;
+      --ocre: #CC7722;
+      --ivoire: #F5F5DC;
+      --indigo: #4B0082;
+      --vert-fonce: #013220;
+      --vert-moyen: #2E8B57;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --radius: 12px;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* === POLICE GAGANTI === */
+    @font-face {
+      font-family: 'Gagganti';
+      src: url('gagganti.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    /* === RESET CSS === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* === STRUCTURE PRINCIPALE === */
+    body {
+      font-family: 'Gagganti', 'Segoe UI', Tahoma, sans-serif;
+      background-color: var(--noir);
+      color: var(--ivoire);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+      text-align: right;
+      direction: rtl;
+    }
+
+    /* === DÉCORATIONS === */
+    /* Fond avec motifs africains */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.03" d="M100,20 C120,60 180,80 180,120 C140,120 100,160 100,200 C100,160 60,120 20,120 C20,80 80,60 100,20 Z"/></svg>'),
+        linear-gradient(to right, rgba(10,10,10,0.9), rgba(10,10,10,0.9));
+      background-size: 300px, cover;
+      z-index: -2;
+    }
+
+    /* Silhouettes de cases traditionnelles */
+    body::after {
+      content: "";
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23D4AF37"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23D4AF37"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23D4AF37"/></svg>');
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: -1;
+      opacity: 0.15;
+    }
+
+    /* Motifs latéraux */
+    .decoration-left, .decoration-right {
+      position: fixed;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.05" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
+      background-size: 80px;
+      z-index: -1;
+    }
+
+    .decoration-left { left: 0; }
+    .decoration-right { right: 0; transform: rotate(180deg); }
+
+    /* === EN-TÊTE === */
+    header {
+      background: linear-gradient(to left, var(--noir), var(--indigo));
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--or);
+      box-shadow: var(--shadow);
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><path fill="%23D4AF37" fill-opacity="0.08" d="M60,0C80,30 120,30 120,60C90,80 120,120 60,120C30,80 0,120 0,60C30,30 0,30 60,0Z"/></svg>');
+      background-size: 120px;
+      opacity: 0.3;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .logo-icon {
+      font-size: 2.8rem;
+      color: var(--or);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(to left, var(--or), var(--or-clair));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* === NAVIGATION === */
+    .main-nav {
+      display: flex;
+      justify-content: center;
+      background: linear-gradient(to left, var(--noir), var(--vert-fonce));
+      border-bottom: 1px solid var(--or);
+      position: relative;
+    }
+
+    .main-nav::after {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10"><path fill="%23D4AF37" d="M0,0 Q5,10 10,0 T20,0" opacity="0.3"/></svg>');
+      background-size: 20px;
+    }
+
+    .nav-link {
+      padding: 1.2rem 2.5rem;
+      color: var(--ivoire);
+      text-decoration: none;
+      font-size: 1.2rem;
+      position: relative;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-link:hover {
+      background-color: rgba(212, 175, 55, 0.1);
+      color: var(--or);
+    }
+
+    .nav-link.active {
+      background-color: rgba(212, 175, 55, 0.2);
+      color: var(--or);
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--or);
+    }
+
+    /* === CONTENU PRINCIPAL === */
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+    }
+
+    /* === FORMULAIRE DE CONNEXION === */
+    .login-container {
+      background-color: rgba(10, 10, 10, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem;
+      border: 1px solid var(--or);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+      max-width: 600px;
+      margin: 2rem auto;
+      text-align: center;
+    }
+
+    .login-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0 C60,20 80,30 100,50 C80,70 60,80 50,100 C40,80 20,70 0,50 C20,30 40,20 50,0 Z"/></svg>');
+      background-size: 200px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .login-title {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: var(--or);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: right;
+    }
+
+    .form-label {
+      font-size: 1.2rem;
+      color: var(--or-clair);
+    }
+
+    .form-input {
+      padding: 1rem;
+      font-size: 1.2rem;
+      background-color: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--or);
+      border-radius: var(--radius);
+      color: var(--ivoire);
+      transition: var(--transition);
+      font-family: 'Gagganti', sans-serif;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--or-clair);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+    }
+
+    .login-btn {
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      background-color: var(--vert-moyen);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1rem;
+      font-weight: bold;
+      border-bottom: 3px solid var(--or);
+    }
+
+    .login-btn:hover {
+      background-color: var(--or);
+      color: var(--noir);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .privacy-notice {
+      font-size: 0.9rem;
+      color: var(--or-clair);
+      margin-top: 1.5rem;
+      opacity: 0.8;
+    }
+
+    /* === ZONE DE DISCUSSION === */
+    .chat-container {
+      display: none;
+      flex-direction: column;
+      height: 70vh;
+      background-color: rgba(10, 10, 10, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--or);
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+
+    .chat-header {
+      background: linear-gradient(to left, var(--noir), var(--indigo));
+      padding: 1rem;
+      border-bottom: 1px solid var(--or);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-title {
+      font-size: 1.5rem;
+      color: var(--or);
+    }
+
+    .online-count {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      color: var(--or-clair);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      position: relative;
+      word-wrap: break-word;
+      line-height: 1.6;
+      font-size: 1.2rem;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .message-user {
+      font-weight: bold;
+      color: var(--or);
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
+    }
+
+    .message-time {
+      font-size: 0.8rem;
+      color: var(--or-clair);
+      margin-top: 0.3rem;
+      display: block;
+      text-align: left;
+      direction: ltr;
+    }
+
+    .message-in {
+      align-self: flex-start;
+      background-color: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-right: 3px solid var(--or);
+    }
+
+    .message-out {
+      align-self: flex-end;
+      background-color: rgba(75, 0, 130, 0.2);
+      border: 1px solid rgba(75, 0, 130, 0.4);
+      border-left: 3px solid var(--indigo);
+    }
+
+    .chat-input-container {
+      display: flex;
+      padding: 1rem;
+      background-color: rgba(10, 10, 10, 0.8);
+      border-top: 1px solid var(--or);
+    }
+
+    #chat-input {
+      flex: 1;
+      padding: 1rem;
+      font-size: 1.2rem;
+      background-color: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--or);
+      border-radius: var(--radius) 0 0 var(--radius);
+      color: var(--ivoire);
+      font-family: 'Gagganti', sans-serif;
+      text-align: right;
+      direction: rtl;
+      resize: none;
+      height: 60px;
+    }
+
+    #chat-input:focus {
+      outline: none;
+      border-color: var(--or-clair);
+    }
+
+    .send-btn {
+      padding: 0 1.5rem;
+      background-color: var(--or);
+      color: var(--noir);
+      border: none;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      cursor: pointer;
+      font-size: 1.3rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-btn:hover {
+      background-color: var(--or-clair);
+    }
+
+    /* === PIED DE PAGE === */
+    footer {
+      background: linear-gradient(to left, var(--noir), var(--indigo));
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--or);
+      position: relative;
+    }
+
+    footer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><path fill="%23D4AF37" fill-opacity="0.08" d="M60,0C80,30 120,30 120,60C90,80 120,120 60,120C30,80 0,120 0,60C30,30 0,30 60,0Z"/></svg>');
+      background-size: 120px;
+      opacity: 0.3;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-link {
+      color: var(--or);
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: var(--transition);
+      position: relative;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .footer-link:hover {
+      color: white;
+    }
+
+    .copyright {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 1.5rem;
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === TOAST === */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      color: white;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .toast-success {
+      background-color: var(--vert-fonce);
+      border-right: 5px solid var(--or);
+    }
+
+    .toast-error {
+      background-color: var(--terre);
+      border-right: 5px solid #ff3333;
+    }
+
+    .toast-info {
+      background-color: var(--indigo);
+      border-right: 5px solid #8888ff;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 992px) {
+      .decoration-left, .decoration-right {
+        width: 60px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1.2rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .nav-link {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .main-content {
+        padding: 1.5rem;
+      }
+
+      .login-container {
+        padding: 1.5rem;
+      }
+      
+      .login-title {
+        font-size: 1.8rem;
+      }
+      
+      .chat-messages {
+        padding: 1rem;
+      }
+      
+      .message {
+        font-size: 1.1rem;
+        max-width: 90%;
+      }
+
+      .decoration-left, .decoration-right {
+        width: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .nav-link {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .login-container {
+        padding: 1.5rem 1rem;
+      }
+      
+      .login-title {
+        font-size: 1.6rem;
+      }
+      
+      .form-input, #chat-input {
+        font-size: 1.1rem;
+        padding: 0.8rem;
+      }
+      
+      .message {
+        font-size: 1rem;
+        padding: 0.8rem 1rem;
+      }
+
+      .decoration-left, .decoration-right {
+        width: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- === STRUCTURE HTML === -->
+  <div class="decoration-left"></div>
+  <div class="decoration-right"></div>
+
+  <header>
+    <div class="logo">
+      <span class="logo-icon">💬🇸🇳</span>
+      <h1>Waxtaan ci Gagganti</h1>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <a href="#" class="nav-link active">
+      <i class="fas fa-comments"></i> Waxtaan
+    </a>
+    <a href="#" class="nav-link">
+      <i class="fas fa-info-circle"></i> Xibaar
+    </a>
+    <a href="#" class="nav-link">
+      <i class="fas fa-question-circle"></i> Ndimbal
+    </a>
+  </nav>
+
+  <main class="main-content">
+    <!-- Formulaire de connexion -->
+    <div class="login-container" id="login-container">
+      <h2 class="login-title">Sàkk bopp ci Waxtaan</h2>
+      <form class="login-form" id="login-form">
+        <div class="form-group">
+          <label for="username" class="form-label">Tur wi</label>
+          <input type="text" id="username" class="form-input" placeholder="Tapp tur wu matale" required>
+        </div>
+        <div class="form-group">
+          <label for="email" class="form-label">Email (facultatif)</label>
+          <input type="email" id="email" class="form-input" placeholder="Email bi nga bëgg">
+        </div>
+        <button type="submit" class="login-btn">
+          <i class="fas fa-sign-in-alt"></i> Dugg ci Waxtaan
+        </button>
+      </form>
+      <p class="privacy-notice">
+        <i class="fas fa-lock"></i> Xibaar yi dinañu wéy ci sunu serveur. Amul sa boppam waxtaan wu privat.
+      </p>
+    </div>
+
+    <!-- Zone de discussion (cachée au départ) -->
+    <div class="chat-container" id="chat-container">
+      <div class="chat-header">
+        <h3 class="chat-title">Waxtaan ci Gagganti</h3>
+        <div class="online-count">
+          <i class="fas fa-users"></i>
+          <span id="online-count">1</span> nit
+        </div>
+      </div>
+      
+      <div class="chat-messages" id="chat-messages">
+        <!-- Les messages seront ajoutés ici dynamiquement -->
+      </div>
+      
+      <div class="chat-input-container">
+        <textarea id="chat-input" placeholder="Bindal xibaar bi..."></textarea>
+        <button class="send-btn" id="send-btn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#" class="footer-link"><i class="fas fa-shield-alt"></i> Sutura</a>
+        <a href="#" class="footer-link"><i class="fas fa-book"></i> Jukki</a>
+        <a href="#" class="footer-link"><i class="fas fa-envelope"></i> Xamle</a>
+        <a href="#" class="footer-link"><i class="fas fa-code"></i> Développeurs</a>
+      </div>
+      <div class="copyright">
+        &copy; 2023 Waxtaan ci Gagganti - Mbind mi dina wéy ci 30 fan
+      </div>
+    </div>
+  </footer>
+
+  <!-- === SCRIPT JS === -->
+  <script>
+    // ===== VARIABLES GLOBALES =====
+    let currentUser = null;
+    let messages = [];
+    let onlineUsers = 1;
+
+    // ===== FONCTIONS UTILITAIRES =====
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      
+      let icon = '';
+      switch(type) {
+        case 'success': icon = '<i class="fas fa-check-circle"></i>'; break;
+        case 'error': icon = '<i class="fas fa-exclamation-circle"></i>'; break;
+        case 'info': icon = '<i class="fas fa-info-circle"></i>'; break;
+      }
+      
+      toast.innerHTML = `${icon} ${message}`;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => document.body.removeChild(toast), 300);
+      }, 3000);
+    }
+
+    function formatTime(date) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function saveToLocalStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error("Erreur de stockage local:", e);
+      }
+    }
+
+    function loadFromLocalStorage(key) {
+      try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : null;
+      } catch (e) {
+        console.error("Erreur de lecture locale:", e);
+        return null;
+      }
+    }
+
+    // ===== GESTION DES MESSAGES =====
+    function addMessageToChat(message) {
+      const messagesContainer = document.getElementById('chat-messages');
+      const messageDiv = document.createElement('div');
+      
+      messageDiv.className = `message message-${message.sender === currentUser ? 'out' : 'in'}`;
+      messageDiv.innerHTML = `
+        <div class="message-user">${message.sender}</div>
+        <div class="message-text">${message.text}</div>
+        <div class="message-time">${formatTime(new Date(message.timestamp))}</div>
+      `;
+      
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Sauvegarder les messages
+      messages.push(message);
+      saveToLocalStorage('gagganti_messages', messages);
+    }
+
+    function loadMessages() {
+      const savedMessages = loadFromLocalStorage('gagganti_messages') || [];
+      messages = savedMessages;
+      
+      const messagesContainer = document.getElementById('chat-messages');
+      messagesContainer.innerHTML = '';
+      
+      savedMessages.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message message-${msg.sender === currentUser ? 'out' : 'in'}`;
+        messageDiv.innerHTML = `
+          <div class="message-user">${msg.sender}</div>
+          <div class="message-text">${msg.text}</div>
+          <div class="message-time">${formatTime(new Date(msg.timestamp))}</div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+      });
+      
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // ===== GESTION DE LA CONNEXION =====
+    function handleLogin(e) {
+      e.preventDefault();
+      
+      const usernameInput = document.getElementById('username');
+      const emailInput = document.getElementById('email');
+      
+      const username = usernameInput.value.trim();
+      const email = emailInput.value.trim();
+      
+      if (!username) {
+        showToast('Fàttaliku tur wi', 'error');
+        return;
+      }
+      
+      // Vérifier si le nom est déjà utilisé (simulation)
+      const existingUsers = loadFromLocalStorage('gagganti_users') || [];
+      if (existingUsers.includes(username)) {
+        showToast('Tur wi dégg na ko, tànn beneen', 'error');
+        return;
+      }
+      
+      // Enregistrer l'utilisateur
+      currentUser = username;
+      existingUsers.push(username);
+      saveToLocalStorage('gagganti_users', existingUsers);
+      saveToLocalStorage('gagganti_current_user', { username, email });
+      
+      // Afficher la zone de chat
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('chat-container').style.display = 'flex';
+      
+      // Charger les messages précédents
+      loadMessages();
+      
+      // Simuler d'autres utilisateurs en ligne
+      onlineUsers = 1 + Math.floor(Math.random() * 5);
+      document.getElementById('online-count').textContent = onlineUsers;
+      
+      showToast(`Jëmm jëm ci Waxtaan, ${username}!`, 'success');
+    }
+
+    // ===== GESTION DE L'ENVOI DE MESSAGES =====
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      const newMessage = {
+        sender: currentUser,
+        text: text,
+        timestamp: new Date().toISOString()
+      };
+      
+      addMessageToChat(newMessage);
+      input.value = '';
+      input.focus();
+      
+      // Simuler une réponse (optionnel)
+      if (Math.random() > 0.7) {
+        setTimeout(() => {
+          const replies = [
+            "Na nga def?",
+            "Naka wa kër ga?",
+            "Jërëjëf!",
+            "Maa ngi fi",
+            "Lu bees?",
+            "Waaw, dëgg nga wax",
+            "Mangi ci xam-xam"
+          ];
+          
+          const randomReply = replies[Math.floor(Math.random() * replies.length)];
+          const botMessage = {
+            sender: "Nit ku Tànn",
+            text: randomReply,
+            timestamp: new Date().toISOString()
+          };
+          
+          addMessageToChat(botMessage);
+        }, 1000 + Math.random() * 4000);
+      }
+    }
+
+    // ===== INITIALISATION =====
+    document.addEventListener('DOMContentLoaded', function() {
+      // Vérifier si l'utilisateur est déjà connecté
+      const savedUser = loadFromLocalStorage('gagganti_current_user');
+      if (savedUser) {
+        currentUser = savedUser.username;
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('chat-container').style.display = 'flex';
+        loadMessages();
+      }
+      
+      // Gestion du formulaire de connexion
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+      
+      // Gestion de l'envoi de messages
+      document.getElementById('send-btn').addEventListener('click', sendMessage);
+      
+      // Envoyer avec Entrée
+      document.getElementById('chat-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+      
+      // Mettre le focus sur le champ de nom
+      if (!currentUser) {
+        document.getElementById('username').focus();
+      } else {
+        document.getElementById('chat-input').focus();
+      }
+    });
+  </script>
+</body>
+</html>
