@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Itnaggag - foloW ic dnibM</title>
   <link rel="preload" href="gagganti.ttf" as="font" type="font/ttf" crossorigin>
+  <link href="gagganti.ttf" rel="stylesheet" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* === VARIABLES CSS === */
@@ -500,8 +501,8 @@
       line-height: 1.8;
       white-space: pre-wrap;
       text-align: right;
-      direction: ltr;
-      unicode-bidi: plaintext;
+      direction: rtl;
+      unicode-bidi: bidi-override;
       z-index: 99999;
       box-sizing: border-box;
       visibility: hidden;
@@ -822,6 +823,7 @@
 
         const mirrorDiv = document.getElementById('mirrorContainer');
         mirrorDiv.textContent = processGaggantiText(text);
+        mirrorDiv.style.fontFamily = "'Gagganti', sans-serif";
         mirrorDiv.style.visibility = 'visible';
 
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -848,7 +850,9 @@
         link.click();
 
         showToast(`Mbind bi nàpp na ci .${format}`, 'success');
-        mirrorDiv.style.visibility = 'hidden';
+        mirrorDiv.style.direction = 'rtl';
+        mirrorDiv.style.unicodeBidi = 'bidi-override';
+        mirrorDiv.style.textAlign = 'right';
 
       } catch (error) {
         console.error("Erreur d'export:", error);
