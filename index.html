@@ -765,7 +765,7 @@
     async function exportAsImage(format) {
       const editor = document.getElementById('editor');
       
-      // Créer un conteneur de capture avec direction forcée LTR
+      // Créer un conteneur de capture
       const captureDiv = document.createElement('div');
       captureDiv.style.position = 'absolute';
       captureDiv.style.left = '-9999px';
@@ -780,18 +780,25 @@
       captureDiv.style.lineHeight = '1.8';
       captureDiv.style.whiteSpace = 'pre-wrap';
       
-      // Important: Forcer LTR mais avec alignement droit
-      captureDiv.style.direction = 'ltr';
+      // Gestion parfaite du RTL
+      captureDiv.style.direction = 'rtl';
       captureDiv.style.textAlign = 'right';
-      
-      // Inverser manuellement l'ordre des caractères
-      const text = editor.value;
-      let visualText = '';
-      for (let i = text.length - 1; i >= 0; i--) {
-        visualText += text[i];
+      captureDiv.style.unicodeBidi = 'plaintext'; // Clé pour désactiver le réarrangement automatique
+    
+      // Conserver l'ordre exact des lignes et caractères
+      const lines = editor.value.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        const lineDiv = document.createElement('div');
+        lineDiv.style.direction = 'ltr'; // LTR pour chaque ligne
+        lineDiv.style.textAlign = 'right';
+        lineDiv.style.unicodeBidi = 'plaintext';
+        
+        // Inverser manuellement les caractères de la ligne
+        lineDiv.textContent = lines[i].split('').reverse().join('');
+        
+        captureDiv.appendChild(lineDiv);
       }
-      
-      captureDiv.textContent = visualText;
+    
       document.body.appendChild(captureDiv);
     
       try {
@@ -803,9 +810,12 @@
           allowTaint: true,
           onclone: (clonedDoc, element) => {
             // Maintenir les styles sur le clone
-            const clonedElement = clonedDoc.querySelector('div');
-            clonedElement.style.direction = 'ltr';
-            clonedElement.style.textAlign = 'right';
+            const clonedElements = clonedDoc.querySelectorAll('div > div');
+            clonedElements.forEach(el => {
+              el.style.direction = 'ltr';
+              el.style.textAlign = 'right';
+              el.style.unicodeBidi = 'plaintext';
+            });
           }
         };
         
