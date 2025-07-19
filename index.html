@@ -702,7 +702,7 @@
         <i class="fas fa-file-alt"></i> Mbind ci .txt
       </button>
       <button onclick="exportAsImage('png')" class="accent">
-        <i class="fas fa-image"></i> Mbind ci .png
+        <i class="fas fa-image"></i> Mbind ci .png (RTL)
       </button>
       <button onclick="exportAsImage('jpeg')" class="accent">
         <i class="fas fa-image"></i> Mbind ci .jpg
@@ -764,22 +764,49 @@
     // ===== FONCTIONS D'EXPORT =====
     async function exportAsImage(format) {
       const editor = document.getElementById('editor');
-      
-      // Créer un conteneur de capture
+    
+      // Créer un conteneur de capture avec la bonne direction
       const captureDiv = document.createElement('div');
       captureDiv.className = 'capture-container';
-      captureDiv.textContent = editor.value;
-      
+    
+      // Structure pour préserver le RTL
+      captureDiv.innerHTML = `
+        <div style="
+          width: 100%;
+          height: 100%;
+          background-color: #0a0a0a;
+          color: #F5F5DC;
+          font-family: 'Gagganti';
+          font-size: 1.8rem;
+          text-align: right;
+          direction: rtl;
+          unicode-bidi: bidi-override;
+          padding: 2rem;
+          border: 1px solid #D4AF37;
+          border-radius: 8px;
+          line-height: 1.8;
+          white-space: pre-wrap;
+        ">
+          ${editor.value}
+        </div>
+      `;
+  
       document.body.appendChild(captureDiv);
       
       try {
-        // Configuration html2canvas
+        // Configuration html2canvas optimisée pour RTL
         const options = {
           backgroundColor: '#0a0a0a',
           scale: 2,
           logging: true,
           useCORS: true,
-          allowTaint: true
+          allowTaint: true,
+          onclone: function(clonedDoc) {
+            // Force la direction RTL sur le clone
+            const clonedCapture = clonedDoc.querySelector('.capture-container div');
+            clonedCapture.style.direction = 'rtl';
+            clonedCapture.style.unicodeBidi = 'bidi-override';
+          }
         };
         
         const canvas = await html2canvas(captureDiv, options);
