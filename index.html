@@ -786,19 +786,19 @@
           line-height: 1.8;
           white-space: pre-wrap;
           text-align: right;
-          direction: ltr; // Important: désactive l'inversion automatique
+          direction: ltr;
           unicode-bidi: plaintext;
           z-index: 99999;
-          visibility: hidden;
           box-sizing: border-box;
         `;
     
         // Traitement spécial Gagganti
         const processText = (text) => {
           return text.split('\n').map(line => {
-            return line.split(' ').map(word => {
-              return word.split('').reverse().join(''); // Inverse seulement les lettres
-            }).join(' '); // Garde l'ordre original des mots
+            // Inverser l'ordre des mots ET inverser chaque mot
+            return line.split(' ').reverse().map(word => {
+              return word.split('').reverse().join('');
+            }).join(' ');
           }).join('\n');
         };
     
@@ -817,7 +817,9 @@
           width: mirrorDiv.scrollWidth + 80,
           height: mirrorDiv.scrollHeight + 80,
           windowWidth: mirrorDiv.scrollWidth + 80,
-          windowHeight: mirrorDiv.scrollHeight + 80
+          windowHeight: mirrorDiv.scrollHeight + 80,
+          scrollX: 0,
+          scrollY: 0
         };
     
         const canvas = await html2canvas(mirrorDiv, options);
