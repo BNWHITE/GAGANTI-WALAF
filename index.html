@@ -772,12 +772,12 @@
         mirrorDiv.id = 'gagganti-mirror';
         document.body.appendChild(mirrorDiv);
     
-        // Style de base RTL
+        // Style de base
         mirrorDiv.style.cssText = `
           position: fixed;
           top: 0;
           left: 0;
-          max-width: 100vw;
+          width: ${editor.offsetWidth}px;
           padding: 40px;
           background-color: #0a0a0a;
           color: #F5F5DC;
@@ -786,36 +786,27 @@
           line-height: 1.8;
           white-space: pre-wrap;
           text-align: right;
+          direction: ltr; // Important: désactive l'inversion automatique
+          unicode-bidi: plaintext;
           z-index: 99999;
           visibility: hidden;
           box-sizing: border-box;
         `;
     
         // Traitement spécial Gagganti
-        const processLine = (line) => {
-          return line.split(' ').map(word => 
-            word.split('').reverse().join('') // Inverse les lettres
-          ).reverse().join(' '); // Inverse l'ordre des mots
+        const processText = (text) => {
+          return text.split('\n').map(line => {
+            return line.split(' ').map(word => {
+              return word.split('').reverse().join(''); // Inverse seulement les lettres
+            }).join(' '); // Garde l'ordre original des mots
+          }).join('\n');
         };
     
-        // Traiter chaque ligne indépendamment
-        const lines = text.split('\n');
-        lines.forEach((line, i) => {
-          if (i > 0) mirrorDiv.appendChild(document.createElement('br'));
-          
-          const processed = processLine(line);
-          const lineDiv = document.createElement('span');
-          lineDiv.textContent = processed;
-          mirrorDiv.appendChild(lineDiv);
-        });
-    
-        // Calculer la taille
+        mirrorDiv.textContent = processText(text);
         mirrorDiv.style.visibility = 'visible';
-        await new Promise(resolve => setTimeout(resolve, 50));
+    
+        await new Promise(resolve => setTimeout(resolve, 100));
         await document.fonts.ready;
-        
-        const width = Math.min(mirrorDiv.scrollWidth + 80, window.innerWidth);
-        const height = mirrorDiv.scrollHeight + 80;
     
         const options = {
           backgroundColor: null,
@@ -823,10 +814,10 @@
           logging: true,
           useCORS: true,
           allowTaint: true,
-          width: width,
-          height: height,
-          windowWidth: width,
-          windowHeight: height
+          width: mirrorDiv.scrollWidth + 80,
+          height: mirrorDiv.scrollHeight + 80,
+          windowWidth: mirrorDiv.scrollWidth + 80,
+          windowHeight: mirrorDiv.scrollHeight + 80
         };
     
         const canvas = await html2canvas(mirrorDiv, options);
