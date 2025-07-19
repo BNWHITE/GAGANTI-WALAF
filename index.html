@@ -46,7 +46,6 @@
     }
 
     /* === DÉCORATIONS === */
-    /* Fond avec motifs africains */
     body::before {
       content: "";
       position: fixed;
@@ -61,7 +60,6 @@
       z-index: -2;
     }
 
-    /* Silhouettes de cases traditionnelles */
     body::after {
       content: "";
       position: fixed;
@@ -76,7 +74,6 @@
       opacity: 0.15;
     }
 
-    /* Motifs latéraux */
     .decoration-left, .decoration-right {
       position: fixed;
       top: 0;
@@ -470,6 +467,46 @@
       border-left: 5px solid #8888ff;
     }
 
+    /* === CONTENEURS DE CAPTURE === */
+    .capture-container {
+      position: fixed;
+      top: -9999px;
+      left: -9999px;
+      width: 800px;
+      padding: 2rem;
+      background-color: var(--noir);
+      color: var(--ivoire);
+      border: 1px solid var(--or);
+      border-radius: 8px;
+      font-family: 'Gagganti';
+      font-size: 1.8rem;
+      text-align: right;
+      direction: rtl;
+      white-space: pre-wrap;
+      line-height: 1.8;
+      z-index: 10000;
+    }
+
+    .mirror-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 40px;
+      background-color: var(--noir);
+      color: var(--ivoire);
+      font-family: 'Gagganti';
+      font-size: 1.8rem;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      text-align: right;
+      direction: ltr;
+      unicode-bidi: plaintext;
+      z-index: 99999;
+      box-sizing: border-box;
+      visibility: hidden;
+    }
+
     /* === RESPONSIVE === */
     @media (max-width: 992px) {
       .keyboard {
@@ -565,24 +602,6 @@
         width: 20px;
       }
     }
-
-    /* === CONTENEUR DE CAPTURE === */
-    .capture-container {
-      position: absolute;
-      left: -9999px;
-      width: 800px;
-      padding: 2rem;
-      background-color: var(--noir);
-      color: var(--ivoire);
-      border: 1px solid var(--or);
-      border-radius: 8px;
-      font-family: 'Gagganti';
-      font-size: 1.8rem;
-      text-align: right;
-      direction: rtl;
-      white-space: pre-wrap;
-      line-height: 1.8;
-    }
   </style>
 </head>
 <body>
@@ -676,22 +695,6 @@
         <button onclick="deleteChar()" class="accent"><i class="fas fa-backspace"></i></button>
         <button onclick="toggleEmojiPanel()" class="secondary">😀</button>
       </div>
-      
-      <!-- Panel émojis -->
-      <div class="keyboard">
-        <button onclick="insertAtCursor('😀')">😀</button>
-        <button onclick="insertAtCursor('😂')">😂</button>
-        <button onclick="insertAtCursor('😊')">😊</button>
-        <button onclick="insertAtCursor('❤️')">❤️</button>
-        <button onclick="insertAtCursor('👍')">👍</button>
-        <button onclick="insertAtCursor('🙏')">🙏</button>
-        <button onclick="insertAtCursor('🇸🇳')">🇸🇳</button>
-        <button onclick="insertAtCursor('🌍')">🌍</button>
-        <button onclick="insertAtCursor('🌞')">🌞</button>
-        <button onclick="insertAtCursor('🍲')">🍲</button>
-        <button onclick="insertAtCursor('🥘')">🥘</button>
-        <button onclick="insertAtCursor('💪')">💪</button>
-      </div>
     </div>
 
     <div class="action-buttons">
@@ -702,10 +705,16 @@
         <i class="fas fa-file-alt"></i> Mbind ci .txt
       </button>
       <button onclick="exportAsImage('png')" class="accent">
-        <i class="fas fa-image"></i> Mbind ci .png (RTL)
+        <i class="fas fa-image"></i> Mbind ci .png
       </button>
       <button onclick="exportAsImage('jpeg')" class="accent">
         <i class="fas fa-image"></i> Mbind ci .jpg
+      </button>
+      <button onclick="exportAsPDF()" class="accent">
+        <i class="fas fa-file-pdf"></i> Mbind ci .pdf
+      </button>
+      <button onclick="captureEditorArea()" class="outline">
+        <i class="fas fa-camera"></i> Capture écran
       </button>
       <button onclick="clearText()" class="outline">
         <i class="fas fa-trash-alt"></i> Mbind ci Fàyyi
@@ -727,10 +736,15 @@
     </div>
   </footer>
 
+  <!-- Conteneurs cachés pour les exports -->
+  <div id="captureContainer" class="capture-container"></div>
+  <div id="mirrorContainer" class="mirror-container"></div>
+
   <!-- === SCRIPT JS === -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    // ===== FONCTIONS PRINCIPALES =====
+    // ===== FONCTIONS DE BASE =====
     function insertAtCursor(char) {
       const editor = document.getElementById('editor');
       const cursorPos = editor.selectionStart;
@@ -761,105 +775,12 @@
       document.querySelector('.character-count').textContent = `${count} xatt`;
     }
 
-    // ===== FONCTIONS D'EXPORT =====
-    async function exportAsImage(format) {
-      try {
-        const editor = document.getElementById('editor');
-        const text = editor.value;
-    
-        // Créer un conteneur miroir
-        const mirrorDiv = document.createElement('div');
-        mirrorDiv.id = 'gagganti-mirror';
-        document.body.appendChild(mirrorDiv);
-    
-        // Style de base
-        mirrorDiv.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: ${editor.offsetWidth}px;
-          padding: 40px;
-          background-color: #0a0a0a;
-          color: #F5F5DC;
-          font-family: 'Gagganti';
-          font-size: 1.8rem;
-          line-height: 1.8;
-          white-space: pre-wrap;
-          text-align: right;
-          direction: ltr;
-          unicode-bidi: plaintext;
-          z-index: 99999;
-          box-sizing: border-box;
-        `;
-    
-        // Traitement spécial Gagganti avec triple inversion
-        const processText = (text) => {
-          // 1. Séparer les lignes
-          const lines = text.split('\n').filter(line => line.trim() !== '');
-          
-          // 2. Inverser l'ordre des lignes
-          const reversedLines = lines.reverse();
-          
-          // 3. Traiter chaque ligne
-          return reversedLines.map(line => {
-            // a. Inverser les lettres dans chaque mot
-            const reversedWords = line.split(' ').map(word => 
-              word.split('').reverse().join('')
-            );
-            // b. Garder l'ordre des mots original dans la ligne
-            return reversedWords.join(' ');
-          }).join('\n');
-        };
-    
-        mirrorDiv.textContent = processText(text);
-        mirrorDiv.style.visibility = 'visible';
-    
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await document.fonts.ready;
-    
-        const options = {
-          backgroundColor: null,
-          scale: 1,
-          logging: true,
-          useCORS: true,
-          allowTaint: true,
-          width: mirrorDiv.scrollWidth + 80,
-          height: mirrorDiv.scrollHeight + 80,
-          windowWidth: mirrorDiv.scrollWidth + 80,
-          windowHeight: mirrorDiv.scrollHeight + 80,
-          scrollX: 0,
-          scrollY: 0
-        };
-    
-        const canvas = await html2canvas(mirrorDiv, options);
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL(`image/${format}`);
-        link.download = `gagganti-export-${Date.now()}.${format}`;
-        link.click();
-    
-      } catch (error) {
-        console.error("Erreur d'export:", error);
-        alert("Jàpp na jàkkaarloo");
-      } finally {
-        const mirror = document.getElementById('gagganti-mirror');
-        if (mirror) document.body.removeChild(mirror);
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
       }
-    }
-    function downloadText() {
-      const text = document.getElementById('editor').value;
-      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `itnagag-${new Date().toISOString().slice(0,10)}.txt`;
-      link.click();
-      showToast('Mbind ci .txt dinañu ko yóbbu', 'success');
-    }
-
-    function copyText() {
-      const textArea = document.getElementById('editor');
-      navigator.clipboard.writeText(textArea.value)
-        .then(() => showToast('Mbind bi nàpp na!', 'success'))
-        .catch(err => showToast('Jàpp na jàkkaarloo', 'error'));
     }
 
     function clearText() {
@@ -870,17 +791,173 @@
       }
     }
 
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
+    // ===== FONCTIONS DE TRAITEMENT DU TEXTE GAGGANTI =====
+    function processGaggantiText(text) {
+      // 1. Séparer les lignes et filtrer les vides
+      const lines = text.split('\n').filter(line => line.trim() !== '');
+      
+      // 2. Inverser l'ordre des lignes
+      const reversedLines = lines.reverse();
+      
+      // 3. Traiter chaque ligne
+      return reversedLines.map(line => {
+        // a. Inverser les lettres dans chaque mot
+        const reversedWords = line.split(' ').map(word => 
+          word.split('').reverse().join('')
+        );
+        // b. Garder l'ordre des mots original dans la ligne
+        return reversedWords.join(' ');
+      }).join('\n');
+    }
+
+    // ===== FONCTIONS D'EXPORT =====
+    async function exportAsImage(format) {
+      try {
+        const text = document.getElementById('editor').value;
+        
+        if (!text.trim()) {
+          showToast("Mbindul dara, bindal dara!", 'error');
+          return;
+        }
+
+        const mirrorDiv = document.getElementById('mirrorContainer');
+        mirrorDiv.textContent = processGaggantiText(text);
+        mirrorDiv.style.visibility = 'visible';
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await document.fonts.ready;
+
+        const options = {
+          backgroundColor: null,
+          scale: 2,
+          logging: false,
+          useCORS: true,
+          allowTaint: true,
+          width: mirrorDiv.scrollWidth + 80,
+          height: mirrorDiv.scrollHeight + 80,
+          windowWidth: mirrorDiv.scrollWidth + 80,
+          windowHeight: mirrorDiv.scrollHeight + 80,
+          scrollX: 0,
+          scrollY: 0
+        };
+
+        const canvas = await html2canvas(mirrorDiv, options);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL(`image/${format}`, { quality: 0.95 });
+        link.download = `itnagag-${new Date().toISOString().slice(0,10)}.${format}`;
+        link.click();
+
+        showToast(`Mbind bi nàpp na ci .${format}`, 'success');
+        mirrorDiv.style.visibility = 'hidden';
+
+      } catch (error) {
+        console.error("Erreur d'export:", error);
+        showToast("Jàpp na jàkkaarloo", 'error');
       }
     }
 
-    function toggleEmojiPanel() {
-      const panel = document.getElementById('emojiPanel');
-      panel.classList.toggle('show');
+    async function exportAsPDF() {
+      try {
+        const text = document.getElementById('editor').value;
+        
+        if (!text.trim()) {
+          showToast("Mbindul dara, bindal dara!", 'error');
+          return;
+        }
+
+        const captureContainer = document.getElementById('captureContainer');
+        captureContainer.textContent = processGaggantiText(text);
+        captureContainer.style.display = 'block';
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await document.fonts.ready;
+
+        const options = {
+          scale: 2,
+          logging: false,
+          useCORS: true,
+          allowTaint: true,
+          width: captureContainer.scrollWidth,
+          height: captureContainer.scrollHeight
+        };
+
+        const canvas = await html2canvas(captureContainer, options);
+        captureContainer.style.display = 'none';
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`itnagag-${new Date().toISOString().slice(0,10)}.pdf`);
+
+        showToast('Mbind bi nàpp na ci .pdf', 'success');
+
+      } catch (error) {
+        console.error("Erreur PDF:", error);
+        showToast("Jàpp na jàkkaarloo", 'error');
+      }
+    }
+
+    async function captureEditorArea() {
+      try {
+        const editorContainer = document.querySelector('.editor-container');
+        
+        const options = {
+          scale: 2,
+          logging: false,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#0a0a0a',
+          windowWidth: editorContainer.scrollWidth,
+          windowHeight: editorContainer.scrollHeight
+        };
+
+        const canvas = await html2canvas(editorContainer, options);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png', { quality: 0.95 });
+        link.download = `itnagag-screenshot-${new Date().toISOString().slice(0,10)}.png`;
+        link.click();
+
+        showToast('Capture écran nàpp na!', 'success');
+
+      } catch (error) {
+        console.error("Erreur capture:", error);
+        showToast("Jàpp na jàkkaarloo", 'error');
+      }
+    }
+
+    function downloadText() {
+      const text = document.getElementById('editor').value;
+      
+      if (!text.trim()) {
+        showToast("Mbindul dara, bindal dara!", 'error');
+        return;
+      }
+
+      const processedText = processGaggantiText(text);
+      const blob = new Blob([processedText], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `itnagag-${new Date().toISOString().slice(0,10)}.txt`;
+      link.click();
+      showToast('Mbind bi nàpp na ci .txt', 'success');
+    }
+
+    function copyText() {
+      const textArea = document.getElementById('editor');
+      const processedText = processGaggantiText(textArea.value);
+      
+      navigator.clipboard.writeText(processedText)
+        .then(() => showToast('Mbind bi nàpp na!', 'success'))
+        .catch(err => showToast('Jàpp na jàkkaarloo', 'error'));
     }
 
     // ===== FONCTIONS UTILITAIRES =====
@@ -905,10 +982,9 @@
       
       document.getElementById('forum-link').addEventListener('click', function(e) {
         e.preventDefault();
-        alert("Waxtaan gi dinañu ko def ci wàll wi!");
+        showToast("Waxtaan gi dinañu ko def ci wàll wi!", 'info');
       });
     });
   </script>
 </body>
 </html>
-
