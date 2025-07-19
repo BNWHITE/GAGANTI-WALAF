@@ -763,71 +763,79 @@
 
     // ===== FONCTIONS D'EXPORT =====
     async function exportAsImage(format) {
-      try {
-        const editor = document.getElementById('editor');
-        
-        // Créer un conteneur miroir avec les mêmes styles
-        const captureDiv = document.createElement('div');
-        captureDiv.style.position = 'absolute';
-        captureDiv.style.left = '-9999px';
-        captureDiv.style.width = editor.offsetWidth + 'px';
-        captureDiv.style.padding = '2rem';
-        captureDiv.style.backgroundColor = '#0a0a0a';
-        captureDiv.style.color = '#F5F5DC';
-        captureDiv.style.border = '1px solid #D4AF37';
-        captureDiv.style.borderRadius = '8px';
-        captureDiv.style.fontFamily = 'Gagganti, sans-serif';
-        captureDiv.style.fontSize = '1.8rem';
-        captureDiv.style.lineHeight = '1.8';
-        captureDiv.style.whiteSpace = 'pre-wrap';
-        
-        // Solution RTL fiable
-        const contentDiv = document.createElement('div');
-        contentDir.style.dir = 'rtl';
-        contentDiv.style.textAlign = 'right';
-        contentDiv.style.unicodeBidi = 'plaintext'; // Empêche le réarrangement
-        
-        // Préserver les sauts de ligne
-        const lines = editor.value.split('\n');
-        lines.forEach(line => {
-          const lineDiv = document.createElement('div');
-          lineDiv.style.direction = 'rtl';
-          lineDiv.style.textAlign = 'right';
-          lineDiv.textContent = line;
-          contentDiv.appendChild(lineDiv);
-        });
-        
-        captureDiv.appendChild(contentDiv);
-        document.body.appendChild(captureDiv);
+      const editor = document.getElementById('editor');
+      
+      // Créer un conteneur miroir parfait
+      const captureDiv = document.createElement('div');
+      captureDiv.id = 'gagganti-capture';
+      captureDiv.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: ${editor.offsetWidth}px;
+        min-height: ${editor.offsetHeight}px;
+        padding: 2rem;
+        background: #0a0a0a;
+        color: #F5F5DC;
+        border: 1px solid #D4AF37;
+        border-radius: 8px;
+        font: 1.8rem 'Gagganti', sans-serif;
+        line-height: 1.8;
+        white-space: pre;
+        text-align: right;
+        z-index: 99999;
+        visibility: hidden;
+      `;
     
+      // Solution RTL fiable
+      const content = document.createElement('pre');
+      content.style.cssText = `
+        direction: rtl;
+        unicode-bidi: bidi-override;
+        margin: 0;
+        padding: 0;
+        white-space: pre-wrap;
+        text-align: inherit;
+      `;
+      content.textContent = editor.value;
+    
+      captureDiv.appendChild(content);
+      document.body.appendChild(captureDiv);
+    
+      try {
+        // Temporairement rendre visible pour la capture
+        captureDiv.style.visibility = 'visible';
+        
         const options = {
-          backgroundColor: '#0a0a0a',
+          backgroundColor: null,
           scale: 2,
           logging: true,
           useCORS: true,
           allowTaint: true,
-          onclone: (clonedDoc, element) => {
-            // Garantir la conservation des styles
-            const clone = element.cloneNode(true);
-            clone.style.direction = 'rtl';
-            clone.style.textAlign = 'right';
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: captureDiv.offsetWidth,
+          windowHeight: captureDiv.offsetHeight,
+          onclone: (document, element) => {
+            element.style.visibility = 'visible';
           }
         };
-        
+    
         const canvas = await html2canvas(captureDiv, options);
-        const mimeType = `image/${format}`;
         const link = document.createElement('a');
-        link.href = canvas.toDataURL(mimeType);
-        link.download = `gagganti-export-${new Date().getTime()}.${format}`;
+        link.href = canvas.toDataURL(`image/${format}`);
+        link.download = `gagganti-${Date.now()}.${format}`;
         link.click();
         
         showToast('Export réussi!', 'success');
       } catch (error) {
-        console.error("Erreur d'export:", error);
+        console.error('Erreur export:', error);
         showToast("Jàpp na jàkkaarloo", 'error');
       } finally {
-        const div = document.querySelector('div[style*="left: -9999px"]');
-        if (div) document.body.removeChild(div);
+        // Nettoyage
+        if (document.getElementById('gagganti-capture')) {
+          document.body.removeChild(captureDiv);
+        }
       }
     }
     function downloadText() {
