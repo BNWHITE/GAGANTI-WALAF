@@ -792,15 +792,22 @@
           box-sizing: border-box;
         `;
     
-        // Traitement spécial Gagganti avec inversion de l'ordre des mots
+        // Traitement spécial Gagganti avec triple inversion
         const processText = (text) => {
-          return text.split('\n').map(line => {
-            // Inverser les lettres dans chaque mot
-            const words = line.split(' ').map(word => 
+          // 1. Séparer les lignes
+          const lines = text.split('\n');
+          
+          // 2. Inverser l'ordre des lignes
+          const reversedLines = lines.reverse();
+          
+          // 3. Traiter chaque ligne
+          return reversedLines.map(line => {
+            // a. Inverser les lettres dans chaque mot
+            const reversedWords = line.split(' ').map(word => 
               word.split('').reverse().join('')
             );
-            // Inverser l'ordre des mots (comme un dépilement)
-            return words.reverse().join(' ');
+            // b. Garder l'ordre des mots original dans la ligne
+            return reversedWords.join(' ');
           }).join('\n');
         };
     
