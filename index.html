@@ -766,10 +766,13 @@
       try {
         const editor = document.getElementById('editor');
         const text = editor.value;
-        
+    
         // Créer un conteneur miroir
         const mirrorDiv = document.createElement('div');
         mirrorDiv.id = 'gagganti-mirror';
+        document.body.appendChild(mirrorDiv);
+    
+        // Appliquer les styles RTL
         mirrorDiv.style.cssText = `
           position: fixed;
           top: 0;
@@ -788,15 +791,20 @@
           unicode-bidi: bidi-override;
           z-index: 99999;
           visibility: hidden;
+          display: flex;
+          flex-direction: column-reverse; // Corrige l'inversion des lignes
         `;
     
-        // Inverser manuellement l'ordre des caractères pour compenser RTL
-        const correctedLines = text.split('\n').map(line => {
-          return line.split('').reverse().join('');
-        }).join('\n');
-    
-        mirrorDiv.textContent = correctedLines;
-        document.body.appendChild(mirrorDiv);
+        // Traitement ligne par ligne
+        const lines = text.split('\n');
+        lines.forEach(line => {
+          const lineDiv = document.createElement('div');
+          lineDiv.style.direction = 'rtl';
+          lineDiv.style.textAlign = 'right';
+          lineDiv.style.unicodeBidi = 'bidi-override';
+          lineDiv.textContent = line;
+          mirrorDiv.prepend(lineDiv); // Ajoute dans l'ordre inverse
+        });
     
         const options = {
           backgroundColor: null,
@@ -807,7 +815,6 @@
           onclone: (clonedDoc) => {
             const clone = clonedDoc.getElementById('gagganti-mirror');
             clone.style.visibility = 'visible';
-            clone.style.direction = 'ltr'; // Inverser la direction pour le rendu
           }
         };
     
