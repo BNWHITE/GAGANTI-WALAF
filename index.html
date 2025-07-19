@@ -815,20 +815,25 @@
     async function exportAsImage(format) {
       try {
         const text = document.getElementById('editor').value;
-        
+    
         if (!text.trim()) {
           showToast("Mbindul dara, bindal dara!", 'error');
           return;
         }
-
+    
         const mirrorDiv = document.getElementById('mirrorContainer');
-        mirrorDiv.textContent = processGaggantiText(text);
+        
+        // === Afficher le texte TEL QUEL ===
+        mirrorDiv.textContent = text;
         mirrorDiv.style.fontFamily = "'Gagganti', sans-serif";
         mirrorDiv.style.visibility = 'visible';
-
+        mirrorDiv.style.direction = 'rtl';
+        mirrorDiv.style.unicodeBidi = 'bidi-override';
+        mirrorDiv.style.textAlign = 'right';
+    
         await new Promise(resolve => setTimeout(resolve, 100));
         await document.fonts.ready;
-
+    
         const options = {
           backgroundColor: null,
           scale: 2,
@@ -842,18 +847,16 @@
           scrollX: 0,
           scrollY: 0
         };
-
+    
         const canvas = await html2canvas(mirrorDiv, options);
         const link = document.createElement('a');
         link.href = canvas.toDataURL(`image/${format}`, { quality: 0.95 });
         link.download = `itnagag-${new Date().toISOString().slice(0,10)}.${format}`;
         link.click();
-
+    
         showToast(`Mbind bi nàpp na ci .${format}`, 'success');
-        mirrorDiv.style.direction = 'rtl';
-        mirrorDiv.style.unicodeBidi = 'bidi-override';
-        mirrorDiv.style.textAlign = 'right';
-
+        mirrorDiv.style.visibility = 'hidden';
+    
       } catch (error) {
         console.error("Erreur d'export:", error);
         showToast("Jàpp na jàkkaarloo", 'error');
