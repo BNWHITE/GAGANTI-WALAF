@@ -767,14 +767,17 @@
         const editor = document.getElementById('editor');
         const text = editor.value;
     
-        // Créer un conteneur avec calcul automatique de la taille
+        // Créer un conteneur miroir
         const mirrorDiv = document.createElement('div');
         mirrorDiv.id = 'gagganti-mirror';
+        document.body.appendChild(mirrorDiv);
+    
+        // Style de base
         mirrorDiv.style.cssText = `
           position: fixed;
           top: 0;
           left: 0;
-          max-width: 100%;
+          max-width: 100vw;
           padding: 40px;
           background-color: #0a0a0a;
           color: #F5F5DC;
@@ -782,56 +785,43 @@
           font-size: 1.8rem;
           line-height: 1.8;
           white-space: pre-wrap;
+          text-align: right;
+          direction: rtl;
+          unicode-bidi: bidi-override;
           z-index: 99999;
           visibility: hidden;
           box-sizing: border-box;
         `;
     
-        // Traitement du texte Gagganti
+        // Traitement spécial pour Gagganti
+        const processGaggantiText = (text) => {
+          return text.split('').reverse().join(''); // Inverse seulement les caractères
+        };
+    
+        // Conserver les sauts de ligne originaux
         const lines = text.split('\n');
-        lines.forEach(line => {
-          const lineDiv = document.createElement('div');
-          lineDiv.style.display = 'flex';
-          lineDiv.style.justifyContent = 'flex-end';
-          lineDiv.style.flexWrap = 'wrap'; // Retour à la ligne automatique
+        lines.forEach((line, index) => {
+          if (index > 0) mirrorDiv.appendChild(document.createElement('br'));
           
-          const words = line.split(' ').filter(w => w.length > 0);
-          words.reverse().forEach(word => {
-            const wordSpan = document.createElement('span');
-            wordSpan.style.marginLeft = '15px';
-            wordSpan.style.marginBottom = '10px';
-            wordSpan.textContent = word.split('').reverse().join('');
-            lineDiv.appendChild(wordSpan);
-          });
-          
+          const lineDiv = document.createElement('span');
+          lineDiv.textContent = processGaggantiText(line);
           mirrorDiv.appendChild(lineDiv);
         });
     
-        document.body.appendChild(mirrorDiv);
-        
-        // Attendre le rendu et le chargement de la police
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await document.fonts.ready;
-    
         // Calculer la taille nécessaire
-        const clone = mirrorDiv.cloneNode(true);
-        clone.style.visibility = 'hidden';
-        clone.style.position = 'absolute';
-        clone.style.top = '-9999px';
-        document.body.appendChild(clone);
+        mirrorDiv.style.visibility = 'hidden';
+        await new Promise(resolve => setTimeout(resolve, 50));
+        await document.fonts.ready;
         
-        const width = clone.scrollWidth + 80; // Marge supplémentaire
-        const height = clone.scrollHeight + 80;
-        document.body.removeChild(clone);
-    
-        // Ajuster la taille du conteneur
+        const width = Math.min(mirrorDiv.scrollWidth + 80, window.innerWidth);
+        const height = mirrorDiv.scrollHeight + 80;
+        
         mirrorDiv.style.width = `${width}px`;
-        mirrorDiv.style.minHeight = `${height}px`;
         mirrorDiv.style.visibility = 'visible';
     
         const options = {
           backgroundColor: null,
-          scale: 1, // Échelle réduite pour plus de fiabilité
+          scale: 1,
           logging: true,
           useCORS: true,
           allowTaint: true,
