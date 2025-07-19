@@ -767,36 +767,39 @@
         const editor = document.getElementById('editor');
         const text = editor.value;
     
-        // Créer un conteneur visible temporairement
+        // Créer un conteneur avec calcul automatique de la taille
         const mirrorDiv = document.createElement('div');
         mirrorDiv.id = 'gagganti-mirror';
         mirrorDiv.style.cssText = `
           position: fixed;
           top: 0;
           left: 0;
-          width: ${editor.offsetWidth}px;
-          padding: 20px;
+          max-width: 100%;
+          padding: 40px;
           background-color: #0a0a0a;
           color: #F5F5DC;
           font-family: 'Gagganti';
           font-size: 1.8rem;
           line-height: 1.8;
-          white-space: pre;
+          white-space: pre-wrap;
           z-index: 99999;
+          visibility: hidden;
+          box-sizing: border-box;
         `;
     
-        // Traitement spécial Gagganti
+        // Traitement du texte Gagganti
         const lines = text.split('\n');
         lines.forEach(line => {
           const lineDiv = document.createElement('div');
           lineDiv.style.display = 'flex';
           lineDiv.style.justifyContent = 'flex-end';
+          lineDiv.style.flexWrap = 'wrap'; // Retour à la ligne automatique
           
-          // Inverser l'ordre des mots et des lettres
           const words = line.split(' ').filter(w => w.length > 0);
           words.reverse().forEach(word => {
             const wordSpan = document.createElement('span');
-            wordSpan.style.marginLeft = '10px';
+            wordSpan.style.marginLeft = '15px';
+            wordSpan.style.marginBottom = '10px';
             wordSpan.textContent = word.split('').reverse().join('');
             lineDiv.appendChild(wordSpan);
           });
@@ -805,18 +808,39 @@
         });
     
         document.body.appendChild(mirrorDiv);
-    
-        // Attendre que la police soit chargée
+        
+        // Attendre le rendu et le chargement de la police
+        await new Promise(resolve => setTimeout(resolve, 100));
         await document.fonts.ready;
+    
+        // Calculer la taille nécessaire
+        const clone = mirrorDiv.cloneNode(true);
+        clone.style.visibility = 'hidden';
+        clone.style.position = 'absolute';
+        clone.style.top = '-9999px';
+        document.body.appendChild(clone);
+        
+        const width = clone.scrollWidth + 80; // Marge supplémentaire
+        const height = clone.scrollHeight + 80;
+        document.body.removeChild(clone);
+    
+        // Ajuster la taille du conteneur
+        mirrorDiv.style.width = `${width}px`;
+        mirrorDiv.style.minHeight = `${height}px`;
+        mirrorDiv.style.visibility = 'visible';
     
         const options = {
           backgroundColor: null,
-          scale: 2,
+          scale: 1, // Échelle réduite pour plus de fiabilité
           logging: true,
           useCORS: true,
           allowTaint: true,
-          windowWidth: mirrorDiv.scrollWidth,
-          windowHeight: mirrorDiv.scrollHeight
+          width: width,
+          height: height,
+          windowWidth: width,
+          windowHeight: height,
+          scrollX: 0,
+          scrollY: 0
         };
     
         const canvas = await html2canvas(mirrorDiv, options);
