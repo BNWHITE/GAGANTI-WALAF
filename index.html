@@ -763,102 +763,73 @@
 
     // ===== FONCTIONS D'EXPORT =====
     async function exportAsImage(format) {
-      const editor = document.getElementById('editor');
-      
-      // Créer un conteneur miroir de l'éditeur
-      const captureDiv = document.createElement('div');
-      captureDiv.id = 'gagganti-capture';
-      document.body.appendChild(captureDiv);
-    
-      // Copier exactement le style de l'éditeur
-      const editorStyle = window.getComputedStyle(editor);
-      captureDiv.style.cssText = `
-        position: absolute;
-        left: -9999px;
-        width: ${editor.offsetWidth}px;
-        min-height: ${editor.offsetHeight}px;
-        padding: ${editorStyle.padding};
-        background-color: ${editorStyle.backgroundColor};
-        color: ${editorStyle.color};
-        border: ${editorStyle.border};
-        border-radius: ${editorStyle.borderRadius};
-        font-family: ${editorStyle.fontFamily};
-        font-size: ${editorStyle.fontSize};
-        line-height: ${editorStyle.lineHeight};
-        white-space: pre-wrap;
-        text-align: right;
-        direction: rtl;
-        unicode-bidi: bidi-override;
-      `;
-    
-      // Créer une structure qui force le rendu exact
-      const contentDiv = document.createElement('div');
-      contentDiv.style.cssText = `
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      `;
-    
-      // Traiter chaque ligne indépendamment
-      const lines = editor.value.split('\n');
-      lines.forEach(line => {
-        const lineDiv = document.createElement('div');
-        lineDiv.style.cssText = `
-          display: block;
-          width: 100%;
-          direction: rtl;
-          unicode-bidi: bidi-override;
-          text-align: right;
-        `;
-        
-        // Utiliser des spans pour chaque caractère si nécessaire
-        if (line.includes('\u200E') || line.includes('\u200F')) {
-          lineDiv.innerHTML = Array.from(line).map(c => 
-            `<span style="unicode-bidi: isolate; direction: ${c === '\u200E' ? 'ltr' : 'rtl'}">${c}</span>`
-          ).join('');
-        } else {
-          lineDiv.textContent = line;
-        }
-        
-        contentDiv.appendChild(lineDiv);
-      });
-    
-      captureDiv.appendChild(contentDiv);
-    
       try {
-        // Configuration ultra-précise pour html2canvas
+        const editor = document.getElementById('editor');
+        
+        // Créer un conteneur miroir avec les mêmes styles
+        const captureDiv = document.createElement('div');
+        captureDiv.style.position = 'absolute';
+        captureDiv.style.left = '-9999px';
+        captureDiv.style.width = editor.offsetWidth + 'px';
+        captureDiv.style.padding = '2rem';
+        captureDiv.style.backgroundColor = '#0a0a0a';
+        captureDiv.style.color = '#F5F5DC';
+        captureDiv.style.border = '1px solid #D4AF37';
+        captureDiv.style.borderRadius = '8px';
+        captureDiv.style.fontFamily = 'Gagganti, sans-serif';
+        captureDiv.style.fontSize = '1.8rem';
+        captureDiv.style.lineHeight = '1.8';
+        captureDiv.style.whiteSpace = 'pre-wrap';
+        
+        // Solution RTL fiable
+        const contentDiv = document.createElement('div');
+        contentDir.style.dir = 'rtl';
+        contentDiv.style.textAlign = 'right';
+        contentDiv.style.unicodeBidi = 'plaintext'; // Empêche le réarrangement
+        
+        // Préserver les sauts de ligne
+        const lines = editor.value.split('\n');
+        lines.forEach(line => {
+          const lineDiv = document.createElement('div');
+          lineDiv.style.direction = 'rtl';
+          lineDiv.style.textAlign = 'right';
+          lineDiv.textContent = line;
+          contentDiv.appendChild(lineDiv);
+        });
+        
+        captureDiv.appendChild(contentDiv);
+        document.body.appendChild(captureDiv);
+    
         const options = {
-          backgroundColor: editorStyle.backgroundColor,
+          backgroundColor: '#0a0a0a',
           scale: 2,
           logging: true,
           useCORS: true,
           allowTaint: true,
-          ignoreElements: (element) => element.id !== 'gagganti-capture',
-          onclone: (clonedDoc) => {
-            const clone = clonedDoc.getElementById('gagganti-capture');
-            clone.style.cssText = captureDiv.style.cssText;
+          onclone: (clonedDoc, element) => {
+            // Garantir la conservation des styles
+            const clone = element.cloneNode(true);
+            clone.style.direction = 'rtl';
+            clone.style.textAlign = 'right';
           }
         };
         
         const canvas = await html2canvas(captureDiv, options);
         const mimeType = `image/${format}`;
-        const quality = format === 'jpeg' ? 0.9 : 1;
-        
         const link = document.createElement('a');
-        link.href = canvas.toDataURL(mimeType, quality);
-        link.download = `gagganti-${new Date().toISOString().slice(0,10)}.${format}`;
+        link.href = canvas.toDataURL(mimeType);
+        link.download = `gagganti-export-${new Date().getTime()}.${format}`;
         link.click();
         
-        showToast(`Mbind ci .${format} généré na`, 'success');
+        showToast('Export réussi!', 'success');
       } catch (error) {
         console.error("Erreur d'export:", error);
         showToast("Jàpp na jàkkaarloo", 'error');
       } finally {
-        document.body.removeChild(captureDiv);
+        const div = document.querySelector('div[style*="left: -9999px"]');
+        if (div) document.body.removeChild(div);
       }
     }
-
     function downloadText() {
       const text = document.getElementById('editor').value;
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
