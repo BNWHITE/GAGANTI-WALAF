@@ -772,7 +772,7 @@
         mirrorDiv.id = 'gagganti-mirror';
         document.body.appendChild(mirrorDiv);
     
-        // Appliquer les styles RTL
+        // Style de base RTL
         mirrorDiv.style.cssText = `
           position: fixed;
           top: 0;
@@ -786,24 +786,27 @@
           font-size: 1.8rem;
           line-height: 1.8;
           white-space: pre-wrap;
-          text-align: right;
-          direction: rtl;
-          unicode-bidi: bidi-override;
           z-index: 99999;
           visibility: hidden;
-          display: flex;
-          flex-direction: column-reverse; // Corrige l'inversion des lignes
         `;
     
-        // Traitement ligne par ligne
+        // Traitement spécial Gagganti
         const lines = text.split('\n');
         lines.forEach(line => {
           const lineDiv = document.createElement('div');
-          lineDiv.style.direction = 'rtl';
-          lineDiv.style.textAlign = 'right';
-          lineDiv.style.unicodeBidi = 'bidi-override';
-          lineDiv.textContent = line;
-          mirrorDiv.prepend(lineDiv); // Ajoute dans l'ordre inverse
+          lineDiv.style.display = 'flex';
+          lineDiv.style.justifyContent = 'flex-end'; // Alignement à droite
+          
+          // Inverser l'ordre des mots ET des lettres dans chaque mot
+          const words = line.split(' ');
+          words.reverse().forEach(word => {
+            const wordSpan = document.createElement('span');
+            wordSpan.style.marginLeft = '10px'; // Espace entre les mots
+            wordSpan.textContent = word.split('').reverse().join(''); // Inversion des lettres
+            lineDiv.appendChild(wordSpan);
+          });
+          
+          mirrorDiv.appendChild(lineDiv);
         });
     
         const options = {
@@ -811,11 +814,7 @@
           scale: 2,
           logging: true,
           useCORS: true,
-          allowTaint: true,
-          onclone: (clonedDoc) => {
-            const clone = clonedDoc.getElementById('gagganti-mirror');
-            clone.style.visibility = 'visible';
-          }
+          allowTaint: true
         };
     
         const canvas = await html2canvas(mirrorDiv, options);
