@@ -763,40 +763,70 @@
 
     // ===== FONCTIONS D'EXPORT =====
     async function exportAsImage(format) {
-    // Créer un canvas manuellement
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+      try {
+        const editor = document.getElementById('editor');
+        const text = editor.value;
+        
+        // Créer un conteneur temporaire avec les bonnes propriétés RTL
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.width = '800px';
+        container.style.padding = '40px';
+        container.style.backgroundColor = '#0a0a0a';
+        container.style.color = '#F5F5DC';
+        container.style.fontFamily = 'Gagganti';
+        container.style.fontSize = '48px';
+        container.style.direction = 'rtl';
+        container.style.textAlign = 'right';
+        container.style.unicodeBidi = 'bidi-override';
+        
+        // Pour chaque ligne, créer un élément séparé
+        const lines = text.split('\n');
+        lines.forEach(line => {
+          const lineDiv = document.createElement('div');
+          lineDiv.style.direction = 'rtl';
+          lineDiv.style.textAlign = 'right';
+          lineDiv.style.unicodeBidi = 'bidi-override';
+          lineDiv.textContent = line;
+          container.appendChild(lineDiv);
+        });
+        
+        document.body.appendChild(container);
     
-    // Dimensions
-    canvas.width = 800;
-    canvas.height = 600;
+        // Configuration spéciale pour html2canvas
+        const options = {
+          backgroundColor: null,
+          scale: 2,
+          logging: true,
+          useCORS: true,
+          allowTaint: true,
+          onclone: (clonedDoc, element) => {
+            // Maintenir les propriétés RTL dans le clone
+            const clones = clonedDoc.querySelectorAll('div');
+            clones.forEach(clone => {
+              clone.style.direction = 'rtl';
+              clone.style.textAlign = 'right';
+              clone.style.unicodeBidi = 'bidi-override';
+            });
+          }
+        };
     
-    // Fond
-    ctx.fillStyle = '#0a0a0a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Style de texte
-    ctx.fillStyle = '#F5F5DC';
-    ctx.font = '48px Gagganti';
-    ctx.textAlign = 'right';
-    
-    // Position et texte
-    const text = document.getElementById('editor').value;
-    const x = canvas.width - 50;
-    const y = 100;
-    const lineHeight = 70;
-    
-    // Découper par lignes et dessiner
-    text.split('\n').forEach((line, i) => {
-      ctx.fillText(line, x, y + (i * lineHeight));
-    });
-    
-    // Téléchargement
-    const link = document.createElement('a');
-    link.href = canvas.toDataURL(`image/${format}`);
-    link.download = `gagganti-export.${format}`;
-    link.click();
-  }
+        const canvas = await html2canvas(container, options);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL(`image/${format}`);
+        link.download = `gagganti-export-${Date.now()}.${format}`;
+        link.click();
+        
+        // Nettoyer
+        document.body.removeChild(container);
+        
+        console.log('Export réussi avec ordre RTL préservé');
+      } catch (error) {
+        console.error("Erreur d'export:", error);
+        alert("Jàpp na jàkkaarloo");
+      }
+    }
     function downloadText() {
       const text = document.getElementById('editor').value;
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
