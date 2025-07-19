@@ -764,48 +764,48 @@
     // ===== FONCTIONS D'EXPORT =====
     async function exportAsImage(format) {
       const editor = document.getElementById('editor');
-    
-      // Créer un conteneur de capture avec la bonne direction
-      const captureDiv = document.createElement('div');
-      captureDiv.className = 'capture-container';
-    
-      // Structure pour préserver le RTL
-      captureDiv.innerHTML = `
-        <div style="
-          width: 100%;
-          height: 100%;
-          background-color: #0a0a0a;
-          color: #F5F5DC;
-          font-family: 'Gagganti';
-          font-size: 1.8rem;
-          text-align: right;
-          direction: rtl;
-          unicode-bidi: bidi-override;
-          padding: 2rem;
-          border: 1px solid #D4AF37;
-          border-radius: 8px;
-          line-height: 1.8;
-          white-space: pre-wrap;
-        ">
-          ${editor.value}
-        </div>
-      `;
-  
-      document.body.appendChild(captureDiv);
       
+      // Créer un conteneur de capture avec direction forcée LTR
+      const captureDiv = document.createElement('div');
+      captureDiv.style.position = 'absolute';
+      captureDiv.style.left = '-9999px';
+      captureDiv.style.width = '800px';
+      captureDiv.style.padding = '2rem';
+      captureDiv.style.backgroundColor = '#0a0a0a';
+      captureDiv.style.color = '#F5F5DC';
+      captureDiv.style.border = '1px solid #D4AF37';
+      captureDiv.style.borderRadius = '8px';
+      captureDiv.style.fontFamily = 'Gagganti, sans-serif';
+      captureDiv.style.fontSize = '1.8rem';
+      captureDiv.style.lineHeight = '1.8';
+      captureDiv.style.whiteSpace = 'pre-wrap';
+      
+      // Important: Forcer LTR mais avec alignement droit
+      captureDiv.style.direction = 'ltr';
+      captureDiv.style.textAlign = 'right';
+      
+      // Inverser manuellement l'ordre des caractères
+      const text = editor.value;
+      let visualText = '';
+      for (let i = text.length - 1; i >= 0; i--) {
+        visualText += text[i];
+      }
+      
+      captureDiv.textContent = visualText;
+      document.body.appendChild(captureDiv);
+    
       try {
-        // Configuration html2canvas optimisée pour RTL
         const options = {
           backgroundColor: '#0a0a0a',
           scale: 2,
           logging: true,
           useCORS: true,
           allowTaint: true,
-          onclone: function(clonedDoc) {
-            // Force la direction RTL sur le clone
-            const clonedCapture = clonedDoc.querySelector('.capture-container div');
-            clonedCapture.style.direction = 'rtl';
-            clonedCapture.style.unicodeBidi = 'bidi-override';
+          onclone: (clonedDoc, element) => {
+            // Maintenir les styles sur le clone
+            const clonedElement = clonedDoc.querySelector('div');
+            clonedElement.style.direction = 'ltr';
+            clonedElement.style.textAlign = 'right';
           }
         };
         
@@ -813,10 +813,9 @@
         const mimeType = `image/${format}`;
         const quality = format === 'jpeg' ? 0.9 : 1;
         
-        // Créer le lien de téléchargement
         const link = document.createElement('a');
         link.href = canvas.toDataURL(mimeType, quality);
-        link.download = `itnagag-${new Date().toISOString().slice(0,10)}.${format}`;
+        link.download = `gagganti-${new Date().toISOString().slice(0,10)}.${format}`;
         link.click();
         
         showToast(`Mbind ci .${format} généré na`, 'success');
