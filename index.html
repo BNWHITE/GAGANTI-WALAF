@@ -763,81 +763,40 @@
 
     // ===== FONCTIONS D'EXPORT =====
     async function exportAsImage(format) {
-      try {
-        const editor = document.getElementById('editor');
-        
-        // Création d'un conteneur miroir parfait
-        const captureDiv = document.createElement('div');
-        captureDiv.id = 'gagganti-capture';
-        document.body.appendChild(captureDiv);
+    // Créer un canvas manuellement
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     
-        // Copie exacte des styles de l'éditeur
-        const editorStyles = window.getComputedStyle(editor);
-        captureDiv.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: ${editor.offsetWidth}px;
-          min-height: ${editor.offsetHeight}px;
-          padding: ${editorStyles.padding};
-          background: ${editorStyles.backgroundColor};
-          color: ${editorStyles.color};
-          border: ${editorStyles.border};
-          border-radius: ${editorStyles.borderRadius};
-          font-family: ${editorStyles.fontFamily};
-          font-size: ${editorStyles.fontSize};
-          line-height: ${editorStyles.lineHeight};
-          white-space: pre-wrap;
-          text-align: right;
-          direction: rtl;
-          unicode-bidi: bidi-override;
-          z-index: 99999;
-          visibility: hidden;
-        `;
+    // Dimensions
+    canvas.width = 800;
+    canvas.height = 600;
     
-        // Contenu textuel préservé
-        const content = document.createElement('pre');
-        content.style.cssText = `
-          margin: 0;
-          padding: 0;
-          white-space: pre-wrap;
-          direction: rtl;
-          unicode-bidi: bidi-override;
-        `;
-        content.textContent = editor.value;
-        captureDiv.appendChild(content);
+    // Fond
+    ctx.fillStyle = '#0a0a0a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-        // Rendering final
-        captureDiv.style.visibility = 'visible';
-        
-        const options = {
-          backgroundColor: null,
-          scale: 2,
-          logging: true,
-          useCORS: true,
-          allowTaint: true,
-          ignoreElements: (el) => !el.isSameNode(captureDiv),
-          onclone: (clonedDoc) => {
-            const clone = clonedDoc.getElementById('gagganti-capture');
-            clone.style.visibility = 'visible';
-          }
-        };
+    // Style de texte
+    ctx.fillStyle = '#F5F5DC';
+    ctx.font = '48px Gagganti';
+    ctx.textAlign = 'right';
     
-        const canvas = await html2canvas(captureDiv, options);
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL(`image/${format}`);
-        link.download = `gagganti-${Date.now()}.${format}`;
-        link.click();
-        
-        showToast('Export réussi!', 'success');
-      } catch (error) {
-        console.error('Erreur export:', error);
-        showToast("Jàpp na jàkkaarloo", 'error');
-      } finally {
-        const div = document.getElementById('gagganti-capture');
-        if (div) document.body.removeChild(div);
-      }
-    }
+    // Position et texte
+    const text = document.getElementById('editor').value;
+    const x = canvas.width - 50;
+    const y = 100;
+    const lineHeight = 70;
+    
+    // Découper par lignes et dessiner
+    text.split('\n').forEach((line, i) => {
+      ctx.fillText(line, x, y + (i * lineHeight));
+    });
+    
+    // Téléchargement
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL(`image/${format}`);
+    link.download = `gagganti-export.${format}`;
+    link.click();
+  }
     function downloadText() {
       const text = document.getElementById('editor').value;
       const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
