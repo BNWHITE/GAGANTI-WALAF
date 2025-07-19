@@ -795,7 +795,7 @@
         // Traitement spécial Gagganti avec triple inversion
         const processText = (text) => {
           // 1. Séparer les lignes
-          const lines = text.split('\n');
+          const lines = text.split('\n').filter(line => line.trim() !== '');
           
           // 2. Inverser l'ordre des lignes
           const reversedLines = lines.reverse();
@@ -911,3 +911,4 @@
   </script>
 </body>
 </html>
+
