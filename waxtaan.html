@@ -2,553 +2,225 @@
 <html lang="wo" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Waxtaan ci Gagganti</title>
-  <link rel="preload" href="gagganti.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    :root {
-      --noir: #0a0a0a;
-      --or: #D4AF37;
-      --ivoire: #F5F5DC;
-      --indigo: #4B0082;
-      --vert: #013220;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-
     @font-face {
       font-family: 'Gagganti';
       src: url('gagganti.ttf') format('truetype');
       font-display: swap;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Gagganti', sans-serif;
-      background: var(--noir);
-      color: var(--ivoire);
+      background: linear-gradient(to left, #0a0a0a, #4B0082);
+      color: #F5F5DC;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
       direction: rtl;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-    }
-
-    /* Panneau latéral */
-    .sidebar {
-      width: 300px;
-      background: rgba(10, 10, 10, 0.9);
-      border-left: 1px solid var(--or);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      transform: translateX(100%);
-      transition: var(--transition);
-    }
-
-    .sidebar-header {
-      padding: 1rem;
-      background: var(--indigo);
-      border-bottom: 1px solid var(--or);
-      text-align: center;
-    }
-
-    .sidebar-users {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-    }
-
-    .user-item {
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-      display: flex;
-      align-items: center;
-    }
-
-    .user-status {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-left: 0.5rem;
-      background: #4CAF50;
-    }
-
-    /* Interface chat principale */
-    .chat-app {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      position: relative;
-    }
-
-    .chat-header {
-      padding: 1rem;
-      background: linear-gradient(to left, var(--noir), var(--indigo));
-      border-bottom: 1px solid var(--or);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .chat-actions button {
-      background: none;
-      border: none;
-      color: var(--or);
-      font-size: 1.2rem;
-      margin-right: 0.5rem;
-      cursor: pointer;
-    }
-
-    .chat-main {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-      background: 
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0C60,20,80,30,100,50C80,70,60,80,50,100C40,80,20,70,0,50C20,30,40,20,50,0Z"/></svg>');
-      background-size: 200px;
-    }
-
-    .message {
-      max-width: 70%;
-      margin-bottom: 1rem;
-      padding: 0.8rem 1.2rem;
-      border-radius: 1rem;
-      position: relative;
-      animation: fadeIn 0.3s ease-out;
-      line-height: 1.6;
-      word-wrap: break-word;
-      unicode-bidi: plaintext;
-      text-align: right;
-    }
-
-    .message-in {
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      margin-right: auto;
-      border-right: 3px solid var(--or);
     }
 
     .message-out {
-      background: rgba(75, 0, 130, 0.2);
-      border: 1px solid rgba(75, 0, 130, 0.4);
-      margin-left: auto;
-      border-left: 3px solid var(--indigo);
+      background-color: rgba(75, 0, 130, 0.3);
+      border-left: 4px solid #4B0082;
     }
 
-    .message-user {
-      font-weight: bold;
-      color: var(--or);
-      font-size: 0.9rem;
-      margin-bottom: 0.3rem;
-      unicode-bidi: plaintext;
+    .message-in {
+      background-color: rgba(212, 175, 55, 0.2);
+      border-right: 4px solid #D4AF37;
     }
 
     .message-time {
-      font-size: 0.7rem;
-      color: var(--or);
-      text-align: left;
-      direction: ltr;
-      display: block;
-      margin-top: 0.3rem;
-    }
-
-    .typing-indicator {
-      font-size: 0.8rem;
-      color: var(--or);
-      margin-right: 1rem;
-      font-style: italic;
-    }
-
-    /* Zone de saisie */
-    .chat-input-container {
-      padding: 1rem;
-      background: var(--noir);
-      border-top: 1px solid var(--or);
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .input-wrapper {
-      flex: 1;
-      display: flex;
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid var(--or);
-      border-radius: 2rem;
-      padding: 0.5rem;
-    }
-
-    #message-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--ivoire);
-      font-family: 'Gagganti';
-      padding: 0.5rem 1rem;
-      direction: rtl;
-      unicode-bidi: plaintext;
-    }
-
-    #message-input:focus {
-      outline: none;
-    }
-
-    .input-actions {
-      display: flex;
-      align-items: center;
-    }
-
-    .input-btn {
-      background: none;
-      border: none;
-      color: var(--or);
-      font-size: 1.2rem;
-      margin-left: 0.5rem;
-      cursor: pointer;
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
-    }
-
-    .new-message {
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    /* Stickers panel */
-    .stickers-panel {
-      position: absolute;
-      bottom: 80px;
-      right: 1rem;
-      background: rgba(10, 10, 10, 0.95);
-      border: 1px solid var(--or);
-      border-radius: 1rem;
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.5rem;
-      max-width: 300px;
-      z-index: 100;
-      display: none;
-    }
-
-    .sticker {
-      font-size: 2rem;
-      cursor: pointer;
-      transition: var(--transition);
+      font-size: 0.75rem;
+      color: #D4AF37;
     }
 
     .sticker:hover {
       transform: scale(1.2);
     }
 
-    /* Mobile adaptations */
-    @media (max-width: 768px) {
-      .sidebar {
-        position: fixed;
-        top: 0;
-        right: 0;
-        height: 100vh;
-        width: 80%;
-        z-index: 1000;
-      }
-
-      .chat-header {
-        padding: 0.8rem;
-      }
-
-      .message {
-        max-width: 85%;
-        padding: 0.6rem 1rem;
-      }
-
-      .input-wrapper {
-        padding: 0.3rem;
-      }
-
-      #message-input {
-        padding: 0.5rem;
-      }
+    .reaction {
+      font-size: 1rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    /* Thème africain */
-    .african-pattern {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.05" d="M100,0C120,40,180,60,180,100C140,100,100,140,100,200C100,140,60,100,20,100C20,60,80,40,100,0Z"/></svg>');
-      background-size: 300px;
-      pointer-events: none;
-      z-index: -1;
+    .reaction:hover {
+      transform: scale(1.3);
     }
   </style>
 </head>
 <body>
-  <div class="african-pattern"></div>
-
-  <!-- Panneau latéral -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h3><i class="fas fa-users"></i> Niti ñi</h3>
-    </div>
-    <div class="sidebar-users" id="userList">
-      <!-- Liste des utilisateurs dynamique -->
-    </div>
-    <div style="padding: 1rem; border-top: 1px solid var(--or);">
-      <button id="inviteBtn" style="background: var(--or); color: var(--noir); border: none; padding: 0.5rem 1rem; border-radius: 1rem; width: 100%;">
-        <i class="fas fa-share"></i> Yónnee lien
-      </button>
-    </div>
-  </div>
-
-  <!-- Interface chat principale -->
-  <div class="chat-app">
-    <div class="chat-header">
-      <button id="menuBtn"><i class="fas fa-bars"></i></button>
-      <h2>Waxtaan</h2>
-      <div class="chat-actions">
-        <button id="pollBtn"><i class="fas fa-chart-pie"></i></button>
-        <button id="stickerBtn"><i class="far fa-smile"></i></button>
+  <div class="w-full flex">
+    <!-- Sidebar -->
+    <aside class="hidden md:flex flex-col w-80 bg-black bg-opacity-90 border-l border-yellow-500">
+      <div class="p-4 bg-indigo-900 border-b border-yellow-500 text-center">
+        <h3 class="text-lg font-bold"><i class="fas fa-users"></i> Niti ñi</h3>
       </div>
-    </div>
+      <div id="userList" class="flex-1 overflow-y-auto p-4 space-y-2">
+        <!-- Liste des utilisateurs -->
+      </div>
+      <div class="p-4 border-t border-yellow-500">
+        <button id="inviteBtn" class="w-full bg-yellow-500 text-black rounded-xl py-2 font-bold">
+          <i class="fas fa-share"></i> Yónnee lien
+        </button>
+      </div>
+    </aside>
 
-    <div class="chat-main">
-      <div class="chat-messages" id="messages">
+    <!-- Zone principale -->
+    <main class="flex-1 flex flex-col relative">
+      <!-- En-tête -->
+      <header class="flex items-center justify-between p-4 bg-gradient-to-l from-black to-indigo-900 border-b border-yellow-500">
+        <button id="menuBtn" class="md:hidden text-yellow-500 text-xl"><i class="fas fa-bars"></i></button>
+        <h2 class="text-xl font-bold">Waxtaan</h2>
+        <div class="flex gap-4">
+          <button id="pollBtn" class="text-yellow-500 text-xl"><i class="fas fa-poll"></i></button>
+          <button id="stickerBtn" class="text-yellow-500 text-xl"><i class="far fa-smile"></i></button>
+        </div>
+      </header>
+
+      <!-- Messages -->
+      <section id="messages" class="flex-1 overflow-y-auto p-4 space-y-4" style="background-image: url('pattern.svg'); background-size: cover; background-repeat: repeat;">
         <!-- Messages dynamiques -->
+      </section>
+
+      <!-- Indicateur de frappe -->
+      <div id="typingIndicator" class="px-4 text-yellow-500 italic text-sm"></div>
+
+      <!-- Entrée message -->
+      <div class="p-4 border-t border-yellow-500 bg-black flex items-center gap-2">
+        <button id="attachBtn" class="text-yellow-500 text-xl"><i class="fas fa-paperclip"></i></button>
+        <input id="message-input" placeholder="Bindal xibaar bi..." class="flex-1 bg-yellow-100 text-black rounded-full px-4 py-2 focus:outline-none" />
+        <button id="send-btn" class="text-yellow-500 text-xl"><i class="fas fa-paper-plane"></i></button>
       </div>
-    </div>
 
-    <div class="typing-indicator" id="typingIndicator"></div>
-
-    <div class="chat-input-container">
-      <div class="input-wrapper">
-        <button id="attachBtn" class="input-btn"><i class="fas fa-paperclip"></i></button>
-        <input type="text" id="message-input" placeholder="Bindal xibaar bi..." autocomplete="off">
+      <!-- Stickers -->
+      <div id="stickersPanel" class="absolute bottom-28 right-4 bg-black bg-opacity-95 border border-yellow-500 rounded-xl p-4 grid grid-cols-4 gap-2 hidden z-50">
+        <div class="sticker text-2xl cursor-pointer">👋</div>
+        <div class="sticker text-2xl cursor-pointer">😂</div>
+        <div class="sticker text-2xl cursor-pointer">❤️</div>
+        <div class="sticker text-2xl cursor-pointer">👍</div>
+        <div class="sticker text-2xl cursor-pointer">🙏</div>
+        <div class="sticker text-2xl cursor-pointer">🇸🇳</div>
+        <div class="sticker text-2xl cursor-pointer">🌍</div>
+        <div class="sticker text-2xl cursor-pointer">✨</div>
       </div>
-      <button id="send-btn" class="input-btn"><i class="fas fa-paper-plane"></i></button>
-    </div>
-
-    <!-- Panel stickers -->
-    <div class="stickers-panel" id="stickersPanel">
-      <div class="sticker">👋</div>
-      <div class="sticker">😂</div>
-      <div class="sticker">❤️</div>
-      <div class="sticker">👍</div>
-      <div class="sticker">🙏</div>
-      <div class="sticker">🇸🇳</div>
-      <div class="sticker">🌍</div>
-      <div class="sticker">✨</div>
-      <div class="sticker">🥁</div>
-      <div class="sticker">🌴</div>
-      <div class="sticker">🦁</div>
-      <div class="sticker">👑</div>
-    </div>
+    </main>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // Initialisation
     const socket = io();
     let username = '';
-    let isTyping = false;
-    let typingTimeout;
 
-    // Demande du nom avec validation
-    while (true) {
-      username = prompt('Tapp tur wu matale :') || '';
-      if (username.trim()) break;
-      alert('Fàttaliku tur wi!');
+    while (!username) {
+      username = prompt('Tapp tur wu matale :').trim();
     }
 
-    // Éléments DOM
-    const elements = {
-      sidebar: document.getElementById('sidebar'),
+    const el = {
       userList: document.getElementById('userList'),
       messages: document.getElementById('messages'),
-      messageInput: document.getElementById('message-input'),
+      input: document.getElementById('message-input'),
       sendBtn: document.getElementById('send-btn'),
-      typingIndicator: document.getElementById('typingIndicator'),
-      menuBtn: document.getElementById('menuBtn'),
+      typing: document.getElementById('typingIndicator'),
+      stickers: document.getElementById('stickersPanel'),
       stickerBtn: document.getElementById('stickerBtn'),
-      stickersPanel: document.getElementById('stickersPanel'),
-      pollBtn: document.getElementById('pollBtn'),
       inviteBtn: document.getElementById('inviteBtn'),
-      attachBtn: document.getElementById('attachBtn')
+      pollBtn: document.getElementById('pollBtn'),
     };
 
-    // Événements
-    elements.menuBtn.addEventListener('click', toggleSidebar);
-    elements.stickerBtn.addEventListener('click', toggleStickers);
-    elements.sendBtn.addEventListener('click', sendMessage);
-    elements.messageInput.addEventListener('keypress', handleKeyPress);
-    elements.messageInput.addEventListener('input', handleTyping);
-    elements.inviteBtn.addEventListener('click', shareLink);
-    elements.pollBtn.addEventListener('click', createPoll);
-
-    // Gestion des stickers
-    document.querySelectorAll('.sticker').forEach(sticker => {
-      sticker.addEventListener('click', () => {
-        const stickerText = sticker.textContent;
+    el.sendBtn.onclick = sendMessage;
+    el.input.oninput = () => socket.emit('typing', username);
+    el.input.onkeypress = e => e.key === 'Enter' && sendMessage();
+    el.stickerBtn.onclick = () => el.stickers.classList.toggle('hidden');
+    el.inviteBtn.onclick = () => {
+      navigator.clipboard.writeText(window.location.href).then(() => alert('Lien bi nàpp na!'));
+    };
+    el.pollBtn.onclick = () => {
+      const q = prompt('Lii laaj bi:');
+      if (q) {
+        const opts = prompt('Tànn yi ak vigule:').split(',');
         socket.emit('message', {
-          user: username,
-          text: stickerText,
-          time: getTime(),
-          isSticker: true
+          user: 'Système',
+          text: `SONDAGE: ${q}\n${opts.map((o,i)=>`${i+1}. ${o.trim()}`).join('\n')}`,
+          time: getTime()
         });
-        elements.stickersPanel.style.display = 'none';
-      });
-    });
-
-    // Fonctions
-    function toggleSidebar() {
-      elements.sidebar.style.transform = elements.sidebar.style.transform === 'translateX(0px)' ? 
-        'translateX(100%)' : 'translateX(0px)';
-    }
-
-    function toggleStickers() {
-      elements.stickersPanel.style.display = elements.stickersPanel.style.display === 'grid' ? 
-        'none' : 'grid';
-    }
-
-    function handleKeyPress(e) {
-      if (e.key === 'Enter') {
-        sendMessage();
       }
-    }
+    };
 
-    function handleTyping() {
-      if (!isTyping) {
-        isTyping = true;
-        socket.emit('typing', username);
-      }
-
-      clearTimeout(typingTimeout);
-      typingTimeout = setTimeout(() => {
-        isTyping = false;
-        socket.emit('stopTyping');
-      }, 2000);
-    }
-
-    function sendMessage() {
-      const text = elements.messageInput.value.trim();
-      
-      if (text) {
-        const message = {
+    document.querySelectorAll('.sticker').forEach(sticker => {
+      sticker.onclick = () => {
+        const msg = {
           user: username,
-          text: text,
+          text: sticker.textContent,
           time: getTime(),
+          isSticker: true,
           outgoing: true
         };
-        
-        socket.emit('message', message);
-        displayMessage(message);
-        elements.messageInput.value = '';
-      }
+        socket.emit('message', msg);
+        renderMessage(msg);
+        el.stickers.classList.add('hidden');
+      };
+    });
+
+    function sendMessage() {
+      const text = el.input.value.trim();
+      if (!text) return;
+      const msg = {
+        user: username,
+        text,
+        time: getTime(),
+        outgoing: true
+      };
+      socket.emit('message', msg);
+      renderMessage(msg);
+      el.input.value = '';
     }
 
-    function displayMessage(msg) {
-      const messageDiv = document.createElement('div');
-      
-      if (msg.isSticker) {
-        messageDiv.className = `message ${msg.outgoing ? 'message-out' : 'message-in'} new-message`;
-        messageDiv.innerHTML = `
-          <div class="message-user">${msg.user}</div>
-          <div class="message-text" style="font-size: 2rem;">${msg.text}</div>
-          <div class="message-time">${msg.time}</div>
-        `;
-      } else {
-        messageDiv.className = `message ${msg.outgoing ? 'message-out' : 'message-in'} new-message`;
-        messageDiv.innerHTML = `
-          <div class="message-user">${msg.user}</div>
-          <div class="message-text">${msg.text}</div>
-          <div class="message-time">${msg.time}</div>
-        `;
-      }
-      
-      elements.messages.appendChild(messageDiv);
-      elements.messages.scrollTop = elements.messages.scrollHeight;
+    function renderMessage(msg) {
+      const div = document.createElement('div');
+      div.className = `max-w-xl px-4 py-2 rounded-xl ${msg.outgoing ? 'message-out ml-auto text-right' : 'message-in mr-auto text-right'} relative`;
+      div.innerHTML = `
+        <div class="font-bold text-yellow-500">${msg.user}</div>
+        <div class="text-lg">${msg.text}</div>
+        <div class="message-time">${msg.time}</div>
+        <div class="absolute bottom-0 left-2 flex gap-1">
+          <span class="reaction">❤️</span>
+          <span class="reaction">😂</span>
+          <span class="reaction">🔥</span>
+        </div>`;
+      el.messages.appendChild(div);
+      el.messages.scrollTop = el.messages.scrollHeight;
     }
 
     function getTime() {
       return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-    function shareLink() {
-      const link = window.location.href;
-      navigator.clipboard.writeText(link)
-        .then(() => alert('Lien bi nàpp na! Yónnee ko ci nit ñi.'))
-        .catch(() => prompt('Copie lien bi:', link));
-    }
-
-    function createPoll() {
-      const question = prompt('Lii laaj bi:');
-      if (question) {
-        const options = prompt('Tànn jukki yi (mattale ak virgule):').split(',');
-        
-        socket.emit('message', {
-          user: 'Système',
-          text: `SONDAGE: ${question}\n\n${options.map((o, i) => `${i+1}. ${o.trim()}`).join('\n')}`,
-          time: getTime(),
-          isPoll: true
-        });
-      }
-    }
-
-    // Événements Socket.io
     socket.on('connect', () => {
       socket.emit('join', username);
     });
 
-    socket.on('message', (msg) => {
-      if (msg.user !== username) { // Évite la duplication
-        displayMessage(msg);
-      }
+    socket.on('message', msg => {
+      if (msg.user !== username) renderMessage(msg);
     });
 
-    socket.on('userList', (users) => {
-      elements.userList.innerHTML = users.map(user => `
-        <div class="user-item">
-          <i class="fas fa-user"></i> ${user}
-          <span class="user-status"></span>
-        </div>
-      `).join('');
-    });
-
-    socket.on('typing', (user) => {
+    socket.on('typing', user => {
       if (user !== username) {
-        elements.typingIndicator.textContent = `${user} ngi bind...`;
+        el.typing.textContent = `${user} ngi bind...`;
         setTimeout(() => {
-          elements.typingIndicator.textContent = '';
+          el.typing.textContent = '';
         }, 3000);
       }
     });
 
-    // Focus automatique
-    elements.messageInput.focus();
+    socket.on('userList', users => {
+      el.userList.innerHTML = users.map(user => `<div class='flex items-center gap-2'><i class='fas fa-user text-yellow-500'></i> ${user}</div>`).join('');
+    });
   </script>
 </body>
 </html>
