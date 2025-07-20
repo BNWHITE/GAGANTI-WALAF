@@ -7,32 +7,22 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-// Servir les fichiers statiques
+// Configuration minimale
 app.use(express.static(path.join(__dirname)));
 
-// Gestion du chat
-const messages = [];
+// Stockage mémoire (pour démo)
+let messages = [];
+
 io.on('connection', (socket) => {
-  // Envoyer l'historique
-  socket.emit('loadMessages', messages.slice(-50));
+  // Envoi de l'historique
+  socket.emit('init', messages.slice(-50));
 
-  socket.on('sendMessage', (text) => {
-    const msg = {
-      user: socket.username || 'Nit',
-      text,
-      time: new Date().toLocaleTimeString()
-    };
+  // Réception des messages
+  socket.on('message', (msg) => {
     messages.push(msg);
-    io.emit('message', msg);
-  });
-
-  socket.on('join', (username) => {
-    socket.username = username;
+    io.emit('message', msg); // Diffusion à tous
   });
 });
 
-server.listen(3000, () => console.log(`
-Serveur prêt :
-- Éditeur : http://localhost:3000/index.html
-- Chat : http://localhost:3000/waxtaan.html
-`));
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Serveur actif sur ${PORT}`));
