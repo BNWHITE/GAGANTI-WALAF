@@ -12,6 +12,7 @@
       --or: #D4AF37;
       --ivoire: #F5F5DC;
       --indigo: #4B0082;
+      --vert: #013220;
       --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
@@ -35,99 +36,81 @@
       direction: rtl;
       height: 100vh;
       overflow: hidden;
+      display: flex;
     }
 
-    /* Animation d'ouverture */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes africanPattern {
-      0% { background-position: 0% 0%; }
-      100% { background-position: 100% 100%; }
-    }
-
-    .splash-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, var(--noir) 0%, var(--indigo) 100%);
-      background-image: 
-        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.1" d="M100,0C120,40,180,60,180,100C140,100,100,140,100,200C100,140,60,100,20,100C20,60,80,40,100,0Z"/></svg>');
-      background-size: 300px;
-      animation: africanPattern 60s linear infinite;
+    /* Panneau latéral */
+    .sidebar {
+      width: 300px;
+      background: rgba(10, 10, 10, 0.9);
+      border-left: 1px solid var(--or);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      transition: opacity 0.5s;
-    }
-
-    .splash-content {
-      text-align: center;
-      animation: fadeIn 1s ease-out;
-    }
-
-    .splash-icon {
-      font-size: 4rem;
-      color: var(--or);
-      margin-bottom: 1rem;
-    }
-
-    .splash-text {
-      font-size: 1.8rem;
-      background: linear-gradient(to left, var(--or), var(--ivoire));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 2rem;
-    }
-
-    .progress-bar {
-      width: 200px;
-      height: 4px;
-      background: rgba(212, 175, 55, 0.2);
-      border-radius: 2px;
       overflow: hidden;
-    }
-
-    .progress {
-      height: 100%;
-      width: 0%;
-      background: var(--or);
-      transition: width 0.3s;
-    }
-
-    /* Interface chat */
-    .chat-app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      opacity: 0;
-      transform: translateY(10px);
+      transform: translateX(100%);
       transition: var(--transition);
     }
 
-    .chat-header {
-      background: linear-gradient(to left, var(--noir), var(--indigo));
+    .sidebar-header {
       padding: 1rem;
-      text-align: center;
+      background: var(--indigo);
       border-bottom: 1px solid var(--or);
-      box-shadow: var(--shadow);
-      position: relative;
-      z-index: 10;
+      text-align: center;
     }
 
-    .chat-title {
-      font-size: 1.5rem;
-      background: linear-gradient(to left, var(--or), var(--ivoire));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .sidebar-users {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .user-item {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .user-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-left: 0.5rem;
+      background: #4CAF50;
+    }
+
+    /* Interface chat principale */
+    .chat-app {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+    }
+
+    .chat-header {
+      padding: 1rem;
+      background: linear-gradient(to left, var(--noir), var(--indigo));
+      border-bottom: 1px solid var(--or);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-actions button {
+      background: none;
+      border: none;
+      color: var(--or);
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+
+    .chat-main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
     }
 
     .chat-messages {
@@ -140,7 +123,7 @@
     }
 
     .message {
-      max-width: 80%;
+      max-width: 70%;
       margin-bottom: 1rem;
       padding: 0.8rem 1.2rem;
       border-radius: 1rem;
@@ -148,6 +131,8 @@
       animation: fadeIn 0.3s ease-out;
       line-height: 1.6;
       word-wrap: break-word;
+      unicode-bidi: plaintext;
+      text-align: right;
     }
 
     .message-in {
@@ -169,6 +154,7 @@
       color: var(--or);
       font-size: 0.9rem;
       margin-bottom: 0.3rem;
+      unicode-bidi: plaintext;
     }
 
     .message-time {
@@ -180,231 +166,389 @@
       margin-top: 0.3rem;
     }
 
+    .typing-indicator {
+      font-size: 0.8rem;
+      color: var(--or);
+      margin-right: 1rem;
+      font-style: italic;
+    }
+
+    /* Zone de saisie */
     .chat-input-container {
       padding: 1rem;
       background: var(--noir);
       border-top: 1px solid var(--or);
       display: flex;
       gap: 0.5rem;
+      align-items: center;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--or);
+      border-radius: 2rem;
+      padding: 0.5rem;
     }
 
     #message-input {
       flex: 1;
-      padding: 1rem;
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid var(--or);
-      border-radius: 2rem;
+      background: transparent;
+      border: none;
       color: var(--ivoire);
       font-family: 'Gagganti';
+      padding: 0.5rem 1rem;
       direction: rtl;
-      text-align: right;
+      unicode-bidi: plaintext;
     }
 
-    #send-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--or);
-      color: var(--noir);
-      border: none;
+    #message-input:focus {
+      outline: none;
+    }
+
+    .input-actions {
       display: flex;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--shadow);
     }
 
-    #send-btn:hover {
-      transform: scale(1.1);
-    }
-
-    .back-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
+    .input-btn {
+      background: none;
+      border: none;
       color: var(--or);
-      text-decoration: none;
       font-size: 1.2rem;
-      z-index: 11;
+      margin-left: 0.5rem;
+      cursor: pointer;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .chat-header {
-        padding: 0.8rem;
-      }
-      
-      .chat-title {
-        font-size: 1.3rem;
-      }
-      
-      .message {
-        max-width: 90%;
-        padding: 0.6rem 1rem;
-      }
-      
-      #message-input {
-        padding: 0.8rem;
-      }
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Animation de notification */
-    @keyframes ping {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.8; }
-      100% { transform: scale(1); opacity: 1; }
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
     }
 
     .new-message {
-      animation: ping 0.5s ease;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Stickers panel */
+    .stickers-panel {
+      position: absolute;
+      bottom: 80px;
+      right: 1rem;
+      background: rgba(10, 10, 10, 0.95);
+      border: 1px solid var(--or);
+      border-radius: 1rem;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      max-width: 300px;
+      z-index: 100;
+      display: none;
+    }
+
+    .sticker {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .sticker:hover {
+      transform: scale(1.2);
+    }
+
+    /* Mobile adaptations */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 80%;
+        z-index: 1000;
+      }
+
+      .chat-header {
+        padding: 0.8rem;
+      }
+
+      .message {
+        max-width: 85%;
+        padding: 0.6rem 1rem;
+      }
+
+      .input-wrapper {
+        padding: 0.3rem;
+      }
+
+      #message-input {
+        padding: 0.5rem;
+      }
+    }
+
+    /* Thème africain */
+    .african-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.05" d="M100,0C120,40,180,60,180,100C140,100,100,140,100,200C100,140,60,100,20,100C20,60,80,40,100,0Z"/></svg>');
+      background-size: 300px;
+      pointer-events: none;
+      z-index: -1;
     }
   </style>
 </head>
 <body>
-  <!-- Écran de chargement -->
-  <div class="splash-screen" id="splashScreen">
-    <div class="splash-content">
-      <div class="splash-icon">
-        <i class="fas fa-comments"></i>
-      </div>
-      <div class="splash-text">Waxtaan ci Gagganti</div>
-      <div class="progress-bar">
-        <div class="progress" id="progressBar"></div>
-      </div>
+  <div class="african-pattern"></div>
+
+  <!-- Panneau latéral -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3><i class="fas fa-users"></i> Niti ñi</h3>
+    </div>
+    <div class="sidebar-users" id="userList">
+      <!-- Liste des utilisateurs dynamique -->
+    </div>
+    <div style="padding: 1rem; border-top: 1px solid var(--or);">
+      <button id="inviteBtn" style="background: var(--or); color: var(--noir); border: none; padding: 0.5rem 1rem; border-radius: 1rem; width: 100%;">
+        <i class="fas fa-share"></i> Yónnee lien
+      </button>
     </div>
   </div>
 
-  <!-- Interface chat -->
-  <div class="chat-app" id="chatApp">
-    <a href="index.html" class="back-btn">
-      <i class="fas fa-arrow-left"></i>
-    </a>
-    
+  <!-- Interface chat principale -->
+  <div class="chat-app">
     <div class="chat-header">
-      <h1 class="chat-title">
-        <i class="fas fa-comments"></i> Waxtaan
-      </h1>
+      <button id="menuBtn"><i class="fas fa-bars"></i></button>
+      <h2>Waxtaan</h2>
+      <div class="chat-actions">
+        <button id="pollBtn"><i class="fas fa-chart-pie"></i></button>
+        <button id="stickerBtn"><i class="far fa-smile"></i></button>
+      </div>
     </div>
-    
-    <div class="chat-messages" id="messages"></div>
-    
+
+    <div class="chat-main">
+      <div class="chat-messages" id="messages">
+        <!-- Messages dynamiques -->
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typingIndicator"></div>
+
     <div class="chat-input-container">
-      <input type="text" id="message-input" placeholder="Bindal xibaar bi..." dir="rtl" autocomplete="off">
-      <button id="send-btn">
-        <i class="fas fa-paper-plane"></i>
-      </button>
+      <div class="input-wrapper">
+        <button id="attachBtn" class="input-btn"><i class="fas fa-paperclip"></i></button>
+        <input type="text" id="message-input" placeholder="Bindal xibaar bi..." autocomplete="off">
+      </div>
+      <button id="send-btn" class="input-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+
+    <!-- Panel stickers -->
+    <div class="stickers-panel" id="stickersPanel">
+      <div class="sticker">👋</div>
+      <div class="sticker">😂</div>
+      <div class="sticker">❤️</div>
+      <div class="sticker">👍</div>
+      <div class="sticker">🙏</div>
+      <div class="sticker">🇸🇳</div>
+      <div class="sticker">🌍</div>
+      <div class="sticker">✨</div>
+      <div class="sticker">🥁</div>
+      <div class="sticker">🌴</div>
+      <div class="sticker">🦁</div>
+      <div class="sticker">👑</div>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // Animation d'ouverture
-    const splashScreen = document.getElementById('splashScreen');
-    const progressBar = document.getElementById('progressBar');
-    const chatApp = document.getElementById('chatApp');
-    
-    // Simulation de chargement
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 10;
-      progressBar.style.width = `${Math.min(progress, 100)}%`;
-      
-      if (progress >= 100) {
-        clearInterval(interval);
-        splashScreen.style.opacity = '0';
-        setTimeout(() => {
-          splashScreen.style.display = 'none';
-          chatApp.style.opacity = '1';
-          chatApp.style.transform = 'translateY(0)';
-          document.getElementById('message-input').focus();
-        }, 500);
-      }
-    }, 200);
-
-    // Connexion au chat
+    // Initialisation
     const socket = io();
     let username = '';
-    
+    let isTyping = false;
+    let typingTimeout;
+
     // Demande du nom avec validation
     while (true) {
       username = prompt('Tapp tur wu matale :') || '';
       if (username.trim()) break;
       alert('Fàttaliku tur wi!');
     }
-    
-    // Envoi de message
-    document.getElementById('send-btn').addEventListener('click', sendMessage);
-    document.getElementById('message-input').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage();
+
+    // Éléments DOM
+    const elements = {
+      sidebar: document.getElementById('sidebar'),
+      userList: document.getElementById('userList'),
+      messages: document.getElementById('messages'),
+      messageInput: document.getElementById('message-input'),
+      sendBtn: document.getElementById('send-btn'),
+      typingIndicator: document.getElementById('typingIndicator'),
+      menuBtn: document.getElementById('menuBtn'),
+      stickerBtn: document.getElementById('stickerBtn'),
+      stickersPanel: document.getElementById('stickersPanel'),
+      pollBtn: document.getElementById('pollBtn'),
+      inviteBtn: document.getElementById('inviteBtn'),
+      attachBtn: document.getElementById('attachBtn')
+    };
+
+    // Événements
+    elements.menuBtn.addEventListener('click', toggleSidebar);
+    elements.stickerBtn.addEventListener('click', toggleStickers);
+    elements.sendBtn.addEventListener('click', sendMessage);
+    elements.messageInput.addEventListener('keypress', handleKeyPress);
+    elements.messageInput.addEventListener('input', handleTyping);
+    elements.inviteBtn.addEventListener('click', shareLink);
+    elements.pollBtn.addEventListener('click', createPoll);
+
+    // Gestion des stickers
+    document.querySelectorAll('.sticker').forEach(sticker => {
+      sticker.addEventListener('click', () => {
+        const stickerText = sticker.textContent;
+        socket.emit('message', {
+          user: username,
+          text: stickerText,
+          time: getTime(),
+          isSticker: true
+        });
+        elements.stickersPanel.style.display = 'none';
+      });
     });
-    
+
+    // Fonctions
+    function toggleSidebar() {
+      elements.sidebar.style.transform = elements.sidebar.style.transform === 'translateX(0px)' ? 
+        'translateX(100%)' : 'translateX(0px)';
+    }
+
+    function toggleStickers() {
+      elements.stickersPanel.style.display = elements.stickersPanel.style.display === 'grid' ? 
+        'none' : 'grid';
+    }
+
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function handleTyping() {
+      if (!isTyping) {
+        isTyping = true;
+        socket.emit('typing', username);
+      }
+
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() => {
+        isTyping = false;
+        socket.emit('stopTyping');
+      }, 2000);
+    }
+
     function sendMessage() {
-      const input = document.getElementById('message-input');
-      const text = input.value.trim();
+      const text = elements.messageInput.value.trim();
       
       if (text) {
         const message = {
           user: username,
-          text: reverseGaggantiText(text),
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          text: text,
+          time: getTime(),
+          outgoing: true
         };
         
         socket.emit('message', message);
-        displayMessage({ ...message, outgoing: true });
-        input.value = '';
+        displayMessage(message);
+        elements.messageInput.value = '';
       }
     }
-    
-    // Fonction de traitement Gagganti
-    function reverseGaggantiText(text) {
-      return text.split('').reverse().join('');
-    }
-    
-    // Affichage des messages
+
     function displayMessage(msg) {
-      const messagesDiv = document.getElementById('messages');
       const messageDiv = document.createElement('div');
       
-      messageDiv.className = `message ${msg.outgoing ? 'message-out' : 'message-in'} new-message`;
-      messageDiv.innerHTML = `
-        <div class="message-user">${msg.user}</div>
-        <div class="message-text">${msg.text}</div>
-        <div class="message-time">${msg.time}</div>
-      `;
-      
-      messagesDiv.appendChild(messageDiv);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-      
-      // Retirer l'animation après exécution
-      setTimeout(() => {
-        messageDiv.classList.remove('new-message');
-      }, 500);
-    }
-    
-    // Réception des messages
-    socket.on('message', (msg) => {
-      displayMessage(msg);
-    });
-    
-    // Chargement de l'historique
-    socket.on('init', (messages) => {
-      const messagesDiv = document.getElementById('messages');
-      messages.forEach(msg => {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${msg.user === username ? 'message-out' : 'message-in'}`;
+      if (msg.isSticker) {
+        messageDiv.className = `message ${msg.outgoing ? 'message-out' : 'message-in'} new-message`;
+        messageDiv.innerHTML = `
+          <div class="message-user">${msg.user}</div>
+          <div class="message-text" style="font-size: 2rem;">${msg.text}</div>
+          <div class="message-time">${msg.time}</div>
+        `;
+      } else {
+        messageDiv.className = `message ${msg.outgoing ? 'message-out' : 'message-in'} new-message`;
         messageDiv.innerHTML = `
           <div class="message-user">${msg.user}</div>
           <div class="message-text">${msg.text}</div>
           <div class="message-time">${msg.time}</div>
         `;
-        messagesDiv.appendChild(messageDiv);
-      });
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+      
+      elements.messages.appendChild(messageDiv);
+      elements.messages.scrollTop = elements.messages.scrollHeight;
+    }
+
+    function getTime() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function shareLink() {
+      const link = window.location.href;
+      navigator.clipboard.writeText(link)
+        .then(() => alert('Lien bi nàpp na! Yónnee ko ci nit ñi.'))
+        .catch(() => prompt('Copie lien bi:', link));
+    }
+
+    function createPoll() {
+      const question = prompt('Lii laaj bi:');
+      if (question) {
+        const options = prompt('Tànn jukki yi (mattale ak virgule):').split(',');
+        
+        socket.emit('message', {
+          user: 'Système',
+          text: `SONDAGE: ${question}\n\n${options.map((o, i) => `${i+1}. ${o.trim()}`).join('\n')}`,
+          time: getTime(),
+          isPoll: true
+        });
+      }
+    }
+
+    // Événements Socket.io
+    socket.on('connect', () => {
+      socket.emit('join', username);
     });
-    
-    // Connexion initiale
-    socket.emit('join', username);
+
+    socket.on('message', (msg) => {
+      if (msg.user !== username) { // Évite la duplication
+        displayMessage(msg);
+      }
+    });
+
+    socket.on('userList', (users) => {
+      elements.userList.innerHTML = users.map(user => `
+        <div class="user-item">
+          <i class="fas fa-user"></i> ${user}
+          <span class="user-status"></span>
+        </div>
+      `).join('');
+    });
+
+    socket.on('typing', (user) => {
+      if (user !== username) {
+        elements.typingIndicator.textContent = `${user} ngi bind...`;
+        setTimeout(() => {
+          elements.typingIndicator.textContent = '';
+        }, 3000);
+      }
+    });
+
+    // Focus automatique
+    elements.messageInput.focus();
   </script>
 </body>
 </html>
