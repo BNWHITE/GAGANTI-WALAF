@@ -2,7 +2,7 @@
 <html lang="wo" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Waxtaan ci Gagganti</title>
   <link rel="preload" href="gagganti.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,6 +12,8 @@
       --or: #D4AF37;
       --ivoire: #F5F5DC;
       --indigo: #4B0082;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     @font-face {
@@ -20,36 +22,168 @@
       font-display: swap;
     }
 
-    body {
-      font-family: 'Gagganti', sans-serif;
-      background: linear-gradient(to left, var(--noir), var(--indigo));
-      color: var(--ivoire);
+    * {
       margin: 0;
       padding: 0;
-      direction: rtl;
+      box-sizing: border-box;
     }
 
-    .chat-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
+    body {
+      font-family: 'Gagganti', sans-serif;
+      background: var(--noir);
+      color: var(--ivoire);
+      direction: rtl;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Animation d'ouverture */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes africanPattern {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    .splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--noir) 0%, var(--indigo) 100%);
+      background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.1" d="M100,0C120,40,180,60,180,100C140,100,100,140,100,200C100,140,60,100,20,100C20,60,80,40,100,0Z"/></svg>');
+      background-size: 300px;
+      animation: africanPattern 60s linear infinite;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.5s;
+    }
+
+    .splash-content {
+      text-align: center;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .splash-icon {
+      font-size: 4rem;
+      color: var(--or);
+      margin-bottom: 1rem;
+    }
+
+    .splash-text {
+      font-size: 1.8rem;
+      background: linear-gradient(to left, var(--or), var(--ivoire));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 2rem;
+    }
+
+    .progress-bar {
+      width: 200px;
+      height: 4px;
+      background: rgba(212, 175, 55, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: var(--or);
+      transition: width 0.3s;
+    }
+
+    /* Interface chat */
+    .chat-app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: var(--transition);
     }
 
     .chat-header {
+      background: linear-gradient(to left, var(--noir), var(--indigo));
+      padding: 1rem;
       text-align: center;
-      padding: 1rem;
-      border-bottom: 2px solid var(--or);
+      border-bottom: 1px solid var(--or);
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 10;
     }
 
-    #messages {
-      height: 60vh;
+    .chat-title {
+      font-size: 1.5rem;
+      background: linear-gradient(to left, var(--or), var(--ivoire));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .chat-messages {
+      flex: 1;
       overflow-y: auto;
-      border: 1px solid var(--or);
       padding: 1rem;
-      margin: 1rem 0;
+      background: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23D4AF37" fill-opacity="0.03" d="M50,0C60,20,80,30,100,50C80,70,60,80,50,100C40,80,20,70,0,50C20,30,40,20,50,0Z"/></svg>');
+      background-size: 200px;
     }
 
-    .chat-input {
+    .message {
+      max-width: 80%;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1rem;
+      position: relative;
+      animation: fadeIn 0.3s ease-out;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
+
+    .message-in {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      margin-right: auto;
+      border-right: 3px solid var(--or);
+    }
+
+    .message-out {
+      background: rgba(75, 0, 130, 0.2);
+      border: 1px solid rgba(75, 0, 130, 0.4);
+      margin-left: auto;
+      border-left: 3px solid var(--indigo);
+    }
+
+    .message-user {
+      font-weight: bold;
+      color: var(--or);
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .message-time {
+      font-size: 0.7rem;
+      color: var(--or);
+      text-align: left;
+      direction: ltr;
+      display: block;
+      margin-top: 0.3rem;
+    }
+
+    .chat-input-container {
+      padding: 1rem;
+      background: var(--noir);
+      border-top: 1px solid var(--or);
       display: flex;
       gap: 0.5rem;
     }
@@ -59,67 +193,147 @@
       padding: 1rem;
       background: rgba(212, 175, 55, 0.1);
       border: 1px solid var(--or);
+      border-radius: 2rem;
       color: var(--ivoire);
+      font-family: 'Gagganti';
+      direction: rtl;
+      text-align: right;
     }
 
     #send-btn {
-      padding: 0 1.5rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
       background: var(--or);
       color: var(--noir);
       border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
     }
 
-    .message {
-      margin-bottom: 0.5rem;
-      padding: 0.5rem;
-      border-right: 3px solid var(--or);
+    #send-btn:hover {
+      transform: scale(1.1);
     }
 
     .back-btn {
-      display: inline-block;
-      margin: 1rem;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
       color: var(--or);
       text-decoration: none;
+      font-size: 1.2rem;
+      z-index: 11;
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
-      #messages {
-        height: 50vh;
+      .chat-header {
+        padding: 0.8rem;
       }
+      
+      .chat-title {
+        font-size: 1.3rem;
+      }
+      
+      .message {
+        max-width: 90%;
+        padding: 0.6rem 1rem;
+      }
+      
+      #message-input {
+        padding: 0.8rem;
+      }
+    }
+
+    /* Animation de notification */
+    @keyframes ping {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .new-message {
+      animation: ping 0.5s ease;
     }
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-btn">
-    <i class="fas fa-arrow-left"></i> Déggal
-  </a>
+  <!-- Écran de chargement -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-content">
+      <div class="splash-icon">
+        <i class="fas fa-comments"></i>
+      </div>
+      <div class="splash-text">Waxtaan ci Gagganti</div>
+      <div class="progress-bar">
+        <div class="progress" id="progressBar"></div>
+      </div>
+    </div>
+  </div>
 
-  <div class="chat-container">
+  <!-- Interface chat -->
+  <div class="chat-app" id="chatApp">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+    
     <div class="chat-header">
-      <h1><i class="fas fa-comments"></i> Waxtaan ci Gagganti</h1>
+      <h1 class="chat-title">
+        <i class="fas fa-comments"></i> Waxtaan
+      </h1>
     </div>
     
-    <div id="messages"></div>
+    <div class="chat-messages" id="messages"></div>
     
-    <div class="chat-input">
-      <input type="text" id="message-input" placeholder="Bindal xibaar bi..." dir="rtl">
-      <button id="send-btn"><i class="fas fa-paper-plane"></i> Yónnee</button>
+    <div class="chat-input-container">
+      <input type="text" id="message-input" placeholder="Bindal xibaar bi..." dir="rtl" autocomplete="off">
+      <button id="send-btn">
+        <i class="fas fa-paper-plane"></i>
+      </button>
     </div>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // Connexion au serveur
+    // Animation d'ouverture
+    const splashScreen = document.getElementById('splashScreen');
+    const progressBar = document.getElementById('progressBar');
+    const chatApp = document.getElementById('chatApp');
+    
+    // Simulation de chargement
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      progressBar.style.width = `${Math.min(progress, 100)}%`;
+      
+      if (progress >= 100) {
+        clearInterval(interval);
+        splashScreen.style.opacity = '0';
+        setTimeout(() => {
+          splashScreen.style.display = 'none';
+          chatApp.style.opacity = '1';
+          chatApp.style.transform = 'translateY(0)';
+          document.getElementById('message-input').focus();
+        }, 500);
+      }
+    }, 200);
+
+    // Connexion au chat
     const socket = io();
     let username = '';
     
-    // Demande du nom d'utilisateur
-    while (!username.trim()) {
+    // Demande du nom avec validation
+    while (true) {
       username = prompt('Tapp tur wu matale :') || '';
+      if (username.trim()) break;
+      alert('Fàttaliku tur wi!');
     }
     
-    // Gestion de l'envoi de messages
+    // Envoi de message
     document.getElementById('send-btn').addEventListener('click', sendMessage);
     document.getElementById('message-input').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
@@ -132,42 +346,65 @@
       if (text) {
         const message = {
           user: username,
-          text: text,
-          time: new Date().toLocaleTimeString()
+          text: reverseGaggantiText(text),
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         
         socket.emit('message', message);
+        displayMessage({ ...message, outgoing: true });
         input.value = '';
-        input.focus();
       }
     }
     
+    // Fonction de traitement Gagganti
+    function reverseGaggantiText(text) {
+      return text.split('').reverse().join('');
+    }
+    
     // Affichage des messages
-    socket.on('message', (msg) => {
-      displayMessage(msg);
-    });
-    
-    // Réception de l'historique
-    socket.on('init', (messages) => {
-      messages.forEach(msg => displayMessage(msg));
-    });
-    
     function displayMessage(msg) {
       const messagesDiv = document.getElementById('messages');
       const messageDiv = document.createElement('div');
       
-      messageDiv.className = 'message';
+      messageDiv.className = `message ${msg.outgoing ? 'message-out' : 'message-in'} new-message`;
       messageDiv.innerHTML = `
-        <strong>${msg.user}:</strong> ${msg.text}
-        <small style="color: var(--or);">${msg.time}</small>
+        <div class="message-user">${msg.user}</div>
+        <div class="message-text">${msg.text}</div>
+        <div class="message-time">${msg.time}</div>
       `;
       
       messagesDiv.appendChild(messageDiv);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      
+      // Retirer l'animation après exécution
+      setTimeout(() => {
+        messageDiv.classList.remove('new-message');
+      }, 500);
     }
     
-    // Focus automatique sur le champ de message
-    document.getElementById('message-input').focus();
+    // Réception des messages
+    socket.on('message', (msg) => {
+      displayMessage(msg);
+    });
+    
+    // Chargement de l'historique
+    socket.on('init', (messages) => {
+      const messagesDiv = document.getElementById('messages');
+      messages.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${msg.user === username ? 'message-out' : 'message-in'}`;
+        messageDiv.innerHTML = `
+          <div class="message-user">${msg.user}</div>
+          <div class="message-text">${msg.text}</div>
+          <div class="message-time">${msg.time}</div>
+        `;
+        messagesDiv.appendChild(messageDiv);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+    
+    // Connexion initiale
+    socket.emit('join', username);
   </script>
 </body>
 </html>
