@@ -15,8 +15,8 @@
 
     body {
       font-family: 'Gagganti', sans-serif;
-      background: linear-gradient(to left, #0a0a0a, #4B0082);
-      color: #F5F5DC;
+      background: linear-gradient(to left, #F5F5F5, #ffffff);
+      color: #1a1a1a;
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -24,18 +24,18 @@
     }
 
     .message-out {
-      background-color: rgba(75, 0, 130, 0.3);
+      background-color: rgba(255, 255, 255, 0.9);
       border-left: 4px solid #4B0082;
     }
 
     .message-in {
-      background-color: rgba(212, 175, 55, 0.2);
-      border-right: 4px solid #D4AF37;
+      background-color: rgba(230, 230, 230, 0.9);
+      border-right: 4px solid #4B0082;
     }
 
     .message-time {
       font-size: 0.75rem;
-      color: #D4AF37;
+      color: #666;
     }
 
     .sticker:hover {
@@ -52,20 +52,25 @@
     .reaction:hover {
       transform: scale(1.3);
     }
+
+    #message-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #4B0082;
+    }
   </style>
 </head>
 <body>
   <div class="w-full flex">
     <!-- Sidebar -->
-    <aside class="hidden md:flex flex-col w-80 bg-black bg-opacity-90 border-l border-yellow-500">
-      <div class="p-4 bg-indigo-900 border-b border-yellow-500 text-center">
+    <aside class="hidden md:flex flex-col w-80 bg-white border-l border-purple-600 shadow-md">
+      <div class="p-4 bg-purple-800 text-white text-center">
         <h3 class="text-lg font-bold"><i class="fas fa-users"></i> Niti ñi</h3>
       </div>
       <div id="userList" class="flex-1 overflow-y-auto p-4 space-y-2">
         <!-- Liste des utilisateurs -->
       </div>
-      <div class="p-4 border-t border-yellow-500">
-        <button id="inviteBtn" class="w-full bg-yellow-500 text-black rounded-xl py-2 font-bold">
+      <div class="p-4 border-t border-purple-600">
+        <button id="inviteBtn" class="w-full bg-purple-600 text-white rounded-xl py-2 font-bold hover:bg-purple-700 transition">
           <i class="fas fa-share"></i> Yónnee lien
         </button>
       </div>
@@ -74,32 +79,32 @@
     <!-- Zone principale -->
     <main class="flex-1 flex flex-col relative">
       <!-- En-tête -->
-      <header class="flex items-center justify-between p-4 bg-gradient-to-l from-black to-indigo-900 border-b border-yellow-500">
-        <button id="menuBtn" class="md:hidden text-yellow-500 text-xl"><i class="fas fa-bars"></i></button>
+      <header class="flex items-center justify-between p-4 bg-purple-700 text-white">
+        <button id="menuBtn" class="md:hidden text-white text-xl"><i class="fas fa-bars"></i></button>
         <h2 class="text-xl font-bold">Waxtaan</h2>
         <div class="flex gap-4">
-          <button id="pollBtn" class="text-yellow-500 text-xl"><i class="fas fa-poll"></i></button>
-          <button id="stickerBtn" class="text-yellow-500 text-xl"><i class="far fa-smile"></i></button>
+          <button id="pollBtn" class="text-white text-xl"><i class="fas fa-poll"></i></button>
+          <button id="stickerBtn" class="text-white text-xl"><i class="far fa-smile"></i></button>
         </div>
       </header>
 
       <!-- Messages -->
-      <section id="messages" class="flex-1 overflow-y-auto p-4 space-y-4" style="background-image: url('pattern.svg'); background-size: cover; background-repeat: repeat;">
+      <section id="messages" class="flex-1 overflow-y-auto p-4 space-y-4" style="background-image: url('pattern-light.svg'); background-size: cover; background-repeat: repeat;">
         <!-- Messages dynamiques -->
       </section>
 
       <!-- Indicateur de frappe -->
-      <div id="typingIndicator" class="px-4 text-yellow-500 italic text-sm"></div>
+      <div id="typingIndicator" class="px-4 text-purple-600 italic text-sm"></div>
 
       <!-- Entrée message -->
-      <div class="p-4 border-t border-yellow-500 bg-black flex items-center gap-2">
-        <button id="attachBtn" class="text-yellow-500 text-xl"><i class="fas fa-paperclip"></i></button>
-        <input id="message-input" placeholder="Bindal xibaar bi..." class="flex-1 bg-yellow-100 text-black rounded-full px-4 py-2 focus:outline-none" />
-        <button id="send-btn" class="text-yellow-500 text-xl"><i class="fas fa-paper-plane"></i></button>
+      <div class="p-4 border-t border-purple-600 bg-white flex items-center gap-2">
+        <button id="attachBtn" class="text-purple-600 text-xl"><i class="fas fa-paperclip"></i></button>
+        <input id="message-input" placeholder="Bindal xibaar bi..." class="flex-1 bg-gray-100 text-black rounded-full px-4 py-2" />
+        <button id="send-btn" class="text-purple-600 text-xl"><i class="fas fa-paper-plane"></i></button>
       </div>
 
       <!-- Stickers -->
-      <div id="stickersPanel" class="absolute bottom-28 right-4 bg-black bg-opacity-95 border border-yellow-500 rounded-xl p-4 grid grid-cols-4 gap-2 hidden z-50">
+      <div id="stickersPanel" class="absolute bottom-28 right-4 bg-white border border-purple-600 rounded-xl p-4 grid grid-cols-4 gap-2 hidden z-50 shadow-md">
         <div class="sticker text-2xl cursor-pointer">👋</div>
         <div class="sticker text-2xl cursor-pointer">😂</div>
         <div class="sticker text-2xl cursor-pointer">❤️</div>
@@ -185,7 +190,7 @@
       const div = document.createElement('div');
       div.className = `max-w-xl px-4 py-2 rounded-xl ${msg.outgoing ? 'message-out ml-auto text-right' : 'message-in mr-auto text-right'} relative`;
       div.innerHTML = `
-        <div class="font-bold text-yellow-500">${msg.user}</div>
+        <div class="font-bold text-purple-600">${msg.user}</div>
         <div class="text-lg">${msg.text}</div>
         <div class="message-time">${msg.time}</div>
         <div class="absolute bottom-0 left-2 flex gap-1">
@@ -219,7 +224,7 @@
     });
 
     socket.on('userList', users => {
-      el.userList.innerHTML = users.map(user => `<div class='flex items-center gap-2'><i class='fas fa-user text-yellow-500'></i> ${user}</div>`).join('');
+      el.userList.innerHTML = users.map(user => `<div class='flex items-center gap-2'><i class='fas fa-user text-purple-600'></i> ${user}</div>`).join('');
     });
   </script>
 </body>
