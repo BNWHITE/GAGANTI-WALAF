@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="wo" dir="rtl">
+<html lang="wo">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,15 +26,25 @@
       font-display: swap;
     }
 
-    /* === ANIMATION D'ENTRÉE === */
+    /* === ANIMATIONS === */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes birdFly {
-      0% { transform: translateX(-100%) translateY(-50%); }
-      100% { transform: translateX(100vw) translateY(calc(-50% + 50px)); }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
 
     /* === STRUCTURE PRINCIPALE === */
@@ -65,82 +75,6 @@
       z-index: -2;
     }
 
-    /* === ANIMATION OISEAU === */
-    .bird-animation {
-      position: fixed;
-      top: 50%;
-      left: 0;
-      font-size: 3rem;
-      z-index: 1000;
-      animation: birdFly 4s ease-in-out forwards;
-      opacity: 0.8;
-    }
-
-    /* === MODAL D'ACCUEIL === */
-    .welcome-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    .welcome-content {
-      background: var(--noir);
-      padding: 2rem;
-      border-radius: 1rem;
-      border: 2px solid var(--or);
-      max-width: 90%;
-      width: 500px;
-      text-align: center;
-    }
-
-    .welcome-title {
-      font-size: 2rem;
-      color: var(--or);
-      margin-bottom: 1.5rem;
-    }
-
-    .welcome-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .welcome-input {
-      padding: 0.8rem;
-      border-radius: 0.5rem;
-      border: 1px solid var(--or);
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--ivoire);
-      font-family: 'Gagganti';
-      text-align: right;
-      direction: rtl;
-    }
-
-    .welcome-button {
-      padding: 0.8rem;
-      background-color: var(--or);
-      color: var(--noir);
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-family: 'Gagganti';
-      font-size: 1.2rem;
-      transition: all 0.2s;
-    }
-
-    .welcome-button:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-    }
-
     /* === EN-TÊTE === */
     header {
       background: linear-gradient(to right, var(--noir), var(--indigo));
@@ -149,7 +83,7 @@
       position: relative;
       border-bottom: 2px solid var(--or);
       box-shadow: var(--shadow);
-      display: none; /* Caché jusqu'à connexion */
+      animation: slideInRight 0.5s ease-out;
     }
 
     .logo {
@@ -164,6 +98,7 @@
       font-size: 2rem;
       color: var(--or);
       text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+      animation: float 3s ease-in-out infinite;
     }
 
     h1 {
@@ -176,25 +111,6 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .online-users {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(212, 175, 55, 0.2);
-      padding: 0.3rem 0.8rem;
-      border-radius: 1rem;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .online-count {
-      color: var(--or);
-      font-weight: bold;
-    }
-
     /* === ZONE DE MESSAGES === */
     #messages {
       flex: 1;
@@ -203,7 +119,6 @@
       scroll-behavior: smooth;
       direction: rtl;
       unicode-bidi: bidi-override;
-      display: none; /* Caché jusqu'à connexion */
     }
 
     .message {
@@ -214,7 +129,8 @@
       position: relative;
       word-wrap: break-word;
       line-height: 1.5;
-      unicode-bidi: plaintext; /* Pour le texte en Gagganti */
+      animation: fadeIn 0.3s ease-out;
+      transform-origin: right;
     }
 
     .message-out {
@@ -238,7 +154,6 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
-      direction: rtl;
     }
 
     .message-avatar {
@@ -246,6 +161,7 @@
       height: 1.8rem;
       border-radius: 50%;
       object-fit: cover;
+      border: 1px solid var(--or);
     }
 
     .message-sender {
@@ -265,14 +181,14 @@
     .message-text {
       font-size: 1.1rem;
       unicode-bidi: plaintext;
-      word-wrap: break-word;
+      text-align: right;
     }
 
     .message-reactions {
       display: flex;
       gap: 0.3rem;
       margin-top: 0.5rem;
-      direction: ltr;
+      justify-content: flex-end;
     }
 
     .reaction {
@@ -290,6 +206,7 @@
     .reaction.active {
       opacity: 1;
       transform: scale(1.1);
+      animation: pulse 0.5s;
     }
 
     .day-divider {
@@ -332,6 +249,7 @@
 
     .typing-indicator.visible {
       opacity: 1;
+      animation: fadeIn 0.3s;
     }
 
     .typing-text {
@@ -364,6 +282,65 @@
       30% { transform: translateY(-3px); }
     }
 
+    /* === UTILISATEURS EN LIGNE === */
+    #online-users {
+      position: fixed;
+      top: 5rem;
+      left: 1rem;
+      background: rgba(10, 10, 10, 0.8);
+      border: 1px solid var(--or);
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow);
+      animation: slideInRight 0.5s;
+      z-index: 100;
+    }
+
+    .online-users-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--or);
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      padding-bottom: 0.3rem;
+    }
+
+    .online-user {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      animation: fadeIn 0.3s;
+    }
+
+    .online-user-avatar {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--or);
+    }
+
+    .online-user-name {
+      font-size: 0.9rem;
+    }
+
+    .online-count {
+      background-color: var(--or);
+      color: var(--noir);
+      border-radius: 50%;
+      width: 1.2rem;
+      height: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      margin-left: auto;
+    }
+
     /* === ZONE DE SAISIE === */
     #input-container {
       display: flex;
@@ -372,7 +349,6 @@
       border-top: 1px solid rgba(212, 175, 55, 0.2);
       gap: 0.5rem;
       align-items: center;
-      display: none; /* Caché jusqu'à connexion */
     }
 
     #message-input {
@@ -432,6 +408,7 @@
 
     .action-button:hover {
       background: rgba(212, 175, 55, 0.1);
+      transform: scale(1.1);
     }
 
     /* === NOTIFICATIONS === */
@@ -448,10 +425,154 @@
       transition: transform 0.3s ease;
       z-index: 1000;
       border-left: 4px solid var(--or);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .notification.show {
       transform: translateX(0);
+      animation: pulse 1s;
+    }
+
+    .notification-icon {
+      font-size: 1.2rem;
+    }
+
+    .notification-close {
+      margin-left: 0.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .notification-close:hover {
+      opacity: 1;
+    }
+
+    /* === MODAL PARAMÈTRES === */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: var(--noir);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid var(--or);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.3s;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      color: var(--or);
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--or);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 0.3rem;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--ivoire);
+      font-family: 'Gagganti', sans-serif;
+      direction: rtl;
+      unicode-bidi: bidi-override;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--or);
+    }
+
+    .avatar-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .avatar-option {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      object-fit: cover;
+    }
+
+    .avatar-option:hover {
+      transform: scale(1.1);
+    }
+
+    .avatar-option.selected {
+      border-color: var(--or);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+      animation: pulse 0.5s;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.3rem;
+      border: none;
+      cursor: pointer;
+      font-family: 'Gagganti', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .modal-button.primary {
+      background-color: var(--or);
+      color: var(--noir);
+    }
+
+    .modal-button.secondary {
+      background-color: transparent;
+      color: var(--or);
+      border: 1px solid var(--or);
+    }
+
+    .modal-button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
     }
 
     /* === EMOJI PICKER === */
@@ -470,46 +591,11 @@
       opacity: 1;
       transform: translateY(0);
       visibility: visible;
-    }
-
-    /* === CLAVIER VIRTUEL === */
-    .virtual-keyboard {
-      display: none;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 0.5rem;
-      padding: 1rem;
-      background: var(--noir);
-      border-top: 1px solid var(--or);
-    }
-
-    .keyboard-key {
-      padding: 0.8rem;
-      background: var(--vert-fonce);
-      color: white;
-      border: none;
-      border-radius: 0.3rem;
-      cursor: pointer;
-      font-family: 'Gagganti';
-      transition: all 0.2s;
-    }
-
-    .keyboard-key:hover {
-      background: var(--or);
-      color: var(--noir);
-    }
-
-    .toggle-keyboard {
-      position: fixed;
-      bottom: 5rem;
-      left: 1rem;
+      animation: fadeIn 0.3s;
     }
 
     /* === RESPONSIVE === */
     @media (max-width: 768px) {
-      .welcome-title {
-        font-size: 1.5rem;
-      }
-
       h1 {
         font-size: 1.5rem;
       }
@@ -522,56 +608,34 @@
         font-size: 1rem;
       }
 
-      .virtual-keyboard {
-        grid-template-columns: repeat(8, 1fr);
-      }
-    }
-
-    @media (max-width: 480px) {
-      .welcome-content {
-        padding: 1rem;
-      }
-
-      .online-users {
-        position: static;
-        transform: none;
-        margin-top: 0.5rem;
-        justify-content: center;
-      }
-
-      .virtual-keyboard {
-        grid-template-columns: repeat(5, 1fr);
+      #online-users {
+        top: auto;
+        bottom: 5rem;
+        left: 1rem;
+        right: 1rem;
+        max-height: 20vh;
       }
     }
   </style>
 </head>
 <body>
-  <!-- ANIMATION D'ENTRÉE -->
-  <div id="birdAnimation" class="bird-animation" style="display: none;">🦜</div>
-
-  <!-- MODAL D'ACCUEIL -->
-  <div id="welcomeModal" class="welcome-modal">
-    <div class="welcome-content">
-      <h1 class="welcome-title">Tër ci Waxtaan ci Gagganti</h1>
-      <div class="welcome-form">
-        <input type="text" id="usernameInput" class="welcome-input" placeholder="Tur wu matale" required>
-        <input type="text" id="avatarUrlInput" class="welcome-input" placeholder="Lien bu bëgg (facultatif)">
-        <button id="enterChat" class="welcome-button">Dugg ci Waxtaan</button>
-      </div>
-    </div>
-  </div>
-
   <!-- EN-TÊTE -->
-  <header id="appHeader">
+  <header>
     <div class="logo">
       <span class="logo-icon">💬</span>
       <h1>Waxtaan ci Gagganti</h1>
-      <div class="online-users">
-        <i class="fas fa-users"></i>
-        <span class="online-count">0</span> nit
-      </div>
     </div>
   </header>
+
+  <!-- UTILISATEURS EN LIGNE -->
+  <div id="online-users" style="display: none;">
+    <div class="online-users-header">
+      <i class="fas fa-users"></i>
+      <span>Nit ñi ci liggéey</span>
+      <span class="online-count">0</span>
+    </div>
+    <div id="online-users-list"></div>
+  </div>
 
   <!-- ZONE DE MESSAGES -->
   <div id="messages">
@@ -586,48 +650,8 @@
   <!-- ZONE DE SAISIE -->
   <div id="input-container">
     <button id="emojiButton" class="action-button">😊</button>
-    <input type="text" id="message-input" placeholder="Bindal ci..." autocomplete="off">
+    <input type="text" id="message-input" placeholder="...itnagag ci bindal" autocomplete="off">
     <button id="send-button" disabled>➡️</button>
-    <button id="toggleKeyboard" class="action-button toggle-keyboard"><i class="fas fa-keyboard"></i></button>
-  </div>
-
-  <!-- CLAVIER VIRTUEL -->
-  <div id="virtualKeyboard" class="virtual-keyboard">
-    <!-- Rangée 1 -->
-    <button class="keyboard-key" onclick="insertAtCursor('ا')">ا</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ب')">ب</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ت')">ت</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ث')">ث</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ج')">ج</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ح')">ح</button>
-    <button class="keyboard-key" onclick="insertAtCursor('خ')">خ</button>
-    <button class="keyboard-key" onclick="insertAtCursor('د')">د</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ذ')">ذ</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ر')">ر</button>
-    
-    <!-- Rangée 2 -->
-    <button class="keyboard-key" onclick="insertAtCursor('ز')">ز</button>
-    <button class="keyboard-key" onclick="insertAtCursor('س')">س</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ش')">ش</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ص')">ص</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ض')">ض</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ط')">ط</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ظ')">ظ</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ع')">ع</button>
-    <button class="keyboard-key" onclick="insertAtCursor('غ')">غ</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ف')">ف</button>
-    
-    <!-- Rangée 3 -->
-    <button class="keyboard-key" onclick="insertAtCursor('ق')">ق</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ك')">ك</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ل')">ل</button>
-    <button class="keyboard-key" onclick="insertAtCursor('م')">م</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ن')">ن</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ه')">ه</button>
-    <button class="keyboard-key" onclick="insertAtCursor('و')">و</button>
-    <button class="keyboard-key" onclick="insertAtCursor('ي')">ي</button>
-    <button class="keyboard-key" onclick="insertAtCursor(' ')">␣</button>
-    <button class="keyboard-key" onclick="deleteChar()"><i class="fas fa-backspace"></i></button>
   </div>
 
   <!-- EMOJI PICKER -->
@@ -636,7 +660,46 @@
   </div>
 
   <!-- NOTIFICATION -->
-  <div id="notification" class="notification"></div>
+  <div id="notification" class="notification">
+    <span id="notification-icon" class="notification-icon">🔔</span>
+    <span id="notification-message"></span>
+    <span class="notification-close">&times;</span>
+  </div>
+
+  <!-- MODAL PARAMÈTRES -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <h2 class="modal-title">Teyyeel yi</h2>
+      <div class="form-group">
+        <label for="usernameInput" class="form-label">Tur wu matale</label>
+        <input type="text" id="usernameInput" class="form-input" placeholder="...wu matale tur tapp">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Avatar</label>
+        <input type="text" id="avatarUrlInput" class="form-input" placeholder="...bu bëgg lien">
+        <div class="avatar-options">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="cancelSettings" class="modal-button secondary">Neenal</button>
+        <button id="saveSettings" class="modal-button primary">Saxal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUTON PARAMÈTRES -->
+  <button id="settingsButton" class="action-button" style="position: fixed; bottom: 1rem; left: 1rem;">
+    <i class="fas fa-cog"></i>
+  </button>
+
+  <!-- BOUTON UTILISATEURS EN LIGNE -->
+  <button id="onlineUsersButton" class="action-button" style="position: fixed; bottom: 4rem; left: 1rem;">
+    <i class="fas fa-users"></i>
+  </button>
 
   <!-- SCRIPT JS -->
   <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1"></script>
@@ -645,88 +708,129 @@
     // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       // Éléments DOM
-      const welcomeModal = document.getElementById('welcomeModal');
-      const usernameInput = document.getElementById('usernameInput');
-      const avatarUrlInput = document.getElementById('avatarUrlInput');
-      const enterChatBtn = document.getElementById('enterChat');
-      const appHeader = document.getElementById('appHeader');
       const messagesEl = document.getElementById('messages');
       const inputEl = document.getElementById('message-input');
       const sendBtn = document.getElementById('send-button');
       const emojiButton = document.getElementById('emojiButton');
       const emojiPicker = document.getElementById('emojiPicker');
       const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notification-message');
+      const notificationIcon = document.getElementById('notification-icon');
+      const settingsButton = document.getElementById('settingsButton');
+      const settingsModal = document.getElementById('settingsModal');
+      const usernameInput = document.getElementById('usernameInput');
+      const avatarUrlInput = document.getElementById('avatarUrlInput');
+      const saveSettingsBtn = document.getElementById('saveSettings');
+      const cancelSettingsBtn = document.getElementById('cancelSettings');
       const typingIndicator = document.getElementById('typingIndicator');
+      const onlineUsersButton = document.getElementById('onlineUsersButton');
+      const onlineUsersPanel = document.getElementById('online-users');
+      const onlineUsersList = document.getElementById('online-users-list');
       const onlineCount = document.querySelector('.online-count');
-      const toggleKeyboardBtn = document.getElementById('toggleKeyboard');
-      const virtualKeyboard = document.getElementById('virtualKeyboard');
-      const birdAnimation = document.getElementById('birdAnimation');
 
+      // Connexion Socket.io
+      const socket = io();
+      
       // Variables d'état
-      let username = '';
-      let avatarUrl = '';
+      let username = localStorage.getItem('gagganti_username') || '';
+      let avatarUrl = localStorage.getItem('gagganti_avatar') || '';
+      let lastDate = '';
       let isTyping = false;
       let typingTimeout;
-      let socket;
+      let onlineUsers = [];
+      let notificationTimeout;
 
-      // Afficher l'animation d'entrée
-      function showEntranceAnimation() {
-        birdAnimation.style.display = 'block';
-        
-        // Quand l'animation est terminée, afficher le modal
-        birdAnimation.addEventListener('animationend', () => {
-          birdAnimation.style.display = 'none';
-          welcomeModal.style.display = 'flex';
-        }, { once: true });
+      // Vérifier et demander le nom d'utilisateur si nécessaire
+      if (!username) {
+        setTimeout(() => {
+          settingsModal.classList.add('active');
+        }, 500);
       }
 
-      // Démarrer l'animation d'entrée
-      showEntranceAnimation();
+      // Fonction pour inverser le texte selon les règles Gagganti
+      function reverseGagganti(text) {
+        // Inverser l'ordre des mots et des lettres dans chaque mot
+        return text.split(' ').map(word => 
+          word.split('').reverse().join('')
+        ).join(' ');
+      }
 
-      // Fonction pour inverser le texte en Gagganti
-      function reverseText(text) {
-        // Séparer les mots et inverser leur ordre
-        const words = text.split(' ');
-        const reversedWords = words.map(word => {
-          // Inverser chaque mot caractère par caractère
-          return word.split('').reverse().join('');
+      // Charger les paramètres
+      function loadSettings() {
+        usernameInput.value = username;
+        avatarUrlInput.value = avatarUrl;
+        
+        // Sélectionner l'avatar actuel s'il fait partie des options
+        document.querySelectorAll('.avatar-option').forEach(option => {
+          if (option.dataset.avatar === avatarUrl) {
+            option.classList.add('selected');
+          }
         });
-        // Inverser l'ordre des mots
-        return reversedWords.reverse().join(' ');
       }
 
-      // Fonction pour insérer du texte à la position du curseur
-      function insertAtCursor(text) {
-        const cursorPos = inputEl.selectionStart;
-        const currentText = inputEl.value;
+      // Sauvegarder les paramètres
+      function saveSettings() {
+        const newUsername = usernameInput.value.trim();
+        let newAvatarUrl = avatarUrlInput.value.trim();
         
-        inputEl.value = currentText.substring(0, cursorPos) + text + currentText.substring(cursorPos);
-        inputEl.selectionStart = inputEl.selectionEnd = cursorPos + text.length;
-        inputEl.focus();
-        sendBtn.disabled = inputEl.value.trim() === '';
-      }
-
-      // Fonction pour supprimer un caractère
-      function deleteChar() {
-        const cursorPos = inputEl.selectionStart;
-        const text = inputEl.value;
-        
-        if (cursorPos > 0) {
-          inputEl.value = text.substring(0, cursorPos - 1) + text.substring(cursorPos);
-          inputEl.selectionStart = inputEl.selectionEnd = cursorPos - 1;
-          sendBtn.disabled = inputEl.value.trim() === '';
+        if (!newUsername) {
+          showNotification('Fànn la, tapp tur wu matale!', 'error');
+          return;
         }
-        inputEl.focus();
+        
+        // Si aucune URL personnalisée, utiliser l'avatar sélectionné
+        if (!newAvatarUrl) {
+          const selectedAvatar = document.querySelector('.avatar-option.selected');
+          if (selectedAvatar) {
+            newAvatarUrl = selectedAvatar.dataset.avatar;
+          } else {
+            newAvatarUrl = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=' + Math.random().toString(36).substring(2);
+          }
+        }
+        
+        username = newUsername;
+        avatarUrl = newAvatarUrl;
+        
+        localStorage.setItem('gagganti_username', username);
+        localStorage.setItem('gagganti_avatar', avatarUrl);
+        
+        socket.emit('user-info', { username, avatar: avatarUrl });
+        
+        settingsModal.classList.remove('active');
+        showNotification('Teyyeel yi sax nañu', 'success');
       }
 
       // Afficher une notification
-      function showNotification(message) {
-        notification.textContent = message;
+      function showNotification(message, type = 'info') {
+        clearTimeout(notificationTimeout);
+        
+        notificationMessage.textContent = message;
+        
+        // Changer l'icône selon le type
+        switch(type) {
+          case 'error':
+            notificationIcon.textContent = '❌';
+            notification.style.backgroundColor = '#7c4d1e';
+            break;
+          case 'success':
+            notificationIcon.textContent = '✅';
+            notification.style.backgroundColor = '#013220';
+            break;
+          case 'info':
+            notificationIcon.textContent = '🔔';
+            notification.style.backgroundColor = '#4B0082';
+            break;
+          case 'message':
+            notificationIcon.textContent = '💬';
+            notification.style.backgroundColor = '#4B0082';
+            break;
+        }
+        
         notification.classList.add('show');
         
-        setTimeout(() => {
+        notificationTimeout = setTimeout(() => {
           notification.classList.remove('show');
-        }, 3000);
+        }, 5000);
       }
 
       // Formater la date
@@ -764,9 +868,10 @@
         // Créer l'élément message
         const messageEl = document.createElement('div');
         messageEl.className = `message ${message.senderId === socket.id ? 'message-out' : 'message-in'}`;
+        messageEl.dataset.messageId = message.id;
         
-        // Inverser le texte pour le Gagganti
-        const reversedText = reverseText(message.text);
+        // Inverser le texte selon les règles Gagganti
+        const reversedText = reverseGagganti(message.text);
         
         messageEl.innerHTML = `
           <div class="message-header">
@@ -798,7 +903,28 @@
         
         // Ajouter le message à la conversation
         messagesEl.appendChild(messageEl);
+        
+        // Faire défiler vers le bas si c'est un nouveau message
         messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      // Mettre à jour la liste des utilisateurs en ligne
+      function updateOnlineUsers(users) {
+        onlineUsers = users;
+        onlineUsersList.innerHTML = '';
+        onlineCount.textContent = users.length;
+        
+        users.forEach(user => {
+          if (user.id === socket.id) return; // Ne pas s'afficher soi-même
+          
+          const userEl = document.createElement('div');
+          userEl.className = 'online-user';
+          userEl.innerHTML = `
+            <img src="${user.avatar || 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=user'}" class="online-user-avatar">
+            <span class="online-user-name">${user.name}</span>
+          `;
+          onlineUsersList.appendChild(userEl);
+        });
       }
 
       // Envoyer un message
@@ -808,7 +934,7 @@
         if (!text || !username) return;
         
         const message = {
-          text: reverseText(text), // Inverser le texte avant envoi
+          text,
           sender: username,
           avatar: avatarUrl,
           timestamp: new Date().toISOString()
@@ -819,86 +945,85 @@
         sendBtn.disabled = true;
       }
 
-      // Connexion au chat
-      enterChatBtn.addEventListener('click', () => {
-        username = usernameInput.value.trim();
-        avatarUrl = avatarUrlInput.value.trim();
+      // Gestion des événements Socket.io
+      socket.on('connect', () => {
+        console.log('Connecté au serveur avec l\'ID:', socket.id);
         
-        if (!username) {
-          showNotification('Fànn la, tapp tur wu matale!');
-          return;
-        }
-        
-        // Avatar par défaut si non spécifié
-        if (!avatarUrl) {
-          avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${username}`;
-        }
-        
-        // Connecter le socket
-        socket = io();
-        
-        // Gestion des événements Socket.io
-        socket.on('connect', () => {
-          // Envoyer les informations utilisateur
+        // Envoyer les informations utilisateur
+        if (username) {
           socket.emit('user-info', { username, avatar: avatarUrl });
+        }
+      });
+      
+      socket.on('user-info', (userInfo) => {
+        // Mettre à jour les informations utilisateur si nécessaire
+        if (userInfo.id === socket.id) {
+          username = userInfo.name;
+          avatarUrl = userInfo.avatar;
+          localStorage.setItem('gagganti_username', username);
+          localStorage.setItem('gagganti_avatar', avatarUrl);
+        }
+      });
+      
+      socket.on('message', (message) => {
+        renderMessage(message);
+        
+        // Notification si la fenêtre n'est pas active
+        if (document.hidden && message.senderId !== socket.id) {
+          showNotification(`${message.sender}: ${reverseGagganti(message.text)}`, 'message');
           
-          // Cacher le modal et afficher l'interface de chat
-          welcomeModal.style.display = 'none';
-          appHeader.style.display = 'block';
-          messagesEl.style.display = 'block';
-          inputContainer.style.display = 'flex';
+          // Vibrer si supporté
+          if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]);
+          }
+        }
+      });
+      
+      socket.on('user-typing', (user) => {
+        if (user.id !== socket.id) {
+          typingIndicator.querySelector('.typing-text').textContent = `${user.name} ngi bind...`;
+          typingIndicator.classList.add('visible');
+        }
+      });
+      
+      socket.on('user-stopped-typing', (userId) => {
+        if (userId !== socket.id) {
+          typingIndicator.classList.remove('visible');
+        }
+      });
+      
+      socket.on('reaction', ({ messageId, reaction, sender }) => {
+        // Mettre à jour les réactions
+        const messageEl = document.querySelector(`[data-message-id="${messageId}"]`);
+        if (messageEl) {
+          const reactionsContainer = messageEl.querySelector('.message-reactions');
+          const existingReaction = Array.from(reactionsContainer.children).find(
+            el => el.textContent.includes(reaction)
+          );
           
-          showNotification('Dama nga ci waxtaan gi!');
-        });
-        
-        socket.on('message', (message) => {
-          renderMessage(message);
-          
-          // Notification si la fenêtre n'est pas active
-          if (document.hidden && message.senderId !== socket.id) {
-            showNotification(`${message.sender}: ${reverseText(message.text)}`);
+          if (existingReaction) {
+            existingReaction.classList.add('active');
+            showNotification(`${sender} di joxe ${reaction}`, 'info');
           }
-        });
-        
-        socket.on('user-typing', (user) => {
-          if (user.id !== socket.id) {
-            typingIndicator.querySelector('.typing-text').textContent = `${user.name} ngi bind...`;
-            typingIndicator.classList.add('visible');
-          }
-        });
-        
-        socket.on('user-stopped-typing', (userId) => {
-          if (userId !== socket.id) {
-            typingIndicator.classList.remove('visible');
-          }
-        });
-        
-        socket.on('user-count', (count) => {
-          onlineCount.textContent = count;
-        });
-        
-        socket.on('reaction', ({ messageId, reaction }) => {
-          // Mettre à jour les réactions (implémentation simplifiée)
-          const messages = document.querySelectorAll('.message');
-          
-          for (const msg of messages) {
-            if (msg.dataset.messageId === messageId) {
-              const reactionsContainer = msg.querySelector('.message-reactions');
-              const existingReaction = Array.from(reactionsContainer.children).find(
-                el => el.textContent.includes(reaction)
-              );
-              
-              if (existingReaction) {
-                existingReaction.classList.add('active');
-              }
-              break;
-            }
-          }
-        });
-        
-        socket.on('history', (messages) => {
-          messages.forEach(msg => renderMessage(msg));
-        });
+        }
+      });
+      
+      socket.on('online-users', (users) => {
+        updateOnlineUsers(users);
+      });
+      
+      socket.on('user-connected', (user) => {
+        if (user.id !== socket.id) {
+          showNotification(`${user.name} dafa seet`, 'info');
+        }
+      });
+      
+      socket.on('user-disconnected', (user) => {
+        showNotification(`${user.name} dafa génn`, 'info');
+      });
+      
+      socket.on('history', (messages) => {
+        messages.forEach(msg => renderMessage(msg));
       });
 
       // Gestion des événements DOM
@@ -940,17 +1065,51 @@
       
       // Gestion du sélecteur d'émojis
       emojiPicker.addEventListener('emoji-click', (event) => {
-        insertAtCursor(event.detail.unicode);
+        inputEl.value += event.detail.unicode;
+        inputEl.focus();
         emojiPicker.classList.remove('visible');
       });
       
-      // Basculer le clavier virtuel
-      toggleKeyboardBtn.addEventListener('click', () => {
-        virtualKeyboard.style.display = virtualKeyboard.style.display === 'grid' ? 'none' : 'grid';
+      // Gestion des paramètres
+      settingsButton.addEventListener('click', () => {
+        loadSettings();
+        settingsModal.classList.add('active');
+      });
+      
+      saveSettingsBtn.addEventListener('click', saveSettings);
+      
+      cancelSettingsBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.avatar-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          avatarUrlInput.value = '';
+        });
+      });
+      
+      // Gestion des utilisateurs en ligne
+      onlineUsersButton.addEventListener('click', () => {
+        onlineUsersPanel.style.display = onlineUsersPanel.style.display === 'none' ? 'block' : 'none';
+      });
+      
+      // Fermer la notification
+      document.querySelector('.notification-close').addEventListener('click', () => {
+        notification.classList.remove('show');
+      });
+      
+      // Gestion des notifications push
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          // Réduire toutes les notifications lorsque la page redevient visible
+          notification.classList.remove('show');
+        }
       });
       
       // Focus automatique sur le champ de saisie
-      usernameInput.focus();
+      inputEl.focus();
     });
   </script>
 </body>
