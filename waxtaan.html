@@ -4,169 +4,865 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Waxtaan ci Gagganti</title>
+  <link rel="preload" href="gagganti.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
+    /* === VARIABLES CSS === */
+    :root {
+      --noir: #0a0a0a;
+      --or: #D4AF37;
+      --terre: #7c4d1e;
+      --ocre: #CC7722;
+      --ivoire: #F5F5DC;
+      --indigo: #4B0082;
+      --vert-fonce: #013220;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* === POLICE GAGANTI === */
     @font-face {
       font-family: 'Gagganti';
-      src: url('/mnt/data/gagganti.ttf') format('truetype');
+      src: url('gagganti.ttf') format('truetype');
       font-display: swap;
     }
 
+    /* === STRUCTURE PRINCIPALE === */
     body {
       font-family: 'Gagganti', sans-serif;
-      background-color: #121212;
-      color: #f5f5f5;
+      background-color: var(--noir);
+      color: var(--ivoire);
       height: 100vh;
       margin: 0;
       display: flex;
       flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
 
-    .message-out {
-      background-color: #2f2f4f;
-      border-left: 4px solid #a78bfa;
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><path fill="%23D4AF37" fill-opacity="0.03" d="M100,20 C120,60 180,80 180,120 C140,120 100,160 100,200 C100,160 60,120 20,120 C20,80 80,60 100,20 Z"/></svg>'),
+        linear-gradient(to right, rgba(10,10,10,0.9), rgba(10,10,10,0.9));
+      background-size: 300px, cover;
+      z-index: -2;
     }
 
-    .message-in {
-      background-color: #1e1e2e;
-      border-right: 4px solid #8b5cf6;
+    /* === EN-TÊTE === */
+    header {
+      background: linear-gradient(to right, var(--noir), var(--indigo));
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+      border-bottom: 2px solid var(--or);
+      box-shadow: var(--shadow);
     }
 
-    .message-time {
-      font-size: 0.75rem;
-      color: #999;
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
     }
 
-    .reaction {
-      font-size: 1rem;
-      margin-left: 0.5rem;
-      cursor: pointer;
-      transition: transform 0.2s;
+    .logo-icon {
+      font-size: 2rem;
+      color: var(--or);
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
     }
 
-    .reaction:hover {
-      transform: scale(1.3);
+    h1 {
+      font-size: 1.8rem;
+      background: linear-gradient(to right, var(--or), #F5DEB3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
+    /* === ZONE DE MESSAGES === */
     #messages {
       flex: 1;
       overflow-y: auto;
       padding: 1rem;
+      scroll-behavior: smooth;
+      direction: rtl;
+      unicode-bidi: bidi-override;
     }
 
-    #input-container {
+    .message {
+      max-width: 80%;
+      padding: 0.8rem 1.2rem;
+      margin-bottom: 1rem;
+      border-radius: 1rem;
+      position: relative;
+      word-wrap: break-word;
+      line-height: 1.5;
+    }
+
+    .message-out {
+      background-color: var(--indigo);
+      margin-left: auto;
+      margin-right: 0;
+      border-top-right-radius: 0;
+      border-left: 3px solid var(--or);
+    }
+
+    .message-in {
+      background-color: var(--vert-fonce);
+      margin-right: auto;
+      margin-left: 0;
+      border-top-left-radius: 0;
+      border-right: 3px solid var(--or);
+    }
+
+    .message-header {
       display: flex;
-      padding: 1rem;
-      background: #1a1a1a;
+      align-items: center;
       gap: 0.5rem;
+      margin-bottom: 0.5rem;
     }
 
-    #message-input {
-      flex: 1;
-      padding: 0.75rem;
-      border-radius: 999px;
-      border: none;
-      background: #333;
-      color: #fff;
+    .message-avatar {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 50%;
+      object-fit: cover;
     }
 
-    #send-button {
-      padding: 0.75rem 1.25rem;
-      background-color: #4c1d95;
-      color: white;
-      border-radius: 999px;
+    .message-sender {
+      font-weight: bold;
+      color: var(--or);
+    }
+
+    .message-time {
+      font-size: 0.7rem;
+      color: var(--ocre);
+      margin-top: 0.3rem;
+      text-align: left;
+      direction: ltr;
+      unicode-bidi: bidi-override;
+    }
+
+    .message-text {
+      font-size: 1.1rem;
+    }
+
+    .message-reactions {
+      display: flex;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+    }
+
+    .reaction {
+      font-size: 0.9rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+
+    .reaction:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    .reaction.active {
+      opacity: 1;
+      transform: scale(1.1);
     }
 
     .day-divider {
       text-align: center;
+      margin: 1.5rem 0;
+      position: relative;
+      color: var(--or);
       font-size: 0.8rem;
-      color: #aaa;
-      margin: 1rem 0;
+    }
+
+    .day-divider::before,
+    .day-divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 30%;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.5;
+    }
+
+    .day-divider::before {
+      left: 0;
+    }
+
+    .day-divider::after {
+      right: 0;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-right: 1rem;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      direction: rtl;
+    }
+
+    .typing-indicator.visible {
+      opacity: 1;
+    }
+
+    .typing-text {
+      font-size: 0.8rem;
+      color: var(--ocre);
+    }
+
+    .typing-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--or);
+      border-radius: 50%;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-3px); }
+    }
+
+    /* === ZONE DE SAISIE === */
+    #input-container {
+      display: flex;
+      padding: 1rem;
+      background: var(--noir);
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 0.8rem 1.2rem;
+      border-radius: 2rem;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--ivoire);
+      font-family: 'Gagganti', sans-serif;
+      font-size: 1rem;
+      direction: rtl;
+    }
+
+    #message-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--or);
+    }
+
+    #send-button {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background-color: var(--or);
+      color: var(--noir);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+    }
+
+    #send-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    #send-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* === BOUTONS D'ACTION === */
+    .action-button {
+      background: none;
+      border: none;
+      color: var(--or);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .action-button:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* === NOTIFICATIONS === */
+    .notification {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: 0.5rem;
+      background-color: var(--indigo);
+      color: white;
+      box-shadow: var(--shadow);
+      transform: translateX(200%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      border-left: 4px solid var(--or);
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    /* === MODAL PARAMÈTRES === */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: var(--noir);
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid var(--or);
+      box-shadow: var(--shadow);
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      color: var(--or);
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--or);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 0.3rem;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--ivoire);
+      font-family: 'Gagganti', sans-serif;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--or);
+    }
+
+    .avatar-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .avatar-option {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      object-fit: cover;
+    }
+
+    .avatar-option:hover {
+      transform: scale(1.1);
+    }
+
+    .avatar-option.selected {
+      border-color: var(--or);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.3rem;
+      border: none;
+      cursor: pointer;
+      font-family: 'Gagganti', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .modal-button.primary {
+      background-color: var(--or);
+      color: var(--noir);
+    }
+
+    .modal-button.secondary {
+      background-color: transparent;
+      color: var(--or);
+      border: 1px solid var(--or);
+    }
+
+    .modal-button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    /* === EMOJI PICKER === */
+    .emoji-picker-container {
+      position: absolute;
+      bottom: 5rem;
+      right: 1rem;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      visibility: hidden;
+    }
+
+    .emoji-picker-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .message {
+        max-width: 90%;
+      }
+
+      .message-text {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="messages" class="overflow-y-auto"></div>
+  <!-- EN-TÊTE -->
+  <header>
+    <div class="logo">
+      <span class="logo-icon">💬</span>
+      <h1>Waxtaan ci Gagganti</h1>
+    </div>
+  </header>
 
-  <div id="input-container">
-    <input type="text" id="message-input" placeholder="Bindal ci..." autocomplete="off"></input>
-    <button id="send-button">➡️</button>
+  <!-- ZONE DE MESSAGES -->
+  <div id="messages">
+    <div id="typingIndicator" class="typing-indicator">
+      <span class="typing-text">...</span>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
   </div>
 
+  <!-- ZONE DE SAISIE -->
+  <div id="input-container">
+    <button id="emojiButton" class="action-button">😊</button>
+    <input type="text" id="message-input" placeholder="Bindal ci..." autocomplete="off">
+    <button id="send-button" disabled>➡️</button>
+  </div>
+
+  <!-- EMOJI PICKER -->
+  <div id="emojiPicker" class="emoji-picker-container">
+    <emoji-picker></emoji-picker>
+  </div>
+
+  <!-- NOTIFICATION -->
+  <div id="notification" class="notification"></div>
+
+  <!-- MODAL PARAMÈTRES -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <h2 class="modal-title">Teyyeel yi</h2>
+      <div class="form-group">
+        <label for="usernameInput" class="form-label">Tur wu matale</label>
+        <input type="text" id="usernameInput" class="form-input" placeholder="Tapp tur wu matale">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Avatar</label>
+        <input type="text" id="avatarUrlInput" class="form-input" placeholder="Lien bu bëgg">
+        <div class="avatar-options">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="cancelSettings" class="modal-button secondary">Neenal</button>
+        <button id="saveSettings" class="modal-button primary">Saxal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUTON PARAMÈTRES -->
+  <button id="settingsButton" class="action-button" style="position: fixed; bottom: 1rem; left: 1rem;">
+    <i class="fas fa-cog"></i>
+  </button>
+
+  <!-- SCRIPT JS -->
+  <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    const storedName = localStorage.getItem('gagganti_username') || prompt('Tapp tur wu matale :');
-    const storedAvatar = localStorage.getItem('gagganti_avatar') || prompt('Entrer lien avatar (facultatif) :');
-    localStorage.setItem('gagganti_username', storedName);
-    localStorage.setItem('gagganti_avatar', storedAvatar);
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', () => {
+      // Éléments DOM
+      const messagesEl = document.getElementById('messages');
+      const inputEl = document.getElementById('message-input');
+      const sendBtn = document.getElementById('send-button');
+      const emojiButton = document.getElementById('emojiButton');
+      const emojiPicker = document.getElementById('emojiPicker');
+      const notification = document.getElementById('notification');
+      const settingsButton = document.getElementById('settingsButton');
+      const settingsModal = document.getElementById('settingsModal');
+      const usernameInput = document.getElementById('usernameInput');
+      const avatarUrlInput = document.getElementById('avatarUrlInput');
+      const saveSettingsBtn = document.getElementById('saveSettings');
+      const cancelSettingsBtn = document.getElementById('cancelSettings');
+      const typingIndicator = document.getElementById('typingIndicator');
 
-    const messagesEl = document.getElementById('messages');
-    const inputEl = document.getElementById('message-input');
-    const sendBtn = document.getElementById('send-button');
+      // Connexion Socket.io
+      const socket = io();
+      
+      // Variables d'état
+      let username = localStorage.getItem('gagganti_username') || '';
+      let avatarUrl = localStorage.getItem('gagganti_avatar') || '';
+      let lastDate = '';
+      let isTyping = false;
+      let typingTimeout;
 
-    const chatHistory = JSON.parse(localStorage.getItem('gagganti_history')) || [];
-
-    let lastDate = '';
-
-    function formatDate(d) {
-      const today = new Date();
-      const target = new Date(d);
-      if (target.toDateString() === today.toDateString()) return 'Tey';
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-      if (target.toDateString() === yesterday.toDateString()) return 'Démb';
-      return target.toLocaleDateString();
-    }
-
-    function renderMessage(msg) {
-      const msgDate = new Date(msg.date).toDateString();
-      if (msgDate !== lastDate) {
-        const divider = document.createElement('div');
-        divider.className = 'day-divider';
-        divider.textContent = formatDate(msg.date);
-        messagesEl.appendChild(divider);
-        lastDate = msgDate;
+      // Vérifier et demander le nom d'utilisateur si nécessaire
+      if (!username) {
+        setTimeout(() => {
+          settingsModal.classList.add('active');
+        }, 500);
       }
 
-      const div = document.createElement('div');
-      div.className = `max-w-xl px-4 py-2 mb-2 rounded-xl ${msg.outgoing ? 'message-out ml-auto text-right' : 'message-in mr-auto text-right'} relative`;
-      div.innerHTML = `
-        <div class="flex items-center gap-2 mb-1">
-          ${msg.avatar ? `<img src="${msg.avatar}" alt="avatar" class="w-6 h-6 rounded-full">` : ''}
-          <div class="font-bold text-purple-400">${msg.user}</div>
-        </div>
-        <div class="text-lg">${msg.text}</div>
-        <div class="message-time">${new Date(msg.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-        <div class="flex gap-2 mt-1">
-          <span class="reaction">❤️</span>
-          <span class="reaction">😂</span>
-          <span class="reaction">🔥</span>
-        </div>`;
-      messagesEl.appendChild(div);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
+      // Charger les paramètres
+      function loadSettings() {
+        usernameInput.value = username;
+        avatarUrlInput.value = avatarUrl;
+        
+        // Sélectionner l'avatar actuel s'il fait partie des options
+        document.querySelectorAll('.avatar-option').forEach(option => {
+          if (option.dataset.avatar === avatarUrl) {
+            option.classList.add('selected');
+          }
+        });
+      }
 
-    chatHistory.forEach(renderMessage);
+      // Sauvegarder les paramètres
+      function saveSettings() {
+        const newUsername = usernameInput.value.trim();
+        let newAvatarUrl = avatarUrlInput.value.trim();
+        
+        if (!newUsername) {
+          showNotification('Fànn la, tapp tur wu matale!');
+          return;
+        }
+        
+        // Si aucune URL personnalisée, utiliser l'avatar sélectionné
+        if (!newAvatarUrl) {
+          const selectedAvatar = document.querySelector('.avatar-option.selected');
+          if (selectedAvatar) {
+            newAvatarUrl = selectedAvatar.dataset.avatar;
+          } else {
+            newAvatarUrl = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=' + Math.random().toString(36).substring(2);
+          }
+        }
+        
+        username = newUsername;
+        avatarUrl = newAvatarUrl;
+        
+        localStorage.setItem('gagganti_username', username);
+        localStorage.setItem('gagganti_avatar', avatarUrl);
+        
+        settingsModal.classList.remove('active');
+        showNotification('Teyyeel yi sax nañu');
+      }
 
-    function sendMessage() {
-      const text = inputEl.value.trim();
-      if (!text) return;
-      const msg = {
-        user: storedName,
-        avatar: storedAvatar,
-        text,
-        date: new Date(),
-        outgoing: true
-      };
-      chatHistory.push(msg);
-      localStorage.setItem('gagganti_history', JSON.stringify(chatHistory));
-      renderMessage(msg);
-      inputEl.value = '';
-    }
+      // Afficher une notification
+      function showNotification(message) {
+        notification.textContent = message;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
 
-    sendBtn.addEventListener('click', sendMessage);
-    inputEl.addEventListener('keypress', e => {
-      if (e.key === 'Enter') sendMessage();
+      // Formater la date
+      function formatDate(date) {
+        const today = new Date();
+        const messageDate = new Date(date);
+        
+        if (messageDate.toDateString() === today.toDateString()) {
+          return 'Tey';
+        }
+        
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        if (messageDate.toDateString() === yesterday.toDateString()) {
+          return 'Démb';
+        }
+        
+        return messageDate.toLocaleDateString('wo', { day: 'numeric', month: 'long' });
+      }
+
+      // Afficher un message
+      function renderMessage(message) {
+        const messageDate = new Date(message.timestamp).toDateString();
+        
+        // Ajouter un séparateur de date si nécessaire
+        if (messageDate !== lastDate) {
+          const divider = document.createElement('div');
+          divider.className = 'day-divider';
+          divider.textContent = formatDate(message.timestamp);
+          messagesEl.insertBefore(divider, messagesEl.firstChild);
+          lastDate = messageDate;
+        }
+        
+        // Créer l'élément message
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${message.senderId === socket.id ? 'message-out' : 'message-in'}`;
+        
+        messageEl.innerHTML = `
+          <div class="message-header">
+            ${message.avatar ? `<img src="${message.avatar}" class="message-avatar">` : ''}
+            <span class="message-sender">${message.sender}</span>
+          </div>
+          <div class="message-text">${message.text}</div>
+          <div class="message-time">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+          <div class="message-reactions">
+            <span class="reaction" data-reaction="❤️">❤️</span>
+            <span class="reaction" data-reaction="😂">😂</span>
+            <span class="reaction" data-reaction="👍">👍</span>
+          </div>
+        `;
+        
+        // Ajouter les réactions
+        messageEl.querySelectorAll('.reaction').forEach(reaction => {
+          reaction.addEventListener('click', () => {
+            socket.emit('reaction', {
+              messageId: message.id,
+              reaction: reaction.dataset.reaction,
+              sender: username,
+              senderId: socket.id
+            });
+            
+            reaction.classList.toggle('active');
+          });
+        });
+        
+        // Ajouter le message à la conversation
+        messagesEl.insertBefore(messageEl, messagesEl.firstChild);
+        
+        // Faire défiler vers le bas si c'est un nouveau message
+        if (message.senderId === socket.id || messagesEl.scrollTop === 0) {
+          setTimeout(() => {
+            messagesEl.scrollTop = 0;
+          }, 50);
+        }
+      }
+
+      // Envoyer un message
+      function sendMessage() {
+        const text = inputEl.value.trim();
+        
+        if (!text || !username) return;
+        
+        const message = {
+          text,
+          sender: username,
+          avatar: avatarUrl,
+          timestamp: new Date().toISOString()
+        };
+        
+        socket.emit('message', message);
+        inputEl.value = '';
+        sendBtn.disabled = true;
+      }
+
+      // Gestion des événements Socket.io
+      socket.on('connect', () => {
+        console.log('Connecté au serveur avec l\'ID:', socket.id);
+        
+        // Envoyer les informations utilisateur
+        if (username) {
+          socket.emit('user-info', { username, avatar: avatarUrl });
+        }
+      });
+      
+      socket.on('message', (message) => {
+        renderMessage(message);
+        
+        // Notification si la fenêtre n'est pas active
+        if (document.hidden && message.senderId !== socket.id) {
+          showNotification(`${message.sender}: ${message.text}`);
+        }
+      });
+      
+      socket.on('user-typing', (user) => {
+        if (user.id !== socket.id) {
+          typingIndicator.querySelector('.typing-text').textContent = `${user.name} ngi bind...`;
+          typingIndicator.classList.add('visible');
+        }
+      });
+      
+      socket.on('user-stopped-typing', (userId) => {
+        if (userId !== socket.id) {
+          typingIndicator.classList.remove('visible');
+        }
+      });
+      
+      socket.on('reaction', ({ messageId, reaction }) => {
+        // Mettre à jour les réactions (implémentation simplifiée)
+        const messages = document.querySelectorAll('.message');
+        
+        for (const msg of messages) {
+          if (msg.dataset.messageId === messageId) {
+            const reactionsContainer = msg.querySelector('.message-reactions');
+            const existingReaction = Array.from(reactionsContainer.children).find(
+              el => el.textContent.includes(reaction)
+            );
+            
+            if (existingReaction) {
+              existingReaction.classList.add('active');
+            }
+            break;
+          }
+        }
+      });
+      
+      socket.on('history', (messages) => {
+        messages.reverse().forEach(msg => renderMessage(msg));
+      });
+
+      // Gestion des événements DOM
+      inputEl.addEventListener('input', () => {
+        sendBtn.disabled = inputEl.value.trim() === '';
+        
+        if (inputEl.value.trim() && !isTyping) {
+          isTyping = true;
+          socket.emit('typing', { name: username });
+        }
+        
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          if (isTyping) {
+            isTyping = false;
+            socket.emit('stopped-typing');
+          }
+        }, 2000);
+      });
+      
+      inputEl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+      
+      sendBtn.addEventListener('click', sendMessage);
+      
+      emojiButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        emojiPicker.classList.toggle('visible');
+      });
+      
+      document.addEventListener('click', (e) => {
+        if (!emojiPicker.contains(e.target) && e.target !== emojiButton) {
+          emojiPicker.classList.remove('visible');
+        }
+      });
+      
+      // Gestion du sélecteur d'émojis
+      emojiPicker.addEventListener('emoji-click', (event) => {
+        inputEl.value += event.detail.unicode;
+        inputEl.focus();
+        emojiPicker.classList.remove('visible');
+      });
+      
+      // Gestion des paramètres
+      settingsButton.addEventListener('click', () => {
+        loadSettings();
+        settingsModal.classList.add('active');
+      });
+      
+      saveSettingsBtn.addEventListener('click', saveSettings);
+      
+      cancelSettingsBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.avatar-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          avatarUrlInput.value = '';
+        });
+      });
+      
+      // Focus automatique sur le champ de saisie
+      inputEl.focus();
     });
   </script>
 </body>
