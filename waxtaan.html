@@ -9,32 +9,52 @@
   <style>
     @font-face {
       font-family: 'Gagganti';
-      src: url('gagganti.ttf') format('truetype');
+      src: url('https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2') format('woff2');
       font-display: swap;
     }
 
     body {
       font-family: 'Gagganti', sans-serif;
+      background-color: #121212;
+      color: #f5f5f5;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    body.light {
       background-color: #f8f8f8;
       color: #1a1a1a;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      direction: rtl;
     }
 
     .message-out {
-      background-color: #e5e5ff;
-      border-left: 4px solid #4B0082;
+      background-color: #2f2f4f;
+      border-left: 4px solid #a78bfa;
+    }
+
+    .light .message-out {
+      background-color: #e0e7ff;
+      border-left: 4px solid #7c3aed;
     }
 
     .message-in {
-      background-color: #ffffff;
-      border-right: 4px solid #4B0082;
+      background-color: #1e1e2e;
+      border-right: 4px solid #8b5cf6;
+    }
+
+    .light .message-in {
+      background-color: #f3f4f6;
+      border-right: 4px solid #6d28d9;
     }
 
     .message-time {
       font-size: 0.75rem;
+      color: #999;
+    }
+
+    .light .message-time {
       color: #666;
     }
 
@@ -43,107 +63,637 @@
       margin-left: 0.5rem;
       cursor: pointer;
       transition: transform 0.2s;
+      opacity: 0.7;
     }
 
     .reaction:hover {
       transform: scale(1.3);
+      opacity: 1;
     }
 
-    #message-input:focus {
-      outline: none;
-      box-shadow: 0 0 0 2px #4B0082;
+    .reaction.active {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      scroll-behavior: smooth;
+    }
+
+    #input-container {
+      display: flex;
+      padding: 1rem;
+      background: #1a1a1a;
+      gap: 0.5rem;
+      position: sticky;
+      bottom: 0;
+    }
+
+    .light #input-container {
+      background: #e5e7eb;
+    }
+
+    #message-input {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 999px;
+      border: none;
+      background: #333;
+      color: #fff;
+      font-family: inherit;
+    }
+
+    .light #message-input {
+      background: #fff;
+      color: #333;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    #send-button {
+      padding: 0.75rem 1.25rem;
+      background-color: #4c1d95;
+      color: white;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .light #send-button {
+      background-color: #5b21b6;
+    }
+
+    #send-button:hover {
+      background-color: #5b21b6;
+    }
+
+    .light #send-button:hover {
+      background-color: #6d28d9;
     }
 
     .day-divider {
       text-align: center;
       font-size: 0.8rem;
-      color: #888;
+      color: #aaa;
       margin: 1rem 0;
+      position: relative;
+    }
+
+    .day-divider::before,
+    .day-divider::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 30%;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .day-divider::before {
+      left: 0;
+    }
+
+    .day-divider::after {
+      right: 0;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .typing-indicator.visible {
+      opacity: 1;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #8b5cf6;
+      border-radius: 50%;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #4c1d95;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transform: translateY(-100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .avatar-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .avatar-option {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .avatar-option:hover {
+      transform: scale(1.1);
+    }
+
+    .avatar-option.selected {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: #1e1e2e;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 90%;
+      width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .light .modal-content {
+      background: #fff;
+    }
+
+    .settings-button {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: #a78bfa;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .light .settings-button {
+      color: #5b21b6;
+    }
+
+    .emoji-picker {
+      position: absolute;
+      bottom: 80px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    .emoji-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #a78bfa;
+    }
+
+    .light .emoji-button {
+      color: #5b21b6;
     }
   </style>
 </head>
 <body>
-  <div class="absolute top-2 left-2 z-50">
-    <button id="themeToggle" class="bg-gray-200 text-black px-4 py-1 rounded-full">Mode Sombre</button>
+  <div class="absolute top-2 left-2 z-50 flex gap-2">
+    <button id="themeToggle" class="bg-gray-700 text-white px-4 py-1 rounded-full">Mode Clair</button>
+    <button id="settingsButton" class="settings-button">
+      <i class="fas fa-cog"></i>
+    </button>
   </div>
 
+  <div id="messages" class="overflow-y-auto">
+    <div id="typingIndicator" class="typing-indicator ml-4">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  </div>
+
+  <div id="input-container">
+    <button id="emojiButton" class="emoji-button">😊</button>
+    <input type="text" id="message-input" placeholder="Bindal ci..." autocomplete="off">
+    <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+  </div>
+
+  <div id="notification" class="notification"></div>
+
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <h2 class="text-xl font-bold mb-4">Teyyeel</h2>
+      <div class="mb-4">
+        <label for="usernameInput" class="block mb-2">Tur wu matale</label>
+        <input type="text" id="usernameInput" class="w-full p-2 rounded bg-gray-700 text-white">
+      </div>
+      <div class="mb-4">
+        <label class="block mb-2">Avatar</label>
+        <div class="avatar-selector">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=5" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=5">
+          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=6" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=6">
+        </div>
+        <p class="text-sm mt-2 text-gray-400">Moytu lien bu bëgg</p>
+        <input type="text" id="customAvatarInput" placeholder="Lien bu bëgg" class="w-full p-2 mt-2 rounded bg-gray-700 text-white">
+      </div>
+      <div class="flex justify-end gap-2">
+        <button id="cancelSettings" class="px-4 py-2 rounded bg-gray-600">Neenal</button>
+        <button id="saveSettings" class="px-4 py-2 rounded bg-purple-600 text-white">Saxal</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1"></script>
+
   <script>
+    // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
+      // THEMING
       const themeToggle = document.getElementById('themeToggle');
-      const darkMode = localStorage.getItem('theme') === 'dark';
-      if (darkMode) document.body.classList.add('dark');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      // Set initial theme based on preference
+      if (prefersDark) {
+        document.body.classList.remove('light');
+        themeToggle.textContent = 'Mode Clair';
+      } else {
+        document.body.classList.add('light');
+        themeToggle.textContent = 'Mode Sombre';
+      }
+      
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('light');
+        const isLight = document.body.classList.contains('light');
+        themeToggle.textContent = isLight ? 'Mode Sombre' : 'Mode Clair';
+        localStorage.setItem('gagganti_theme', isLight ? 'light' : 'dark');
+      });
 
-      themeToggle.onclick = () => {
-        document.body.classList.toggle('dark');
-        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-        themeToggle.textContent = document.body.classList.contains('dark') ? 'Mode Clair' : 'Mode Sombre';
-      };
-    });
-  </script>
-
-  <script>
-    const storedName = localStorage.getItem('gagganti_username') || prompt('Tapp tur wu matale :');
-    const storedAvatar = localStorage.getItem('gagganti_avatar') || prompt('Entrer lien avatar (facultatif) :');
-    localStorage.setItem('gagganti_username', storedName);
-    localStorage.setItem('gagganti_avatar', storedAvatar);
-  </script>
-
-  <div class="w-full flex">
-    <!-- (Remainder of HTML remains unchanged, except for added features to message rendering logic) -->
-  </div>
-
-  <script>
-    // Modified renderMessage to handle date dividers and avatars
-    let lastMessageDate = '';
-
-    function formatDate(date) {
-      const today = new Date();
-      const d = new Date(date);
-      if (d.toDateString() === today.toDateString()) return 'Tey';
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-      if (d.toDateString() === yesterday.toDateString()) return 'Démb';
-      return d.toLocaleDateString();
-    }
-
-    function renderMessage(msg) {
-      const msgDate = new Date().toDateString();
-      if (msgDate !== lastMessageDate) {
-        const divider = document.createElement('div');
-        divider.className = 'day-divider';
-        divider.textContent = formatDate(new Date());
-        el.messages.appendChild(divider);
-        lastMessageDate = msgDate;
+      // Load saved theme
+      const savedTheme = localStorage.getItem('gagganti_theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light');
+        themeToggle.textContent = 'Mode Sombre';
       }
 
-      const div = document.createElement('div');
-      div.className = `max-w-xl px-4 py-2 rounded-xl ${msg.outgoing ? 'message-out ml-auto text-right' : 'message-in mr-auto text-right'} relative`;
-      div.innerHTML = `
-        <div class="flex items-center gap-2">
-          ${storedAvatar ? `<img src="${storedAvatar}" alt="avatar" class="w-6 h-6 rounded-full">` : ''}
-          <div class="font-bold text-purple-600">${msg.user}</div>
-        </div>
-        <div class="text-lg">${msg.text}</div>
-        <div class="message-time">${msg.time}</div>
-        <div class="absolute bottom-0 left-2 flex gap-1">
-          <span class="reaction">❤️</span>
-          <span class="reaction">😂</span>
-          <span class="reaction">🔥</span>
-        </div>`;
-      el.messages.appendChild(div);
-      el.messages.scrollTop = el.messages.scrollHeight;
-    }
+      // USER SETTINGS
+      let storedName = localStorage.getItem('gagganti_username');
+      let storedAvatar = localStorage.getItem('gagganti_avatar');
+      
+      if (!storedName) {
+        storedName = prompt('Tapp tur wu matale :') || 'Nit ku dul xam';
+        localStorage.setItem('gagganti_username', storedName);
+      }
+      
+      if (!storedAvatar) {
+        storedAvatar = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=' + Math.random().toString(36).substring(2);
+        localStorage.setItem('gagganti_avatar', storedAvatar);
+      }
 
-    // Search functionality (basic)
-    const searchInput = document.createElement('input');
-    searchInput.placeholder = 'Wut ci xibaar...';
-    searchInput.className = 'absolute top-2 right-2 bg-white border border-gray-300 rounded-full px-4 py-1 text-sm z-50';
-    document.body.appendChild(searchInput);
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase();
-      document.querySelectorAll('#messages > div').forEach(div => {
-        div.style.display = div.textContent.toLowerCase().includes(query) ? '' : 'none';
+      // DOM ELEMENTS
+      const messagesEl = document.getElementById('messages');
+      const inputEl = document.getElementById('message-input');
+      const sendBtn = document.getElementById('send-button');
+      const typingIndicator = document.getElementById('typingIndicator');
+      const notification = document.getElementById('notification');
+      const settingsButton = document.getElementById('settingsButton');
+      const settingsModal = document.getElementById('settingsModal');
+      const usernameInput = document.getElementById('usernameInput');
+      const customAvatarInput = document.getElementById('customAvatarInput');
+      const saveSettingsBtn = document.getElementById('saveSettings');
+      const cancelSettingsBtn = document.getElementById('cancelSettings');
+      const emojiButton = document.getElementById('emojiButton');
+      
+      // Initialize emoji picker
+      const picker = document.createElement('emoji-picker');
+      picker.classList.add('emoji-picker');
+      picker.style.display = 'none';
+      document.body.appendChild(picker);
+      
+      // CHAT HISTORY
+      const chatHistory = JSON.parse(localStorage.getItem('gagganti_history')) || [];
+      let lastDate = '';
+      let isTyping = false;
+      let typingTimeout;
+
+      // FUNCTIONS
+      function formatDate(d) {
+        const today = new Date();
+        const target = new Date(d);
+        if (target.toDateString() === today.toDateString()) return 'Tey';
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+        if (target.toDateString() === yesterday.toDateString()) return 'Démb';
+        return target.toLocaleDateString('wo', { day: 'numeric', month: 'long' });
+      }
+
+      function showNotification(message) {
+        notification.textContent = message;
+        notification.classList.add('show');
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+
+      function simulateReply() {
+        if (Math.random() > 0.7) { // 30% chance of reply
+          showTypingIndicator(true);
+          
+          setTimeout(() => {
+            showTypingIndicator(false);
+            
+            const replies = [
+              "Naka nga def?",
+              "Jërëjëf!",
+              "Mangi fi rekk",
+              "Yow nag?",
+              "Waaw dëgg",
+              "Déedéet, amul dëgg",
+              "Mangi ci kaw",
+              "Loolu réy!",
+              "Nanga def noonu?",
+              "Ba beneen yoon"
+            ];
+            
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            
+            const msg = {
+              user: 'Bokk na',
+              avatar: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=bokk',
+              text: randomReply,
+              date: new Date(),
+              outgoing: false
+            };
+            
+            chatHistory.push(msg);
+            localStorage.setItem('gagganti_history', JSON.stringify(chatHistory));
+            renderMessage(msg);
+            
+            // Notification if not focused
+            if (!document.hasFocus()) {
+              showNotification('🔔 ' + msg.user + ': ' + msg.text);
+            }
+          }, 2000 + Math.random() * 3000);
+        }
+      }
+
+      function showTypingIndicator(show) {
+        if (show) {
+          typingIndicator.classList.add('visible');
+        } else {
+          typingIndicator.classList.remove('visible');
+        }
+      }
+
+      function renderMessage(msg) {
+        const msgDate = new Date(msg.date).toDateString();
+        if (msgDate !== lastDate) {
+          const divider = document.createElement('div');
+          divider.className = 'day-divider';
+          divider.textContent = formatDate(msg.date);
+          messagesEl.appendChild(divider);
+          lastDate = msgDate;
+        }
+
+        const div = document.createElement('div');
+        div.className = `max-w-xl px-4 py-2 mb-2 rounded-xl ${msg.outgoing ? 'message-out ml-auto text-right' : 'message-in mr-auto text-right'} relative`;
+        div.innerHTML = `
+          <div class="flex items-center gap-2 mb-1">
+            ${msg.avatar ? `<img src="${msg.avatar}" alt="avatar" class="w-6 h-6 rounded-full">` : ''}
+            <div class="font-bold text-purple-400">${msg.user}</div>
+          </div>
+          <div class="text-lg">${msg.text}</div>
+          <div class="message-time">${new Date(msg.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+          <div class="flex gap-2 mt-1">
+            <span class="reaction" data-reaction="❤️">❤️</span>
+            <span class="reaction" data-reaction="😂">😂</span>
+            <span class="reaction" data-reaction="🔥">🔥</span>
+            <span class="reaction" data-reaction="👍">👍</span>
+            <span class="reaction" data-reaction="😮">😮</span>
+          </div>`;
+        
+        // Add reactions functionality
+        div.querySelectorAll('.reaction').forEach(el => {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            el.classList.toggle('active');
+          });
+        });
+        
+        messagesEl.appendChild(div);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      }
+
+      function sendMessage() {
+        const text = inputEl.value.trim();
+        if (!text) return;
+        
+        const msg = {
+          user: storedName,
+          avatar: storedAvatar,
+          text,
+          date: new Date(),
+          outgoing: true
+        };
+        
+        chatHistory.push(msg);
+        localStorage.setItem('gagganti_history', JSON.stringify(chatHistory));
+        renderMessage(msg);
+        inputEl.value = '';
+        
+        // Simulate reply after a delay
+        setTimeout(simulateReply, 1000 + Math.random() * 2000);
+      }
+
+      function loadSettings() {
+        usernameInput.value = storedName;
+        customAvatarInput.value = storedAvatar;
+        
+        // Select the current avatar if it's one of the defaults
+        document.querySelectorAll('.avatar-option').forEach(option => {
+          if (option.dataset.avatar === storedAvatar) {
+            option.classList.add('selected');
+          }
+        });
+      }
+
+      function saveSettings() {
+        const newName = usernameInput.value.trim() || 'Nit ku dul xam';
+        let newAvatar = customAvatarInput.value.trim();
+        
+        // If no custom avatar, use selected one
+        if (!newAvatar) {
+          const selectedAvatar = document.querySelector('.avatar-option.selected');
+          if (selectedAvatar) {
+            newAvatar = selectedAvatar.dataset.avatar;
+          } else {
+            newAvatar = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=' + Math.random().toString(36).substring(2);
+          }
+        }
+        
+        storedName = newName;
+        storedAvatar = newAvatar;
+        localStorage.setItem('gagganti_username', storedName);
+        localStorage.setItem('gagganti_avatar', storedAvatar);
+        
+        settingsModal.classList.remove('active');
+        showNotification('Teyyeel yi sax nañu');
+      }
+
+      // EVENT LISTENERS
+      sendBtn.addEventListener('click', sendMessage);
+      
+      inputEl.addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendMessage();
       });
+      
+      inputEl.addEventListener('input', () => {
+        clearTimeout(typingTimeout);
+        
+        if (inputEl.value.trim() && !isTyping) {
+          isTyping = true;
+        }
+        
+        typingTimeout = setTimeout(() => {
+          isTyping = false;
+        }, 2000);
+      });
+      
+      settingsButton.addEventListener('click', () => {
+        loadSettings();
+        settingsModal.classList.add('active');
+      });
+      
+      cancelSettingsBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('active');
+      });
+      
+      saveSettingsBtn.addEventListener('click', saveSettings);
+      
+      document.querySelectorAll('.avatar-option').forEach(option => {
+        option.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+          option.classList.add('selected');
+          customAvatarInput.value = '';
+        });
+      });
+      
+      emojiButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+      });
+      
+      picker.addEventListener('emoji-click', (event) => {
+        inputEl.value += event.detail.unicode;
+        picker.style.display = 'none';
+        inputEl.focus();
+      });
+      
+      document.addEventListener('click', (e) => {
+        if (!picker.contains(e.target) && e.target !== emojiButton) {
+          picker.style.display = 'none';
+        }
+      });
+
+      // Load chat history
+      chatHistory.forEach(renderMessage);
+      
+      // Focus input on load
+      inputEl.focus();
+      
+      // Add some sample messages if empty
+      if (chatHistory.length === 0) {
+        const sampleMessages = [
+          {
+            user: 'Bokk na',
+            avatar: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=bokk',
+            text: 'Salaam aleekum! Naka nga def?',
+            date: new Date(Date.now() - 86400000),
+            outgoing: false
+          },
+          {
+            user: storedName,
+            avatar: storedAvatar,
+            text: 'Mangi fi rekk, yow nag?',
+            date: new Date(Date.now() - 86400000),
+            outgoing: true
+          },
+          {
+            user: 'Bokk na',
+            avatar: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=bokk',
+            text: 'Mangi ci kaw, jërëjëf!',
+            date: new Date(),
+            outgoing: false
+          }
+        ];
+        
+        sampleMessages.forEach(msg => {
+          chatHistory.push(msg);
+          renderMessage(msg);
+        });
+        
+        localStorage.setItem('gagganti_history', JSON.stringify(chatHistory));
+      }
     });
   </script>
 </body>
