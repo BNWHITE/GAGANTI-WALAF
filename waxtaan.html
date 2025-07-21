@@ -161,7 +161,12 @@
       height: 1.8rem;
       border-radius: 50%;
       object-fit: cover;
-      border: 1px solid var(--or);
+      background-color: var(--or);
+      color: var(--noir);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
     }
 
     .message-sender {
@@ -296,6 +301,7 @@
       box-shadow: var(--shadow);
       animation: slideInRight 0.5s;
       z-index: 100;
+      display: none;
     }
 
     .online-users-header {
@@ -320,8 +326,13 @@
       width: 1.5rem;
       height: 1.5rem;
       border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid var(--or);
+      background-color: var(--or);
+      color: var(--noir);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8rem;
     }
 
     .online-user-name {
@@ -349,6 +360,7 @@
       border-top: 1px solid rgba(212, 175, 55, 0.2);
       gap: 0.5rem;
       align-items: center;
+      position: relative;
     }
 
     #message-input {
@@ -424,10 +436,10 @@
       transform: translateX(200%);
       transition: transform 0.3s ease;
       z-index: 1000;
-      border-left: 4px solid var(--or);
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      border-left: 4px solid var(--or);
     }
 
     .notification.show {
@@ -516,33 +528,6 @@
       border-color: var(--or);
     }
 
-    .avatar-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-
-    .avatar-option {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.2s;
-      object-fit: cover;
-    }
-
-    .avatar-option:hover {
-      transform: scale(1.1);
-    }
-
-    .avatar-option.selected {
-      border-color: var(--or);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
-      animation: pulse 0.5s;
-    }
-
     .modal-actions {
       display: flex;
       justify-content: flex-end;
@@ -573,25 +558,6 @@
     .modal-button:hover {
       opacity: 0.9;
       transform: translateY(-2px);
-    }
-
-    /* === EMOJI PICKER === */
-    .emoji-picker-container {
-      position: absolute;
-      bottom: 5rem;
-      right: 1rem;
-      z-index: 100;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.3s ease;
-      visibility: hidden;
-    }
-
-    .emoji-picker-container.visible {
-      opacity: 1;
-      transform: translateY(0);
-      visibility: visible;
-      animation: fadeIn 0.3s;
     }
 
     /* === RESPONSIVE === */
@@ -628,7 +594,7 @@
   </header>
 
   <!-- UTILISATEURS EN LIGNE -->
-  <div id="online-users" style="display: none;">
+  <div id="online-users">
     <div class="online-users-header">
       <i class="fas fa-users"></i>
       <span>Nit ñi ci liggéey</span>
@@ -654,11 +620,6 @@
     <button id="send-button" disabled>➡️</button>
   </div>
 
-  <!-- EMOJI PICKER -->
-  <div id="emojiPicker" class="emoji-picker-container">
-    <emoji-picker></emoji-picker>
-  </div>
-
   <!-- NOTIFICATION -->
   <div id="notification" class="notification">
     <span id="notification-icon" class="notification-icon">🔔</span>
@@ -673,16 +634,6 @@
       <div class="form-group">
         <label for="usernameInput" class="form-label">Tur wu matale</label>
         <input type="text" id="usernameInput" class="form-input" placeholder="...wu matale tur tapp">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Avatar</label>
-        <input type="text" id="avatarUrlInput" class="form-input" placeholder="...bu bëgg lien">
-        <div class="avatar-options">
-          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=1">
-          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=2">
-          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=3">
-          <img src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4" class="avatar-option" data-avatar="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=4">
-        </div>
       </div>
       <div class="modal-actions">
         <button id="cancelSettings" class="modal-button secondary">Neenal</button>
@@ -702,7 +653,6 @@
   </button>
 
   <!-- SCRIPT JS -->
-  <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     // Initialisation
@@ -711,15 +661,12 @@
       const messagesEl = document.getElementById('messages');
       const inputEl = document.getElementById('message-input');
       const sendBtn = document.getElementById('send-button');
-      const emojiButton = document.getElementById('emojiButton');
-      const emojiPicker = document.getElementById('emojiPicker');
       const notification = document.getElementById('notification');
       const notificationMessage = document.getElementById('notification-message');
       const notificationIcon = document.getElementById('notification-icon');
       const settingsButton = document.getElementById('settingsButton');
       const settingsModal = document.getElementById('settingsModal');
       const usernameInput = document.getElementById('usernameInput');
-      const avatarUrlInput = document.getElementById('avatarUrlInput');
       const saveSettingsBtn = document.getElementById('saveSettings');
       const cancelSettingsBtn = document.getElementById('cancelSettings');
       const typingIndicator = document.getElementById('typingIndicator');
@@ -733,7 +680,6 @@
       
       // Variables d'état
       let username = localStorage.getItem('gagganti_username') || '';
-      let avatarUrl = localStorage.getItem('gagganti_avatar') || '';
       let lastDate = '';
       let isTyping = false;
       let typingTimeout;
@@ -755,46 +701,29 @@
         ).join(' ');
       }
 
+      // Fonction pour obtenir l'initiale d'un nom
+      function getInitial(name) {
+        return name.charAt(0).toUpperCase();
+      }
+
       // Charger les paramètres
       function loadSettings() {
         usernameInput.value = username;
-        avatarUrlInput.value = avatarUrl;
-        
-        // Sélectionner l'avatar actuel s'il fait partie des options
-        document.querySelectorAll('.avatar-option').forEach(option => {
-          if (option.dataset.avatar === avatarUrl) {
-            option.classList.add('selected');
-          }
-        });
       }
 
       // Sauvegarder les paramètres
       function saveSettings() {
         const newUsername = usernameInput.value.trim();
-        let newAvatarUrl = avatarUrlInput.value.trim();
         
         if (!newUsername) {
           showNotification('Fànn la, tapp tur wu matale!', 'error');
           return;
         }
         
-        // Si aucune URL personnalisée, utiliser l'avatar sélectionné
-        if (!newAvatarUrl) {
-          const selectedAvatar = document.querySelector('.avatar-option.selected');
-          if (selectedAvatar) {
-            newAvatarUrl = selectedAvatar.dataset.avatar;
-          } else {
-            newAvatarUrl = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=' + Math.random().toString(36).substring(2);
-          }
-        }
-        
         username = newUsername;
-        avatarUrl = newAvatarUrl;
-        
         localStorage.setItem('gagganti_username', username);
-        localStorage.setItem('gagganti_avatar', avatarUrl);
         
-        socket.emit('user-info', { username, avatar: avatarUrl });
+        socket.emit('user-info', { username });
         
         settingsModal.classList.remove('active');
         showNotification('Teyyeel yi sax nañu', 'success');
@@ -875,7 +804,7 @@
         
         messageEl.innerHTML = `
           <div class="message-header">
-            ${message.avatar ? `<img src="${message.avatar}" class="message-avatar">` : ''}
+            <div class="message-avatar">${getInitial(message.sender)}</div>
             <span class="message-sender">${message.sender}</span>
           </div>
           <div class="message-text">${reversedText}</div>
@@ -920,7 +849,7 @@
           const userEl = document.createElement('div');
           userEl.className = 'online-user';
           userEl.innerHTML = `
-            <img src="${user.avatar || 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=user'}" class="online-user-avatar">
+            <div class="online-user-avatar">${getInitial(user.name)}</div>
             <span class="online-user-name">${user.name}</span>
           `;
           onlineUsersList.appendChild(userEl);
@@ -936,7 +865,6 @@
         const message = {
           text,
           sender: username,
-          avatar: avatarUrl,
           timestamp: new Date().toISOString()
         };
         
@@ -951,7 +879,7 @@
         
         // Envoyer les informations utilisateur
         if (username) {
-          socket.emit('user-info', { username, avatar: avatarUrl });
+          socket.emit('user-info', { username });
         }
       });
       
@@ -959,9 +887,7 @@
         // Mettre à jour les informations utilisateur si nécessaire
         if (userInfo.id === socket.id) {
           username = userInfo.name;
-          avatarUrl = userInfo.avatar;
           localStorage.setItem('gagganti_username', username);
-          localStorage.setItem('gagganti_avatar', avatarUrl);
         }
       });
       
@@ -1052,24 +978,6 @@
       
       sendBtn.addEventListener('click', sendMessage);
       
-      emojiButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        emojiPicker.classList.toggle('visible');
-      });
-      
-      document.addEventListener('click', (e) => {
-        if (!emojiPicker.contains(e.target) && e.target !== emojiButton) {
-          emojiPicker.classList.remove('visible');
-        }
-      });
-      
-      // Gestion du sélecteur d'émojis
-      emojiPicker.addEventListener('emoji-click', (event) => {
-        inputEl.value += event.detail.unicode;
-        inputEl.focus();
-        emojiPicker.classList.remove('visible');
-      });
-      
       // Gestion des paramètres
       settingsButton.addEventListener('click', () => {
         loadSettings();
@@ -1080,14 +988,6 @@
       
       cancelSettingsBtn.addEventListener('click', () => {
         settingsModal.classList.remove('active');
-      });
-      
-      document.querySelectorAll('.avatar-option').forEach(option => {
-        option.addEventListener('click', () => {
-          document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
-          option.classList.add('selected');
-          avatarUrlInput.value = '';
-        });
       });
       
       // Gestion des utilisateurs en ligne
