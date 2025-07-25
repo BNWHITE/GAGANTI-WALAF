@@ -58,7 +58,6 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
-      unicode-bidi: bidi-override;
     }
 
     body::before {
@@ -118,7 +117,6 @@
       padding: 1rem;
       scroll-behavior: smooth;
       direction: rtl;
-      unicode-bidi: bidi-override;
     }
 
     .message {
@@ -180,13 +178,13 @@
       margin-top: 0.3rem;
       text-align: left;
       direction: ltr;
-      unicode-bidi: bidi-override;
     }
 
     .message-text {
       font-size: 1.1rem;
       unicode-bidi: plaintext;
       text-align: right;
+      direction: rtl;
     }
 
     .message-reactions {
@@ -373,7 +371,8 @@
       font-family: 'Gagganti', sans-serif;
       font-size: 1rem;
       direction: rtl;
-      unicode-bidi: bidi-override;
+      unicode-bidi: plaintext;
+      text-align: right;
     }
 
     #message-input:focus {
@@ -520,7 +519,6 @@
       color: var(--ivoire);
       font-family: 'Gagganti', sans-serif;
       direction: rtl;
-      unicode-bidi: bidi-override;
     }
 
     .form-input:focus {
@@ -693,14 +691,6 @@
         }, 500);
       }
 
-      // Fonction pour inverser le texte selon les règles Gagganti
-      function reverseGagganti(text) {
-        // Inverser l'ordre des mots et des lettres dans chaque mot
-        return text.split(' ').map(word => 
-          word.split('').reverse().join('')
-        ).join(' ');
-      }
-
       // Fonction pour obtenir l'initiale d'un nom
       function getInitial(name) {
         return name.charAt(0).toUpperCase();
@@ -799,15 +789,12 @@
         messageEl.className = `message ${message.senderId === socket.id ? 'message-out' : 'message-in'}`;
         messageEl.dataset.messageId = message.id;
         
-        // Inverser le texte selon les règles Gagganti
-        const reversedText = reverseGagganti(message.text);
-        
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-avatar">${getInitial(message.sender)}</div>
             <span class="message-sender">${message.sender}</span>
           </div>
-          <div class="message-text">${reversedText}</div>
+          <div class="message-text" dir="rtl">${message.text}</div>
           <div class="message-time">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
           <div class="message-reactions">
             <span class="reaction" data-reaction="❤️">❤️</span>
@@ -865,6 +852,7 @@
         const message = {
           text,
           sender: username,
+          senderId: socket.id,
           timestamp: new Date().toISOString()
         };
         
@@ -896,7 +884,7 @@
         
         // Notification si la fenêtre n'est pas active
         if (document.hidden && message.senderId !== socket.id) {
-          showNotification(`${message.sender}: ${reverseGagganti(message.text)}`, 'message');
+          showNotification(`${message.sender}: ${message.text}`, 'message');
           
           // Vibrer si supporté
           if ('vibrate' in navigator) {
