@@ -58,7 +58,6 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
-      text-align: right;
     }
 
     body::before {
@@ -128,7 +127,6 @@
       word-wrap: break-word;
       line-height: 1.5;
       animation: fadeIn 0.3s ease-out;
-      text-align: right;
     }
 
     .message-out {
@@ -152,7 +150,6 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
-      flex-direction: row-reverse;
     }
 
     .message-avatar {
@@ -186,6 +183,7 @@
       font-size: 1.1rem;
       unicode-bidi: plaintext;
       text-align: right;
+      direction: rtl;
       white-space: pre-wrap;
     }
 
@@ -234,22 +232,22 @@
     }
 
     .day-divider::before {
-      right: 0;
+      left: 0;
     }
 
     .day-divider::after {
-      left: 0;
+      right: 0;
     }
 
     .typing-indicator {
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      margin-left: 1rem;
+      margin-right: 1rem;
       margin-bottom: 0.5rem;
       opacity: 0;
       transition: opacity 0.3s;
-      justify-content: flex-end;
+      direction: rtl;
     }
 
     .typing-indicator.visible {
@@ -291,7 +289,7 @@
     #online-users {
       position: fixed;
       top: 5rem;
-      right: 1rem;
+      left: 1rem;
       background: rgba(10, 10, 10, 0.8);
       border: 1px solid var(--or);
       border-radius: 0.5rem;
@@ -302,7 +300,6 @@
       animation: slideInRight 0.5s;
       z-index: 100;
       display: none;
-      text-align: right;
     }
 
     .online-users-header {
@@ -313,7 +310,6 @@
       margin-bottom: 0.5rem;
       border-bottom: 1px solid rgba(212, 175, 55, 0.3);
       padding-bottom: 0.3rem;
-      flex-direction: row-reverse;
     }
 
     .online-user {
@@ -322,7 +318,6 @@
       gap: 0.5rem;
       padding: 0.3rem 0;
       animation: fadeIn 0.3s;
-      flex-direction: row-reverse;
     }
 
     .online-user-avatar {
@@ -352,7 +347,7 @@
       align-items: center;
       justify-content: center;
       font-size: 0.7rem;
-      margin-right: auto;
+      margin-left: auto;
     }
 
     /* === ZONE DE SAISIE === */
@@ -364,7 +359,6 @@
       gap: 0.5rem;
       align-items: center;
       position: relative;
-      flex-direction: row-reverse;
     }
 
     #message-input {
@@ -377,8 +371,8 @@
       font-family: 'Gagganti', sans-serif;
       font-size: 1rem;
       direction: rtl;
-      text-align: right;
       unicode-bidi: plaintext;
+      text-align: right;
     }
 
     #message-input::placeholder {
@@ -437,20 +431,19 @@
     .notification {
       position: fixed;
       top: 1rem;
-      left: 1rem;
+      right: 1rem;
       padding: 0.8rem 1.2rem;
       border-radius: 0.5rem;
       background-color: var(--indigo);
       color: white;
       box-shadow: var(--shadow);
-      transform: translateX(-200%);
+      transform: translateX(200%);
       transition: transform 0.3s ease;
       z-index: 1000;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-right: 4px solid var(--or);
-      text-align: right;
+      border-left: 4px solid var(--or);
     }
 
     .notification.show {
@@ -463,7 +456,7 @@
     }
 
     .notification-close {
-      margin-right: 0.5rem;
+      margin-left: 0.5rem;
       cursor: pointer;
       opacity: 0.7;
     }
@@ -503,7 +496,6 @@
       border: 1px solid var(--or);
       box-shadow: var(--shadow);
       animation: fadeIn 0.3s;
-      text-align: right;
     }
 
     .modal-title {
@@ -532,6 +524,7 @@
       color: var(--ivoire);
       font-family: 'Gagganti', sans-serif;
       direction: rtl;
+      unicode-bidi: plaintext;
       text-align: right;
     }
 
@@ -542,7 +535,7 @@
 
     .modal-actions {
       display: flex;
-      justify-content: flex-start;
+      justify-content: flex-end;
       gap: 0.5rem;
       margin-top: 1.5rem;
     }
@@ -589,8 +582,8 @@
       #online-users {
         top: auto;
         bottom: 5rem;
-        right: 1rem;
         left: 1rem;
+        right: 1rem;
         max-height: 20vh;
       }
     }
@@ -705,6 +698,16 @@
         }, 500);
       }
 
+      // Fonction pour inverser le texte (pour l'affichage)
+      function reverseText(text) {
+        return text.split('').reverse().join('');
+      }
+
+      // Fonction pour inverser chaque mot (pour la saisie)
+      function reverseWords(text) {
+        return text.split(' ').map(word => word.split('').reverse().join('')).join(' ');
+      }
+
       // Fonction pour obtenir l'initiale d'un nom
       function getInitial(name) {
         return name.charAt(0).toUpperCase();
@@ -803,13 +806,13 @@
         messageEl.className = `message ${message.senderId === socket.id ? 'message-out' : 'message-in'}`;
         messageEl.dataset.messageId = message.id;
         
-        // Afficher le texte
+        // Afficher le texte inversé pour l'affichage
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-avatar">${getInitial(message.sender)}</div>
             <span class="message-sender">${message.sender}</span>
           </div>
-          <div class="message-text">${message.text}</div>
+          <div class="message-text">${reverseText(message.text)}</div>
           <div class="message-time">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
           <div class="message-reactions">
             <span class="reaction" data-reaction="❤️">❤️</span>
@@ -864,8 +867,11 @@
         
         if (!text || !username) return;
         
+        // Inverser le texte avant envoi
+        const reversedText = reverseWords(text);
+        
         const message = {
-          text: text,
+          text: reversedText, // Texte inversé envoyé
           sender: username,
           senderId: socket.id,
           timestamp: new Date().toISOString()
@@ -899,7 +905,7 @@
         
         // Notification si la fenêtre n'est pas active
         if (document.hidden && message.senderId !== socket.id) {
-          showNotification(`${message.sender}: ${message.text}`, 'message');
+          showNotification(`${message.sender}: ${reverseText(message.text)}`, 'message');
           
           // Vibrer si supporté
           if ('vibrate' in navigator) {
