@@ -691,6 +691,24 @@
         }, 500);
       }
 
+      // Fonction pour inverser le texte
+      function reverseText(text) {
+        return text.split('').reverse().join('');
+      }
+
+      // Gestion de l'inversion en temps réel
+      function handleInputReversal() {
+        const cursorPos = inputEl.selectionStart;
+        const text = inputEl.value;
+        const reversed = reverseText(text);
+        
+        if (text !== reversed) {
+          inputEl.value = reversed;
+          inputEl.setSelectionRange(text.length - cursorPos, text.length - cursorPos);
+        }
+        sendBtn.disabled = reversed.trim() === '';
+      }
+
       // Fonction pour obtenir l'initiale d'un nom
       function getInitial(name) {
         return name.charAt(0).toUpperCase();
@@ -941,22 +959,7 @@
       });
 
       // Gestion des événements DOM
-      inputEl.addEventListener('input', () => {
-        sendBtn.disabled = inputEl.value.trim() === '';
-        
-        if (inputEl.value.trim() && !isTyping) {
-          isTyping = true;
-          socket.emit('typing', { name: username });
-        }
-        
-        clearTimeout(typingTimeout);
-        typingTimeout = setTimeout(() => {
-          if (isTyping) {
-            isTyping = false;
-            socket.emit('stopped-typing');
-          }
-        }, 2000);
-      });
+      inputEl.addEventListener('input', handleInputReversal);
       
       inputEl.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -991,7 +994,6 @@
       // Gestion des notifications push
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') {
-          // Réduire toutes les notifications lorsque la page redevient visible
           notification.classList.remove('show');
         }
       });
