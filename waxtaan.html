@@ -58,6 +58,7 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
+      unicode-bidi: bidi-override;
     }
 
     body::before {
@@ -117,6 +118,7 @@
       padding: 1rem;
       scroll-behavior: smooth;
       direction: rtl;
+      unicode-bidi: bidi-override;
     }
 
     .message {
@@ -178,13 +180,14 @@
       margin-top: 0.3rem;
       text-align: left;
       direction: ltr;
+      unicode-bidi: bidi-override;
     }
 
     .message-text {
       font-size: 1.1rem;
       unicode-bidi: plaintext;
       text-align: right;
-      direction: rtl;
+      white-space: pre-wrap;
     }
 
     .message-reactions {
@@ -371,8 +374,7 @@
       font-family: 'Gagganti', sans-serif;
       font-size: 1rem;
       direction: rtl;
-      unicode-bidi: plaintext;
-      text-align: right;
+      unicode-bidi: bidi-override;
     }
 
     #message-input:focus {
@@ -519,6 +521,7 @@
       color: var(--ivoire);
       font-family: 'Gagganti', sans-serif;
       direction: rtl;
+      unicode-bidi: bidi-override;
     }
 
     .form-input:focus {
@@ -653,6 +656,7 @@
   <!-- SCRIPT JS -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       // Éléments DOM
       const messagesEl = document.getElementById('messages');
@@ -682,59 +686,12 @@
       let typingTimeout;
       let onlineUsers = [];
       let notificationTimeout;
-      let lastInputValue = '';
-      let lastCursorPos = 0;
 
       // Vérifier et demander le nom d'utilisateur si nécessaire
       if (!username) {
         setTimeout(() => {
           settingsModal.classList.add('active');
         }, 500);
-      }
-
-      // Fonction pour inverser le texte
-      function reverseText(text) {
-        return text.split('').reverse().join('');
-      }
-
-      // Gestion avancée du curseur RTL
-      function handleInputReversal() {
-        const cursorPos = inputEl.selectionStart;
-        const text = inputEl.value;
-        
-        // Ne rien faire si le texte n'a pas changé
-        if (text === lastInputValue) return;
-        
-        // Calculer les différences
-        const diff = text.length - lastInputValue.length;
-        let newCursorPos = cursorPos;
-        
-        // Inverser le texte
-        const reversed = reverseText(text);
-        inputEl.value = reversed;
-        
-        // Calculer la nouvelle position du curseur
-        if (diff > 0) {
-          // Caractère(s) ajouté(s)
-          newCursorPos = lastCursorPos + diff;
-        } else if (diff < 0) {
-          // Caractère(s) supprimé(s)
-          newCursorPos = Math.max(0, lastCursorPos + diff);
-        }
-        
-        // Ajustement pour RTL
-        newCursorPos = reversed.length - newCursorPos;
-        newCursorPos = Math.max(0, Math.min(reversed.length, newCursorPos));
-        
-        // Mettre à jour la position du curseur
-        setTimeout(() => {
-          inputEl.setSelectionRange(newCursorPos, newCursorPos);
-        }, 0);
-        
-        // Mettre à jour les états
-        lastInputValue = reversed;
-        lastCursorPos = reversed.length - newCursorPos;
-        sendBtn.disabled = reversed.trim() === '';
       }
 
       // Fonction pour obtenir l'initiale d'un nom
@@ -840,7 +797,7 @@
             <div class="message-avatar">${getInitial(message.sender)}</div>
             <span class="message-sender">${message.sender}</span>
           </div>
-          <div class="message-text" dir="rtl">${message.text}</div>
+          <div class="message-text">${message.text}</div>
           <div class="message-time">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
           <div class="message-reactions">
             <span class="reaction" data-reaction="❤️">❤️</span>
@@ -904,8 +861,6 @@
         
         socket.emit('message', message);
         inputEl.value = '';
-        lastInputValue = '';
-        lastCursorPos = 0;
         sendBtn.disabled = true;
       }
 
@@ -989,17 +944,21 @@
       });
 
       // Gestion des événements DOM
-      inputEl.addEventListener('input', handleInputReversal);
-      
-      inputEl.addEventListener('click', (e) => {
-        const cursorPos = inputEl.selectionStart;
-        const newPos = inputEl.value.length - cursorPos;
-        inputEl.setSelectionRange(newPos, newPos);
-        lastCursorPos = cursorPos;
-      });
-      
-      inputEl.addEventListener('keydown', (e) => {
-        lastCursorPos = inputEl.selectionStart;
+      inputEl.addEventListener('input', () => {
+        sendBtn.disabled = inputEl.value.trim() === '';
+        
+        if (inputEl.value.trim() && !isTyping) {
+          isTyping = true;
+          socket.emit('typing', { name: username });
+        }
+        
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          if (isTyping) {
+            isTyping = false;
+            socket.emit('stopped-typing');
+          }
+        }, 2000);
       });
       
       inputEl.addEventListener('keypress', (e) => {
