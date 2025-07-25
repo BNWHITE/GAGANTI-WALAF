@@ -187,6 +187,7 @@
       font-size: 1.1rem;
       unicode-bidi: plaintext;
       text-align: right;
+      direction: rtl;
       white-space: pre-wrap;
     }
 
@@ -374,7 +375,7 @@
       font-family: 'Gagganti', sans-serif;
       font-size: 1rem;
       direction: rtl;
-      unicode-bidi: bidi-override;
+      unicode-bidi: plaintext;
     }
 
     #message-input:focus {
@@ -521,7 +522,7 @@
       color: var(--ivoire);
       font-family: 'Gagganti', sans-serif;
       direction: rtl;
-      unicode-bidi: bidi-override;
+      unicode-bidi: plaintext;
     }
 
     .form-input:focus {
@@ -774,7 +775,7 @@
         return messageDate.toLocaleDateString('wo', { day: 'numeric', month: 'long' });
       }
 
-      // Afficher un message
+      // Afficher un message (MODIFIÉ - plus d'inversion)
       function renderMessage(message) {
         const messageDate = new Date(message.timestamp).toDateString();
         
@@ -792,6 +793,7 @@
         messageEl.className = `message ${message.senderId === socket.id ? 'message-out' : 'message-in'}`;
         messageEl.dataset.messageId = message.id;
         
+        // Afficher le texte tel quel (sans inversion)
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-avatar">${getInitial(message.sender)}</div>
@@ -846,14 +848,14 @@
         });
       }
 
-      // Envoyer un message
+      // Envoyer un message (MODIFIÉ - pas d'inversion)
       function sendMessage() {
         const text = inputEl.value.trim();
         
         if (!text || !username) return;
         
         const message = {
-          text,
+          text: text, // Texte envoyé tel quel
           sender: username,
           senderId: socket.id,
           timestamp: new Date().toISOString()
