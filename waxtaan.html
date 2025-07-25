@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="wo">
+<html lang="wo" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,7 +58,7 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
-      unicode-bidi: bidi-override;
+      text-align: right;
     }
 
     body::before {
@@ -117,8 +117,6 @@
       overflow-y: auto;
       padding: 1rem;
       scroll-behavior: smooth;
-      direction: rtl;
-      unicode-bidi: bidi-override;
     }
 
     .message {
@@ -130,7 +128,7 @@
       word-wrap: break-word;
       line-height: 1.5;
       animation: fadeIn 0.3s ease-out;
-      transform-origin: right;
+      text-align: right;
     }
 
     .message-out {
@@ -154,6 +152,7 @@
       align-items: center;
       gap: 0.5rem;
       margin-bottom: 0.5rem;
+      flex-direction: row-reverse;
     }
 
     .message-avatar {
@@ -187,7 +186,6 @@
       font-size: 1.1rem;
       unicode-bidi: plaintext;
       text-align: right;
-      direction: rtl;
       white-space: pre-wrap;
     }
 
@@ -236,22 +234,22 @@
     }
 
     .day-divider::before {
-      left: 0;
+      right: 0;
     }
 
     .day-divider::after {
-      right: 0;
+      left: 0;
     }
 
     .typing-indicator {
       display: flex;
       align-items: center;
       gap: 0.3rem;
-      margin-right: 1rem;
+      margin-left: 1rem;
       margin-bottom: 0.5rem;
       opacity: 0;
       transition: opacity 0.3s;
-      direction: rtl;
+      justify-content: flex-end;
     }
 
     .typing-indicator.visible {
@@ -293,7 +291,7 @@
     #online-users {
       position: fixed;
       top: 5rem;
-      left: 1rem;
+      right: 1rem;
       background: rgba(10, 10, 10, 0.8);
       border: 1px solid var(--or);
       border-radius: 0.5rem;
@@ -304,6 +302,7 @@
       animation: slideInRight 0.5s;
       z-index: 100;
       display: none;
+      text-align: right;
     }
 
     .online-users-header {
@@ -314,6 +313,7 @@
       margin-bottom: 0.5rem;
       border-bottom: 1px solid rgba(212, 175, 55, 0.3);
       padding-bottom: 0.3rem;
+      flex-direction: row-reverse;
     }
 
     .online-user {
@@ -322,6 +322,7 @@
       gap: 0.5rem;
       padding: 0.3rem 0;
       animation: fadeIn 0.3s;
+      flex-direction: row-reverse;
     }
 
     .online-user-avatar {
@@ -351,7 +352,7 @@
       align-items: center;
       justify-content: center;
       font-size: 0.7rem;
-      margin-left: auto;
+      margin-right: auto;
     }
 
     /* === ZONE DE SAISIE === */
@@ -363,6 +364,7 @@
       gap: 0.5rem;
       align-items: center;
       position: relative;
+      flex-direction: row-reverse;
     }
 
     #message-input {
@@ -375,7 +377,13 @@
       font-family: 'Gagganti', sans-serif;
       font-size: 1rem;
       direction: rtl;
+      text-align: right;
       unicode-bidi: plaintext;
+    }
+
+    #message-input::placeholder {
+      direction: rtl;
+      text-align: right;
     }
 
     #message-input:focus {
@@ -429,19 +437,20 @@
     .notification {
       position: fixed;
       top: 1rem;
-      right: 1rem;
+      left: 1rem;
       padding: 0.8rem 1.2rem;
       border-radius: 0.5rem;
       background-color: var(--indigo);
       color: white;
       box-shadow: var(--shadow);
-      transform: translateX(200%);
+      transform: translateX(-200%);
       transition: transform 0.3s ease;
       z-index: 1000;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-left: 4px solid var(--or);
+      border-right: 4px solid var(--or);
+      text-align: right;
     }
 
     .notification.show {
@@ -454,7 +463,7 @@
     }
 
     .notification-close {
-      margin-left: 0.5rem;
+      margin-right: 0.5rem;
       cursor: pointer;
       opacity: 0.7;
     }
@@ -494,6 +503,7 @@
       border: 1px solid var(--or);
       box-shadow: var(--shadow);
       animation: fadeIn 0.3s;
+      text-align: right;
     }
 
     .modal-title {
@@ -522,7 +532,7 @@
       color: var(--ivoire);
       font-family: 'Gagganti', sans-serif;
       direction: rtl;
-      unicode-bidi: plaintext;
+      text-align: right;
     }
 
     .form-input:focus {
@@ -532,7 +542,7 @@
 
     .modal-actions {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
       gap: 0.5rem;
       margin-top: 1.5rem;
     }
@@ -579,8 +589,8 @@
       #online-users {
         top: auto;
         bottom: 5rem;
-        left: 1rem;
         right: 1rem;
+        left: 1rem;
         max-height: 20vh;
       }
     }
@@ -775,7 +785,7 @@
         return messageDate.toLocaleDateString('wo', { day: 'numeric', month: 'long' });
       }
 
-      // Afficher un message (MODIFIÉ - plus d'inversion)
+      // Afficher un message
       function renderMessage(message) {
         const messageDate = new Date(message.timestamp).toDateString();
         
@@ -793,7 +803,7 @@
         messageEl.className = `message ${message.senderId === socket.id ? 'message-out' : 'message-in'}`;
         messageEl.dataset.messageId = message.id;
         
-        // Afficher le texte tel quel (sans inversion)
+        // Afficher le texte
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-avatar">${getInitial(message.sender)}</div>
@@ -848,14 +858,14 @@
         });
       }
 
-      // Envoyer un message (MODIFIÉ - pas d'inversion)
+      // Envoyer un message
       function sendMessage() {
         const text = inputEl.value.trim();
         
         if (!text || !username) return;
         
         const message = {
-          text: text, // Texte envoyé tel quel
+          text: text,
           sender: username,
           senderId: socket.id,
           timestamp: new Date().toISOString()
@@ -1002,6 +1012,10 @@
       
       // Focus automatique sur le champ de saisie
       inputEl.focus();
+      
+      // Forcer la direction RTL pour l'input
+      inputEl.style.direction = 'rtl';
+      inputEl.style.textAlign = 'right';
     });
   </script>
 </body>
