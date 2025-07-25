@@ -653,7 +653,6 @@
   <!-- SCRIPT JS -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // Initialisation
     document.addEventListener('DOMContentLoaded', () => {
       // Éléments DOM
       const messagesEl = document.getElementById('messages');
@@ -683,6 +682,8 @@
       let typingTimeout;
       let onlineUsers = [];
       let notificationTimeout;
+      let lastInputValue = '';
+      let lastCursorPos = 0;
 
       // Vérifier et demander le nom d'utilisateur si nécessaire
       if (!username) {
@@ -696,16 +697,43 @@
         return text.split('').reverse().join('');
       }
 
-      // Gestion de l'inversion en temps réel
+      // Gestion avancée du curseur RTL
       function handleInputReversal() {
         const cursorPos = inputEl.selectionStart;
         const text = inputEl.value;
-        const reversed = reverseText(text);
         
-        if (text !== reversed) {
-          inputEl.value = reversed;
-          inputEl.setSelectionRange(text.length - cursorPos, text.length - cursorPos);
+        // Ne rien faire si le texte n'a pas changé
+        if (text === lastInputValue) return;
+        
+        // Calculer les différences
+        const diff = text.length - lastInputValue.length;
+        let newCursorPos = cursorPos;
+        
+        // Inverser le texte
+        const reversed = reverseText(text);
+        inputEl.value = reversed;
+        
+        // Calculer la nouvelle position du curseur
+        if (diff > 0) {
+          // Caractère(s) ajouté(s)
+          newCursorPos = lastCursorPos + diff;
+        } else if (diff < 0) {
+          // Caractère(s) supprimé(s)
+          newCursorPos = Math.max(0, lastCursorPos + diff);
         }
+        
+        // Ajustement pour RTL
+        newCursorPos = reversed.length - newCursorPos;
+        newCursorPos = Math.max(0, Math.min(reversed.length, newCursorPos));
+        
+        // Mettre à jour la position du curseur
+        setTimeout(() => {
+          inputEl.setSelectionRange(newCursorPos, newCursorPos);
+        }, 0);
+        
+        // Mettre à jour les états
+        lastInputValue = reversed;
+        lastCursorPos = reversed.length - newCursorPos;
         sendBtn.disabled = reversed.trim() === '';
       }
 
@@ -876,6 +904,8 @@
         
         socket.emit('message', message);
         inputEl.value = '';
+        lastInputValue = '';
+        lastCursorPos = 0;
         sendBtn.disabled = true;
       }
 
@@ -960,6 +990,17 @@
 
       // Gestion des événements DOM
       inputEl.addEventListener('input', handleInputReversal);
+      
+      inputEl.addEventListener('click', (e) => {
+        const cursorPos = inputEl.selectionStart;
+        const newPos = inputEl.value.length - cursorPos;
+        inputEl.setSelectionRange(newPos, newPos);
+        lastCursorPos = cursorPos;
+      });
+      
+      inputEl.addEventListener('keydown', (e) => {
+        lastCursorPos = inputEl.selectionStart;
+      });
       
       inputEl.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
