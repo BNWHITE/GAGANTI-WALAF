@@ -800,8 +800,11 @@
         messageEl.dataset.messageId = message.id;
         
         // Inverser le texte selon les règles Gagganti
-        const reversedText = reverseGagganti(message.text);
+        //const reversedText = reverseGagganti(message.text);
         
+        // Ne pas inverser le texte pour les messages que vous envoyez
+        const messageText = message.senderId === socket.id ? message.text : reverseGagganti(message.text);
+    
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-avatar">${getInitial(message.sender)}</div>
