@@ -858,19 +858,19 @@
 
       // Envoyer un message
       function sendMessage() {
-        const text = inputEl.value.trim();
-        
-        if (!text || !username) return;
-        
-        const message = {
-          text,
-          sender: username,
-          timestamp: new Date().toISOString()
-        };
-        
-        socket.emit('message', message);
-        inputEl.value = '';
-        sendBtn.disabled = true;
+          const text = inputEl.value.trim();
+          
+          if (!text || !username) return;
+          
+          const message = {
+            text, // Ne pas inverser ici
+            sender: username,
+            timestamp: new Date().toISOString()
+          };
+          
+          socket.emit('message', message);
+          inputEl.value = '';
+          sendBtn.disabled = true;
       }
 
       // Gestion des événements Socket.io
@@ -892,19 +892,23 @@
       });
       
       socket.on('message', (message) => {
-        renderMessage(message);
-        
-        // Notification si la fenêtre n'est pas active
-        if (document.hidden && message.senderId !== socket.id) {
-          showNotification(`${message.sender}: ${reverseGagganti(message.text)}`, 'message');
+          renderMessage(message);
           
-          // Vibrer si supporté
-          if ('vibrate' in navigator) {
-            navigator.vibrate([200, 100, 200]);
+          // Notification si la fenêtre n'est pas active
+          if (document.hidden && message.senderId !== socket.id) {
+            const notificationText = message.senderId === socket.id 
+              ? `${message.sender}: ${message.text}`
+              : `${message.sender}: ${reverseGagganti(message.text)}`;
+            
+            showNotification(notificationText, 'message');
+            
+            // Vibrer si supporté
+            if ('vibrate' in navigator) {
+              navigator.vibrate([200, 100, 200]);
+            }
           }
-        }
       });
-      
+            
       socket.on('user-typing', (user) => {
         if (user.id !== socket.id) {
           typingIndicator.querySelector('.typing-text').textContent = `${user.name} ngi bind...`;
