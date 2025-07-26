@@ -804,13 +804,14 @@
         
         // Ne pas inverser le texte pour les messages que vous envoyez
         const messageText = message.senderId === socket.id ? message.text : reverseGagganti(message.text);
+        const reversedText = reverseGagganti(messageText);
     
         messageEl.innerHTML = `
           <div class="message-header">
             <div class="message-avatar">${getInitial(message.sender)}</div>
             <span class="message-sender">${message.sender}</span>
           </div>
-          <div class="message-text">${messageText}</div> //reversedText to messageText
+          <div class="message-text">${reversedText}</div> 
           <div class="message-time">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
           <div class="message-reactions">
             <span class="reaction" data-reaction="❤️">❤️</span>
