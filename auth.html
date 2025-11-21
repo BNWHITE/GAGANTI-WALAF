@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="wo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>etneT/retcennoC eS - itnaggag</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="gagganti.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="auth-page">
+
+    <div class="auth-container card gagganti-text-flow">
+        <h1 class="auth-title" id="auth-title">retcennoC eS</h1>
+
+        <form id="auth-form">
+            <div class="form-group">
+                <label for="email">liamE</label>
+                <input type="email" id="email" required>
+            </div>
+            
+            <div id="username-group" class="form-group" style="display: none;">
+                <label for="username">elatam uw ruT</label>
+                <input type="text" id="username" class="gagganti-input" data-brut="" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">essap eD toM</label>
+                <input type="password" id="password" class="gagganti-input" data-brut="" required>
+            </div>
+            
+            <div id="bio-group" class="form-group" style="display: none;">
+                <label for="bio">eihpargoiB</label>
+                <textarea id="bio" class="gagganti-input" data-brut="" placeholder="...feddeF ic yeeR"></textarea>
+            </div>
+
+            <button type="submit" id="auth-button" class="button">retcennoC</button>
+        </form>
+        
+        <button id="toggle-auth" class="button secondary" style="background-color: var(--bordure-legere); color: var(--texte-sombre);">tinuoC nU ?</button>
+    </div>
+
+    <script src="js/supabase_client.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
