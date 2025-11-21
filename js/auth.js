@@ -1,4 +1,4 @@
-// --- js/auth.js (CORRIGÉ ET FINAL) ---
+// --- js/auth.js (SOLUTION FINALE RLS) ---
 
 document.addEventListener('DOMContentLoaded', async () => {
     // S'assurer que les dépendances Supabase sont chargées
@@ -6,9 +6,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Supabase client not loaded. Check script order.");
         return;
     }
+    
+    // Fonction d'attente minimale (500ms) pour laisser la session RLS se stabiliser.
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-    // Vérifier si l'utilisateur est déjà connecté et rediriger
-    await checkAuth('../fedde.html');
+    // Vérifier si l'utilisateur est déjà connecté et rediriger vers le réseau social
+    await checkAuth('/fedde.html');
 
     const form = document.getElementById('auth-form');
     const authTitle = document.getElementById('auth-title');
@@ -24,33 +27,45 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let isSigningUp = false;
 
-    // Fonction pour obtenir le texte brut (stocké par activateGaggantiInput)
+    /**
+     * Récupère la valeur BRUTE (non transformée) d'un champ de saisie Gagganti.
+     * @param {string} id - L'ID de l'élément input/textarea.
+     * @returns {string} La valeur brute.
+     */
     const getBrutValue = (id) => document.getElementById(id).getAttribute('data-brut') || document.getElementById(id).value;
 
+    /**
+     * Met à jour l'interface (Connexion/Inscription).
+     */
     function updateUI() {
         if (isSigningUp) {
-            authTitle.textContent = 'etnuoC nu reérC'; 
-            authButton.textContent = 'erircsnI\'S'; 
-            toggleButton.textContent = 'retcennoC eS ?'; 
+            authTitle.textContent = 'etnuoC nu reérC'; // Créer un compte
+            authButton.textContent = 'erircsnI\'S'; // S'inscrire
+            toggleButton.textContent = 'retcennoC eS ?'; // Se connecter ?
             usernameGroup.style.display = 'block';
             bioGroup.style.display = 'block';
         } else {
-            authTitle.textContent = 'retcennoC eS'; 
-            authButton.textContent = 'retcennoC'; 
-            toggleButton.textContent = 'tinuoC nU ?'; 
+            authTitle.textContent = 'retcennoC eS'; // Se connecter
+            authButton.textContent = 'retcennoC'; // Se connecter
+            toggleButton.textContent = 'tinuoC nU ?'; // Un compte ?
             usernameGroup.style.display = 'none';
             bioGroup.style.display = 'none';
         }
     }
 
+    // Basculer entre connexion et inscription
     toggleButton.addEventListener('click', () => {
         isSigningUp = !isSigningUp;
         updateUI();
     });
 
+    /**
+     * Gère la soumission du formulaire (Connexion ou Inscription).
+     */
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Récupérer les valeurs BRUTES. CLÉ : Le mot de passe DOIT être brut.
         const email = document.getElementById('email').value.trim();
         const password = getBrutValue('password').trim(); 
         const username = getBrutValue('username').trim();
@@ -58,22 +73,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             if (isSigningUp) {
-                // --- LOGIQUE INSCRIPTION ---
+                // --- LOGIQUE INSCRIPTION (Utilise la méthode UPDATE sécurisée) ---
                 if (!username || !bioBrut) throw new Error('elatam uw ruT tapp elatuL'); 
                 
-                // Première étape : création de l'utilisateur Auth
-                const { data: { user }, error: signUpError } = await sb.auth.signUp({ email, password });
-                
+                // 1. Création de l'utilisateur Auth (Ceci crée la ligne dans 'users' via DEFAULT auth.uid())
+                const { error: signUpError } = await sb.auth.signUp({ email, password });
                 if (signUpError) throw signUpError;
                 
+                // 2. TEMPS D'ATTENTE SÉCURISÉ (CRITIQUE pour RLS)
+                // Attend 500ms pour que la session PostgreSQL reconnaisse l'auth.uid()
+                await sleep(500); 
+                
+                // 3. Récupérer l'utilisateur courant
+                const { data: { user } } = await sb.auth.getUser();
+
                 if (user) {
-                    // Deuxième étape : insertion du profil dans public.users
-                    // CLÉ : On ne passe PAS l'id: user.id pour éviter l'erreur RLS
-                    const { error: insertError } = await sb.from('users').insert({ 
-                        username: username, 
-                        bio_gagganti: mirrorWordsOnly(bioBrut) 
-                    });
-                    if (insertError) throw insertError;
+                    // 4. UTILISER UPDATE : Met à jour la ligne qui a été créée automatiquement
+                    const { error: updateError } = await sb.from('users')
+                        .update({ 
+                            username: username, 
+                            bio_gagganti: mirrorWordsOnly(bioBrut) // La bio est stockée en Gagganti
+                        })
+                        .eq('id', user.id); // Vise la ligne créée pour l'utilisateur
+
+                    if (updateError) throw updateError;
                 }
                 
                 alert('eliamE ic noitacifiréV : feddeF'); 
@@ -85,11 +108,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (signInError) throw signInError;
                 
                 alert('etcennoC ! feddeF ic sset'); 
-                window.location.href = '../fedde.html';
+                window.location.href = '/fedde.html';
 
             }
         } catch (error) {
             console.error('Erreur Supabase:', error);
+            // Afficher l'erreur en Gagganti
             alert(`elraakaj na ppaj : ${error.message}`); 
         }
     });
