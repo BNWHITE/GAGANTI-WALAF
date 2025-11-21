@@ -1,7 +1,13 @@
-// --- js/auth.js ---
+// --- js/auth.js (CORRIGÉ) ---
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Vérifier si l'utilisateur est déjà connecté et rediriger vers le réseau social
+    // S'assurer que les dépendances Supabase sont chargées
+    if (typeof sb === 'undefined') {
+        console.error("Supabase client not loaded. Check script order.");
+        return;
+    }
+
+    // Vérifier si l'utilisateur est déjà connecté et rediriger
     await checkAuth('/fedde.html');
 
     const form = document.getElementById('auth-form');
@@ -20,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fonction pour obtenir le texte brut (stocké par activateGaggantiInput)
     const getBrutValue = (id) => document.getElementById(id).getAttribute('data-brut') || document.getElementById(id).value;
-
 
     // Mise à jour de l'interface en mode Gagganti
     function updateUI() {
@@ -50,14 +55,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.preventDefault();
         
         // Récupérer les valeurs BRUTES
+        // L'email est stocké en clair (pas de Gagganti)
         const email = document.getElementById('email').value.trim();
-        // IMPORTANT : Récupérer le mot de passe et le nom d'utilisateur en brut
-        const password = document.getElementById('password').value.trim();
+        // CLÉ : Le mot de passe doit être récupéré en brut pour l'envoyer à Supabase
+        const password = getBrutValue('password').trim(); 
+        
         const username = getBrutValue('username').trim();
         const bioBrut = getBrutValue('bio').trim();
 
         try {
             if (isSigningUp) {
+                // --- LOGIQUE INSCRIPTION ---
                 if (!username || !bioBrut) throw new Error('elatam uw ruT tapp elatuL'); // Veuillez taper un nom d'utilisateur.
                 
                 const { data: { user }, error: signUpError } = await sb.auth.signUp({ email, password });
@@ -65,11 +73,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (signUpError) throw signUpError;
                 
                 if (user) {
-                    // Insérer le username et la bio Gagganti dans la table 'users' après l'inscription
+                    // Insérer le username et la bio Gagganti dans la table 'users'
                     const { error: insertError } = await sb.from('users').insert({ 
                         id: user.id, 
-                        username: username, // Stocker le nom d'utilisateur en brut pour la recherche
-                        bio_gagganti: mirrorWordsOnly(bioBrut) // Stocker la bio en Gagganti
+                        username: username, 
+                        bio_gagganti: mirrorWordsOnly(bioBrut) 
                     });
                     if (insertError) throw insertError;
                 }
@@ -77,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert('eliamE ic noitacifiréV : feddeF'); // Vérification dans l'email
                 
             } else {
+                // --- LOGIQUE CONNEXION (Sign In) ---
                 const { error: signInError } = await sb.auth.signInWithPassword({ email, password });
                 
                 if (signInError) throw signInError;
