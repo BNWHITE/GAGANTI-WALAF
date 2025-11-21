@@ -1,7 +1,7 @@
 // Remplacez par votre URL de projet Supabase
 const SUPABASE_URL = 'https://jxwumbkoikoyfhcmmocq.supabase.co';
 // !!! REMPLACEZ PAR VOTRE CLÉ PUBLIQUE (Anon Key) !!!
-const SUPABASE_ANON_KEY = 'sb_secret_P3GK30ThgPIFSfH5BNtwQA_e6Gbm3K6'; 
+const SUPABASE_ANON_KEY = 'sb_publishable_jaly7fPBlTQDFvVnMbqLwg_Xz0T83z8'; 
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
