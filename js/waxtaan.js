@@ -1,6 +1,14 @@
-// --- js/waxtaan.js ---
+// --- js/waxtaan.js (CORRIGÉ POUR BYPASS) ---
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuth();
+    // Récupérer l'ID utilisateur (BYPASS ou réel)
+    const currentUserId = await checkAuth(); 
+    if (!currentUserId) return; 
+    
+    // Charger les données de l'utilisateur (optionnel mais bon pour le profil)
+    const { data: userData } = await sb.from('users').select('*').eq('id', currentUserId).single();
+    if (!userData) return;
+    const currentUser = userData;
+
 
     const messagesEl = document.getElementById('messages');
     const inputEl = document.getElementById('message-input');
@@ -10,11 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     activateGaggantiInput('message-input');
 
-    let currentUserId;
-    const { data: { user } } = await sb.auth.getUser();
-    currentUserId = user.id;
-
-    // Fonction pour afficher le message (HTML)
+    // ... (Fonctions displayMessage, uploadMedia, sendMessage, loadHistory restent les mêmes mais utilisent currentUserId) ...
     function displayMessage(message, username) {
         const isSelf = message.user_id === currentUserId;
         const messageEl = document.createElement('div');
@@ -23,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         let contentHTML;
         const messageContent = isSelf ? message.contenu : mirrorWordsOnly(message.contenu);
         
-        // Gestion des différents types de contenu (texte et vocal dans ce chat)
         if (message.type === 'text') {
             contentHTML = `<p class="message-text">${messageContent}</p>`;
         } else if (message.type === 'vocal') {
@@ -39,9 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }
     
-    // Envoi de Message
     async function sendMessage() {
-        // Récupérer le texte brut stocké par GaggantiInput
         const brutText = inputEl.getAttribute('data-brut').trim();
         
         if (!brutText) return;
@@ -49,9 +50,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             await sb.from('messages').insert([
                 { 
-                    user_id: currentUserId, 
+                    user_id: currentUserId, // Utilise l'ID obtenu de checkAuth
                     type: 'text', 
-                    contenu: brutText // Stocker le brut pour la cohérence
+                    contenu: brutText 
                 }
             ]);
             inputEl.value = '';
@@ -63,7 +64,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     
-    // --- SUPABASE REALTIME ET HISTORIQUE ---
     async function loadHistory() {
         const { data: messages, error } = await sb
             .from('messages')
@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         messagesEl.innerHTML = '';
         messages.forEach(msg => displayMessage(msg, msg.users.username));
     }
-
+    
+    // Temps Réel
     sb.channel('waxtaan_room')
         .on('postgres_changes', 
             { event: 'INSERT', schema: 'public', table: 'messages' }, 
@@ -88,14 +89,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         )
         .subscribe();
         
+    // Chargement de la liste des utilisateurs
+    async function loadUsers() {
+        const { data: users } = await sb.from('users').select('username, avatar_url').neq('id', currentUserId);
+        usersListEl.innerHTML = '';
+        users.forEach(user => {
+            const userEl = document.createElement('div');
+            userEl.className = 'online-user gagganti-text-flow';
+            userEl.innerHTML = `
+                <div class="online-user-avatar">${user.username.charAt(0).toUpperCase()}</div>
+                <span class="online-user-name">${user.username}</span>
+            `;
+            usersListEl.appendChild(userEl);
+        });
+    }
+
     // Événements DOM
-    inputEl.addEventListener('input', () => {
-        sendBtn.disabled = inputEl.value.trim() === '';
-    });
-    inputEl.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
+    inputEl.addEventListener('input', () => { sendBtn.disabled = inputEl.value.trim() === ''; });
+    inputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
     sendBtn.addEventListener('click', sendMessage);
     
     loadHistory();
+    loadUsers();
 });
