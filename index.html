@@ -3,29 +3,793 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lieuccA - itnaggag</title>
+    <title>eddeF - ITNAGGAG (Tout en Un)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="gagganti.css">
-</head>
-<body style="background-color: var(--fond-clair); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* --- VARIABLES CSS - Luminosité Gagganti --- */
+        :root {
+          --fond-clair: #F5F5F5;      
+          --fond-card: #FFFFFF;       
+          --accent-primaire: #FFC300; 
+          --accent-secondaire: #FF5733;
+          --texte-sombre: #1A1A1A;    
+          --bordure-legere: #DEDEDE;  
+          --ombre-subtile: 0 1px 3px rgba(0, 0, 0, 0.08); 
+          --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1); 
+          --col-nav-width: 60px;
+          --col-list-width: 300px;
+        }
 
-    <div class="card" style="max-width: 600px; text-align: center; padding: 3rem;">
-        <h1 class="gagganti-text-flow" style="font-size: 3rem; color: var(--accent-secondaire);">itnaggag - feddeF</h1>
-        <p class="gagganti-text-flow" style="margin-top: 1rem; margin-bottom: 2rem;">ib yeéggil ic nuynaB ic lafèb nuynaB ic nuynaB ib gnal ci lafèb</p>
+        /* === POLICE GAGANTI & RTL SETUP === */
+        @font-face {
+          font-family: 'Gagganti';
+          src: url('gagganti.ttf') format('truetype'); /* Assurez-vous que gagganti.ttf est à la racine */
+          font-display: swap;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Gagganti', sans-serif;
+          background-color: var(--fond-clair);
+          color: var(--texte-sombre);
+          min-height: 100vh;
+          margin: 0;
+        }
+
+        /* Appliquer le Gagganti et RTL */
+        .gagganti-text-flow {
+            direction: rtl; 
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        .gagganti-input, input[type="text"], input[type="password"], input[type="email"], textarea {
+            direction: rtl; 
+            text-align: right;
+        }
+
+        /* === ÉLÉMENTS COMMUNS (Boutons, Inputs, Cards) === */
+        .card {
+            background-color: var(--fond-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 1.5rem;
+        }
+
+        .button, button {
+          padding: 0.8rem 1.2rem;
+          font-size: 1.1rem;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s;
+          background-color: var(--accent-primaire);
+          color: var(--texte-sombre);
+          font-weight: bold;
+          border-radius: 8px;
+          box-shadow: var(--ombre-subtile);
+        }
+
+        .button:hover, button:hover {
+          background-color: var(--accent-secondaire);
+          color: var(--fond-card);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .secondary {
+            background: var(--fond-clair) !important;
+            border: 1px solid var(--bordure-legere);
+            color: var(--texte-sombre) !important;
+        }
+
+        .secondary:hover {
+            background-color: var(--bordure-legere) !important;
+            color: var(--texte-sombre) !important;
+        }
+
+        input, textarea {
+          width: 100%;
+          padding: 0.8rem;
+          border-radius: 8px;
+          border: 1px solid var(--bordure-legere);
+          background: var(--fond-clair);
+          color: var(--texte-sombre);
+          font-size: 1.1rem;
+          box-shadow: var(--ombre-subtile);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-primaire);
+            box-shadow: 0 0 0 2px rgba(255, 195, 0, 0.3);
+        }
+
+        /* === LAYOUT GLOBAL (Desktop - 3 Colonnes) === */
+        .app-container {
+            display: grid;
+            grid-template-columns: var(--col-nav-width) var(--col-list-width) 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .col-nav {
+            background-color: var(--fond-card);
+            border-right: 1px solid var(--bordure-legere);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-card);
+            z-index: 100;
+        }
+
+        .col-list {
+            background-color: var(--fond-card);
+            border-right: 1px solid var(--bordure-legere);
+            overflow-y: auto;
+        }
+
+        .col-main {
+            overflow-y: auto;
+            background-color: var(--fond-clair);
+        }
+
+        /* === Navigation (col-nav) === */
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            margin: 0.5rem 0;
+            color: var(--texte-sombre);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .nav-link i {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--accent-primaire);
+            color: var(--fond-card);
+            font-weight: bold;
+        }
         
-        <div style="display: flex; justify-content: center; gap: 1.5rem;">
-            <a href="auth.html" class="button gagganti-text-flow">retcennoC eS</a>
-            <a href="auth.html" class="button secondary gagganti-text-flow">etnuoC nu reérC</a>
-        </div>
-    </div>
+        /* === AUTHENTIFICATION (auth view) === */
+        #view-auth, #view-index {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-color: var(--fond-clair);
+          padding: 2rem;
+        }
 
-    <script src="js/supabase_client.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check si l'utilisateur est déjà connecté et rediriger vers fedde.html
-            checkAuth('/fedde.html');
-        });
+        .auth-container {
+          background-color: var(--fond-card);
+          padding: 2.5rem;
+          border-radius: 12px;
+          box-shadow: var(--shadow-card);
+          width: 90%;
+          max-width: 450px;
+        }
+
+        .auth-title {
+          color: var(--accent-secondaire);
+          text-align: center;
+          margin-bottom: 2rem;
+          font-size: 1.8rem;
+        }
+        
+        /* === FEEDE / POSTS === */
+        #fedde-feed {
+            padding: 1.5rem;
+        }
+
+        .post-card {
+            background-color: var(--fond-card);
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: var(--ombre-subtile);
+            margin-bottom: 1.5rem;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            direction: ltr; 
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-primaire);
+            color: var(--texte-sombre);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            order: 2; /* Aligner l'avatar à droite dans le conteneur RTL */
+        }
+        
+        .post-content {
+            margin-bottom: 1rem;
+        }
+        
+        .post-media {
+            max-width: 100%;
+            border-radius: 8px;
+            height: auto;
+            margin: 0.5rem 0;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: flex-end; 
+            gap: 1rem;
+            border-top: 1px solid var(--bordure-legere);
+            padding-top: 0.8rem;
+            direction: ltr;
+        }
+        
+        .action-btn {
+            background: none;
+            color: var(--texte-sombre);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--accent-primaire);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* === WAXTAAN (Chat) === */
+        .waxtaan-page {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column-reverse; 
+            direction: rtl; /* Conteneur RTL */
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.8rem;
+            border-radius: 1rem;
+            line-height: 1.5;
+            clear: both; 
+            float: right; 
+        }
+
+        .message-in {
+            background-color: var(--fond-clair); 
+            border: 1px solid var(--bordure-legere);
+            margin-right: auto;
+            margin-left: 0;
+            border-top-left-radius: 0;
+            float: left; 
+        }
+
+        .message-out {
+            background-color: var(--accent-primaire); 
+            color: var(--texte-sombre);
+            margin-left: auto;
+            margin-right: 0;
+            border-top-right-radius: 0;
+            float: right; 
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: var(--texte-sombre);
+            opacity: 0.7;
+            margin-top: 0.3rem;
+            text-align: left; 
+            direction: ltr;
+        }
+
+        #input-container {
+            display: flex;
+            padding: 1rem;
+            background: var(--fond-card);
+            border-top: 1px solid var(--bordure-legere);
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .action-btn {
+             width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background-color: var(--accent-secondaire);
+            color: var(--fond-card);
+            border: none;
+        }
+
+        /* === RESPONSIVE (Mobile) === */
+        @media (max-width: 1023px) {
+            .app-container {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+            }
+            .col-nav, .col-list {
+                display: none; 
+            }
+            .col-main {
+                padding: 1rem;
+                width: 100%;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+
+        <div id="view-auth" class="view auth-page">
+            <div class="auth-container card gagganti-text-flow">
+                <h1 id="auth-title" class="auth-title">retcennoC eS</h1>
+
+                <form id="auth-form">
+                    <div class="form-group">
+                        <label for="email">liamE</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div id="username-group" class="form-group" style="display: none;">
+                        <label for="username">elatam uw ruT</label>
+                        <input type="text" id="username" class="gagganti-input" data-brut="" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">essap eD toM</label>
+                        <input type="password" id="password" class="gagganti-input" data-brut="" required>
+                    </div>
+                    
+                    <div id="bio-group" class="form-group" style="display: none;">
+                        <label for="bio">eihpargoiB</label>
+                        <textarea id="bio" class="gagganti-input" data-brut="" placeholder="...feddeF ic yeeR"></textarea>
+                    </div>
+
+                    <button type="submit" id="auth-button" class="button">retcennoC</button>
+                </form>
+                
+                <button id="toggle-auth" class="button secondary">tinuoC nU ?</button>
+            </div>
+        </div>
+
+        <div id="view-fedde" class="view app-container" style="display: none;">
+             <div class="col-nav">
+                <h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1>
+                <nav id="main-nav">
+                    <a href="#fedde" class="nav-link" data-view="fedde"><i class="fas fa-home"></i> eddeF</a>
+                    <a href="#yeex" class="nav-link" data-view="yeex"><i class="fas fa-search"></i> ehcrcheR</a>
+                    <a href="#waxtaan" class="nav-link" data-view="waxtaan"><i class="fas fa-comments"></i> naathaW</a>
+                    <a href="#safara" class="nav-link" data-view="safara"><i class="fas fa-cog"></i> sartèmeP</a>
+                    <a href="#" id="logout-btn" class="nav-link" data-view="logout" style="margin-top: 2rem;"><i class="fas fa-sign-out-alt"></i> nnèG</a>
+                </nav>
+            </div>
+
+            <div class="col-list">
+                <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">dneT t éinummoc ic sresu sel atuL</h3>
+                <div id="trends-list" style="padding: 1rem;"></div>
+            </div>
+
+            <div class="col-main">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">sretla-nI liF</h2>
+                
+                <div class="card create-post-card">
+                    <h3 class="gagganti-text-flow">dnibM ci kén</h3>
+                    <textarea id="post-input" class="gagganti-text-flow gagganti-input" data-brut="" placeholder="...itnaggag ci bindal, dnobA"></textarea>
+                    <div class="post-actions" style="display: flex; justify-content: space-between; margin-top: 1rem; direction: ltr;">
+                        <button id="attach-media-btn" class="button secondary"><i class="fas fa-image"></i> eGamI</button>
+                        <button id="submit-post-btn" class="button"><i class="fas fa-paper-plane"></i> reyoV</button>
+                    </div>
+                </div>
+                <div id="newsfeed"></div>
+            </div>
+        </div>
+        
+        <div id="view-waxtaan" class="view app-container" style="display: none;">
+             <div class="col-nav"><h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1><nav id="main-nav-waxtaan"></nav></div>
+             <div class="col-list">
+                <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">ib yeéggil ic kén yi tiN</h3>
+                <div id="online-users-list" style="padding: 1rem;"></div>
+             </div>
+            <div class="col-main waxtaan-page">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem; text-align: left;">epuorG ic naathaW</h2>
+                <div id="messages"></div>
+                <div id="input-container">
+                    <button id="record-btn" class="button secondary action-btn">🎤</button>
+                    <input type="text" id="message-input" class="gagganti-text-flow gagganti-input" data-brut="" placeholder="...itnagag ci bindal" autocomplete="off">
+                    <button id="send-button" disabled class="button action-btn">➡️</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-safara" class="view app-container" style="display: none;">
+            <div class="col-nav"><h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1><nav id="main-nav-safara"></nav></div>
+            <div class="col-list" style="text-align: center; padding: 2rem;">
+                <h3 class="gagganti-text-flow" style="margin-bottom: 1rem;">lennosreP liforP</h3>
+                <img id="current-avatar" src="https://via.placeholder.com/120/FFC300/1A1A1A?text=G" alt="giforP eGamI" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent-primaire); margin-bottom: 1rem;">
+                <h2 id="current-username-display" class="gagganti-text-flow" style="color: var(--accent-secondaire);">ruetasilitU</h2>
+                <p id="current-bio" class="gagganti-text-flow" style="font-size: 0.9rem; margin-top: 0.5rem;"></p>
+            </div>
+            <div class="col-main">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">liforP reifidoM</h2>
+                <form id="profile-form" class="card">
+                    <div class="form-group"><label for="new-username">elatam uw ruT</label><input type="text" id="new-username" class="gagganti-input" data-brut=""></div>
+                    <div class="form-group"><label for="new-bio">eihpargoiB</label><textarea id="new-bio" class="gagganti-input" data-brut="" placeholder="...feddeF ic yeeR"></textarea></div>
+                    <div class="form-group"><label for="avatar-upload">giforP eGamI reifidoM</label><input type="file" id="avatar-upload" accept="image/*" style="padding: 0.5rem;"></div>
+                    <button type="submit" class="button" style="width: 100%;">lahaS</button>
+                </form>
+                <h2 class="gagganti-text-flow" style="margin-top: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-secondaire); padding-bottom: 0.5rem;">essap eD toM reifidoM</h2>
+                <form id="password-form" class="card">
+                    <div class="form-group"><label for="new-password">essap eD toM luaevuoN</label><input type="password" id="new-password" required></div>
+                     <div class="form-group"><label for="confirm-password">essap eD toM remrifnoC</label><input type="password" id="confirm-password" required></div>
+                    <button type="submit" class="button secondary" style="width: 100%;">essap eD toM reifidoM</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="view-yeex" class="view app-container" style="display: none;">
+            <div class="col-nav"><h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1><nav id="main-nav-yeex"></nav></div>
+            <div class="col-list">
+                <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">sertliF</h3>
+                <div style="padding: 1rem;"></div>
+            </div>
+            <div class="col-main">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">serbmeM ehcrcheR</h2>
+                <div class="card">
+                    <input type="text" id="search-input" class="gagganti-text-flow gagganti-input" data-brut="" placeholder="...ruetasilitU ruT ruT">
+                    <button id="search-btn" class="button" style="width: 100%; margin-top: 1rem;">ehcrcheR</button>
+                </div>
+                <div id="search-results"></div>
+            </div>
+        </div>
+        
+    </div> <script>
+        // ==========================================================
+        // === 3.1. CLIENT SUPABASE & CORE LOGIC (js/supabase_client.js) ===
+        // ==========================================================
+
+        const SUPABASE_URL = 'https://jxwumbkoikoyfhcmmocq.supabase.co';
+        const SUPABASE_ANON_KEY = 'VOTRE_CLE_PUBLIQUE_SUPABASE'; 
+        const BYPASS_AUTH = true; 
+        const TEST_USER_ID = '684d59af-2f0a-48f9-8194-3c48337c16f7'; 
+        const { createClient } = supabase;
+        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let activeRealtimeChannels = {}; // Pour gérer les connexions Socket/Realtime
+
+        function mirrorWordsOnly(text) {
+            if (!text || text.trim() === '') return '';
+            return text.split(/(\s+)/).map(word => {
+                if (word.trim() === '') return word; 
+                return word.split('').reverse().join('');
+            }).join('');
+        }
+
+        function processGaggantiText(text) { return mirrorWordsOnly(text); }
+
+        const getBrutValue = (id) => document.getElementById(id)?.getAttribute('data-brut') || document.getElementById(id)?.value || '';
+
+        function activateGaggantiInput(elementId) {
+            const inputElement = document.getElementById(elementId);
+            if (!inputElement) return;
+            inputElement.setAttribute('data-brut', inputElement.value);
+
+            inputElement.addEventListener('input', (e) => {
+                const originalText = e.target.value;
+                const cursorPos = inputElement.selectionStart;
+                const transformedText = mirrorWordsOnly(originalText);
+                
+                inputElement.setAttribute('data-brut', originalText);
+                inputElement.value = transformedText;
+                
+                inputElement.selectionStart = inputElement.selectionEnd = cursorPos;
+            });
+        }
+        
+        function renderView(viewName) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.style.display = 'none';
+            });
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) {
+                 // S'assurer que les barres de navigation sont réintégrées
+                document.querySelectorAll('#main-nav a').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-view') === viewName) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Gérer les canaux Realtime (déconnecter l'ancien)
+                Object.keys(activeRealtimeChannels).forEach(channel => {
+                    if (channel !== viewName) { // Déconnecter tous les canaux sauf celui qui reste actif
+                        sb.removeChannel(activeRealtimeChannels[channel]);
+                        delete activeRealtimeChannels[channel];
+                    }
+                });
+                
+                targetView.style.display = viewName === 'auth' ? 'flex' : 'grid';
+                window.location.hash = `#${viewName}`;
+                return true;
+            }
+            return false;
+        }
+
+        async function checkAuth(redirectPath = 'fedde') {
+            if (BYPASS_AUTH) {
+                console.warn("ATTENTION: Le mode BYPASS_AUTH est ACTIF.");
+                const currentHash = window.location.hash.replace('#', '');
+
+                if (currentHash === 'auth' || currentHash === '') {
+                    window.location.hash = `#${redirectPath}`;
+                }
+                return TEST_USER_ID; 
+            }
+            
+            const { data: { session } } = await sb.auth.getSession();
+            const currentHash = window.location.hash.replace('#', '');
+            
+            if (session) {
+                if (currentHash === 'auth' || currentHash === '') {
+                     window.location.hash = `#${redirectPath}`;
+                }
+                return session.user.id;
+            } else {
+                if (currentHash !== 'auth') {
+                    window.location.hash = '#auth';
+                }
+                return null;
+            }
+        }
+        
+        // ==========================================================
+        // === 3.2. AUTH LOGIC (js/auth.js) ===
+        // ==========================================================
+        async function initAuth() {
+            const currentUserId = await checkAuth('fedde');
+            if (currentUserId && currentUserId !== TEST_USER_ID) {
+                renderView('fedde'); // Déjà connecté
+                return;
+            }
+            
+            const form = document.getElementById('auth-form');
+            const authTitle = document.getElementById('auth-title');
+            const authButton = document.getElementById('auth-button');
+            const toggleButton = document.getElementById('toggle-auth');
+            const usernameGroup = document.getElementById('username-group');
+            const bioGroup = document.getElementById('bio-group');
+            
+            activateGaggantiInput('username');
+            activateGaggantiInput('password'); 
+            activateGaggantiInput('bio');
+
+            let isSigningUp = false;
+
+            function updateUI() {
+                if (isSigningUp) {
+                    authTitle.textContent = 'etnuoC nu reérC'; 
+                    authButton.textContent = 'erircsnI\'S'; 
+                    toggleButton.textContent = 'retcennoC eS ?'; 
+                    usernameGroup.style.display = 'block';
+                    bioGroup.style.display = 'block';
+                } else {
+                    authTitle.textContent = 'retcennoC eS'; 
+                    authButton.textContent = 'retcennoC'; 
+                    toggleButton.textContent = 'tinuoC nU ?'; 
+                    usernameGroup.style.display = 'none';
+                    bioGroup.style.display = 'none';
+                }
+            }
+
+            toggleButton.addEventListener('click', () => {
+                isSigningUp = !isSigningUp;
+                updateUI();
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = getBrutValue('password').trim(); 
+                const username = getBrutValue('username').trim();
+                const bioBrut = getBrutValue('bio').trim();
+
+                try {
+                    if (isSigningUp) {
+                        if (!username || !bioBrut) throw new Error('elatam uw ruT tapp elatuL'); 
+                        
+                        const { error: signUpError } = await sb.auth.signUp({ email, password });
+                        if (signUpError) throw signUpError;
+                        
+                        // Utiliser la correction RLS (UPDATE après délai)
+                        await sleep(500); 
+                        const { data: { user } } = await sb.auth.getUser();
+
+                        if (user) {
+                            const { error: updateError } = await sb.from('users')
+                                .update({ 
+                                    username: username, 
+                                    bio_gagganti: mirrorWordsOnly(bioBrut) 
+                                })
+                                .eq('id', user.id);
+                            if (updateError) throw updateError;
+                        }
+                        
+                        alert('eliamE ic noitacifiréV : feddeF'); 
+                        
+                    } else {
+                        const { error: signInError } = await sb.auth.signInWithPassword({ email, password });
+                        if (signInError) throw signInError;
+                        
+                        alert('etcennoC ! feddeF ic sset'); 
+                        renderView('fedde');
+                    }
+                } catch (error) {
+                    console.error('Erreur Supabase:', error);
+                    alert(`elraakaj na ppaj : ${error.message}`); 
+                }
+            });
+
+            updateUI();
+        }
+
+        // ==========================================================
+        // === 3.3. FEDDE LOGIC (js/fedde.js) ===
+        // ==========================================================
+        async function initFedde() {
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return;
+            
+            const { data: userData } = await sb.from('users').select('*').eq('id', currentUserId).single();
+            if (!userData) {
+                console.error("Erreur critique: Profil utilisateur non trouvé.");
+                return;
+            }
+            const currentUser = userData;
+            
+            document.querySelectorAll('#main-nav a').forEach(link => {
+                link.onclick = (e) => { e.preventDefault(); if(link.getAttribute('data-view') === 'logout') handleLogout(); else renderView(link.getAttribute('data-view')); };
+            });
+
+            const postInput = document.getElementById('post-input');
+            const submitPostBtn = document.getElementById('submit-post-btn');
+            const newsfeedEl = document.getElementById('newsfeed');
+            const mediaInput = document.createElement('input'); 
+            mediaInput.type = 'file'; mediaInput.accept = 'image/*';
+            
+            activateGaggantiInput('post-input');
+
+            // Logique de publication et d'affichage (simplifiée)
+            const handleLogout = async () => {
+                const { error } = await sb.auth.signOut();
+                if (error) alert(`nuG na ppaj`);
+                else renderView('auth');
+            };
+            
+            // ... (Fonctions handleLogout, renderPost, loadNewsfeed, et Realtime listeners similaires à js/fedde.js) ...
+            
+             // Gérer le canal Realtime
+            if (!activeRealtimeChannels['fedde']) {
+                 const channel = sb.channel('fedde_posts')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, async (payload) => {
+                        const newPost = payload.new;
+                        const { data: sender } = await sb.from('users').select('username, avatar_url').eq('id', newPost.user_id).single();
+                        if (sender) { renderPost(newPost, sender.username, sender.avatar_url); }
+                    })
+                    .subscribe();
+                activeRealtimeChannels['fedde'] = channel;
+            }
+
+            loadNewsfeed();
+        }
+
+        // ==========================================================
+        // === 3.4. WAXTAAN LOGIC (js/waxtaan.js) ===
+        // ==========================================================
+        async function initWaxtaan() {
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return; 
+
+            // ... (Logique Waxtaan) ...
+            // Gérer le canal Realtime
+            if (!activeRealtimeChannels['waxtaan']) {
+                const channel = sb.channel('waxtaan_room')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, async (payload) => {
+                        // ... (logique d'affichage des messages) ...
+                    })
+                    .subscribe();
+                activeRealtimeChannels['waxtaan'] = channel;
+            }
+            // ... (appel aux fonctions loadHistory(), loadUsers(), etc.) ...
+        }
+
+        // ==========================================================
+        // === 3.5. SAFARA LOGIC (js/safara.js) ===
+        // ==========================================================
+        async function initSafara() {
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return; 
+            
+            // ... (Logique Safara, loadProfile, gestion des formulaires) ...
+        }
+
+        // ==========================================================
+        // === 3.6. YEEX LOGIC (js/yeex.js) ===
+        // ==========================================================
+        async function initYeex() {
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return; 
+            
+            // ... (Logique Yeex, searchUsers, follow/dm) ...
+        }
+
+
+        // ==========================================================
+        // === 3.7. ROUTER PRINCIPAL ===
+        // ==========================================================
+        async function router() {
+            let view = window.location.hash.replace('#', '');
+            
+            if (!view || view === 'auth') {
+                const userId = await checkAuth(); // Tente de se connecter
+                view = userId ? 'fedde' : 'auth';
+            }
+
+            if (renderView(view)) {
+                switch (view) {
+                    case 'auth': await initAuth(); break;
+                    case 'fedde': await initFedde(); break;
+                    case 'waxtaan': await initWaxtaan(); break;
+                    case 'safara': await initSafara(); break;
+                    case 'yeex': await initYeex(); break;
+                    default: renderView('fedde'); await initFedde(); break;
+                }
+            } else {
+                renderView('auth'); await initAuth();
+            }
+        }
+
+        // Événements de chargement et de hash change
+        window.addEventListener('load', router);
+        window.addEventListener('hashchange', router);
+
+        // Initialisation des fonctions utilitaires
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        
     </script>
-    <script src="js/auth.js"></script>
 </body>
 </html>
