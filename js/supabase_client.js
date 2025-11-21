@@ -79,3 +79,42 @@ async function checkAuth(redirectPath = '/editeur.html') {
 function navigate(page) {
     window.location.href = page;
 }
+// ... (code précédent pour SUPABASE_URL, SUPABASE_ANON_KEY, createClient, sb) ...
+
+// ... (fonctions processGaggantiText et mirrorWordsOnly restent les mêmes) ...
+
+/**
+ * Active l'interception clavier pour transformer immédiatement en Gagganti.
+ * Le texte brut est stocké dans l'attribut data-brut.
+ */
+function activateGaggantiInput(elementId) {
+    const inputElement = document.getElementById(elementId);
+    
+    // Initialiser data-brut
+    inputElement.setAttribute('data-brut', inputElement.value);
+
+    inputElement.addEventListener('input', (e) => {
+        // Obtenir le texte brut actuel du champ
+        const displayedText = e.target.value;
+
+        // Si l'utilisateur est en train de taper (c'est l'événement input)
+        // Stocker la position du curseur
+        const cursorPos = inputElement.selectionStart;
+
+        // Le texte brut est maintenant le texte affiché
+        const originalText = displayedText;
+        
+        // Appliquer la transformation Gagganti
+        const transformedText = mirrorWordsOnly(originalText);
+        
+        // Stocker le texte BRUT (non transformé)
+        inputElement.setAttribute('data-brut', originalText);
+        
+        // Afficher le texte Gagganti
+        inputElement.value = transformedText;
+        
+        // Restaurer la position du curseur
+        inputElement.selectionStart = inputElement.selectionEnd = cursorPos;
+    });
+}
+// ... (fonctions checkAuth et navigate restent les mêmes) ...
