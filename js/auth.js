@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Vérifier si l'utilisateur est déjà connecté et rediriger
-    await checkAuth('/fedde.html');
+    await checkAuth('../fedde.html');
 
     const form = document.getElementById('auth-form');
     const authTitle = document.getElementById('auth-title');
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (signInError) throw signInError;
                 
                 alert('etcennoC ! feddeF ic sset'); 
-                window.location.href = '/fedde.html';
+                window.location.href = '../fedde.html';
 
             }
         } catch (error) {
