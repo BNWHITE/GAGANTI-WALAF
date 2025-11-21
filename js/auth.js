@@ -70,10 +70,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (signUpError) throw signUpError;
                 
                 if (user) {
-                    // Deuxième étape : insertion du profil dans public.users
-                    // CLÉ : ON NE PASSE PLUS L'ID, ON LAISSE LA DB UTILISER LE DEFAULT (auth.uid())
                     const { error: insertError } = await sb.from('users').insert({ 
-                        // id: user.id, <--- CETTE LIGNE EST SUPPRIMÉE
+                        // id: user.id, <--- Assurez-vous que cette ligne est bien absente
                         username: username, 
                         bio_gagganti: mirrorWordsOnly(bioBrut) 
                     });
