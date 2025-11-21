@@ -1,11 +1,12 @@
-// --- js/yeex.js ---
+// --- js/yeex.js (CORRIGÉ POUR BYPASS) ---
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuth();
+    // Récupérer l'ID utilisateur (BYPASS ou réel)
+    const currentUserId = await checkAuth(); 
+    if (!currentUserId) return; 
 
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
     const resultsEl = document.getElementById('search-results');
-    const currentUserId = (await sb.auth.getUser()).data.user.id;
     
     activateGaggantiInput('search-input');
 
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         userEl.style.justifyContent = 'space-between';
         userEl.style.alignItems = 'center';
 
-        const bioContent = user.bio_gagganti || 'eihpargoiB snaS';
+        const bioContent = user.bio_gagganti || mirrorWordsOnly('bio non définie');
         
         userEl.innerHTML = `
             <div style="flex: 1;">
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const { data: users } = await sb.from('users')
             .select('id, username, bio_gagganti')
-            .ilike('username', `%${brutSearch}%`) // Recherche par nom d'utilisateur (brut)
+            .ilike('username', `%${brutSearch}%`) 
             .neq('id', currentUserId)
             .limit(10);
             
@@ -58,8 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         // Vérifier qui est déjà suivi
-        const followedUsers = await sb.from('follows').select('followed_id').eq('follower_id', currentUserId);
-        const followedIds = new Set(followedUsers.data.map(f => f.followed_id));
+        const { data: followedUsers } = await sb.from('follows').select('followed_id').eq('follower_id', currentUserId);
+        const followedIds = new Set(followedUsers.map(f => f.followed_id));
 
         users.forEach(user => {
             const isFollowing = followedIds.has(user.id);
@@ -94,4 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') searchUsers();
     });
+    
+    // Charger tous les utilisateurs par défaut au chargement de la page
+    searchUsers(); 
 });
