@@ -3,50 +3,991 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eddeF - itnaggag</title>
+    <title>eddeF - ITNAGGAG (Tout en Un Finalisé)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="gagganti.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        /* --- DÉBUT SECTION CSS --- */
+        
+        /* --- VARIABLES CSS --- */
+        :root {
+          --fond-clair: #F5F5F5;      
+          --fond-card: #FFFFFF;       
+          --accent-primaire: #FFC300; 
+          --accent-secondaire: #FF5733;
+          --texte-sombre: #1A1A1A;    
+          --bordure-legere: #DEDEDE;  
+          --ombre-subtile: 0 1px 3px rgba(0, 0, 0, 0.08); 
+          --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.2); 
+          --col-nav-width: 65px;
+          --col-list-width: 320px;
+
+          /* Chemins d'accès aux images fournies (dans le dossier images/) */
+          --image-bg-1: url('./images/pp10.jpg');
+          --image-bg-2: url('./images/pp7.jpg');
+          --image-texture: url('./images/pp12.jpg');
+          --image-avatar-default: url('./images/pp5.jpg'); 
+        }
+
+        /* === POLICE GAGANTI & RTL SETUP === */
+        @font-face {
+          font-family: 'Gagganti';
+          src: url('gagganti.ttf') format('truetype');
+          font-display: swap;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Gagganti', sans-serif;
+            color: var(--texte-sombre);
+            min-height: 100vh;
+            margin: 0;
+            
+            background-image: var(--image-bg-1);
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
+            background-color: #333;
+        }
+
+        #app {
+            background-color: rgba(255, 255, 255, 0.95);
+            min-height: 100vh;
+        }
+
+        /* Appliquer le Gagganti et RTL */
+        .gagganti-text-flow {
+            direction: rtl; 
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        .gagganti-input, input[type="text"], input[type="password"], input[type="email"], textarea {
+            direction: rtl; 
+            text-align: right;
+            font-size: 1.1rem;
+        }
+
+        /* === ÉLÉMENTS COMMUNS (BOOSTER) === */
+        .card {
+            background-color: var(--fond-card);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 2rem;
+            position: relative; 
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: var(--image-texture); 
+            background-size: 150px;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: inherit;
+        }
+
+        .button, button {
+          padding: 1rem 1.5rem;
+          font-size: 1.2rem;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s;
+          background-color: var(--accent-primaire);
+          color: var(--texte-sombre);
+          font-weight: bold;
+          border-radius: 12px;
+          box-shadow: var(--ombre-subtile);
+          z-index: 10;
+        }
+
+        .button:hover, button:hover {
+          background-color: var(--accent-secondaire);
+          color: var(--fond-card);
+          transform: translateY(-4px);
+          box-shadow: 0 15px 30px rgba(255, 87, 51, 0.3);
+        }
+
+        .secondary {
+            background: var(--fond-clair) !important;
+            border: 1px solid var(--bordure-legere);
+            color: var(--texte-sombre) !important;
+        }
+
+        input, textarea {
+          border-radius: 12px;
+          padding: 1rem;
+          background: var(--fond-clair);
+        }
+
+        /* === LAYOUT GLOBAL (Desktop - 3 Colonnes) === */
+        .app-container {
+            display: grid;
+            grid-template-columns: var(--col-nav-width) var(--col-list-width) 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .col-nav {
+            background-color: var(--fond-card);
+            border-right: 2px solid var(--accent-primaire);
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            z-index: 100;
+        }
+
+        .col-list {
+            background-color: var(--fond-card);
+            border-right: 1px solid var(--bordure-legere);
+            overflow-y: auto;
+            padding-top: 1rem;
+        }
+
+        .col-main {
+            overflow-y: auto;
+            padding: 2rem;
+            background-color: var(--fond-clair);
+        }
+
+        /* Navigation */
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            margin: 0.5rem 0;
+            color: var(--texte-sombre);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: background-color 0.4s;
+        }
+        .nav-link.active {
+            border-right: 4px solid var(--accent-secondaire);
+            background-color: rgba(255, 195, 0, 0.1);
+        }
+
+        /* VUE FEDDE (Fil d'Actualité) */
+        .post-card {
+            border-left: 8px solid var(--accent-secondaire); 
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .post-card:hover {
+            transform: scale(1.005);
+            border-left-color: var(--accent-primaire);
+            box-shadow: 0 6px 25px rgba(255, 195, 0, 0.2);
+        }
+
+        .post-avatar {
+             width: 50px;
+             height: 50px;
+             border-radius: 50%;
+             background-image: var(--image-avatar-default);
+             background-size: cover;
+             background-position: center;
+             border: 3px solid var(--accent-secondaire);
+             box-shadow: 0 0 0 3px var(--fond-card);
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             font-size: 1.4rem;
+             color: var(--fond-card);
+             order: 2;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            direction: ltr;
+        }
+        
+        .post-media {
+            border-radius: 10px;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        /* WAXTAAN (Chat) */
+        .waxtaan-page {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            direction: rtl; 
+        }
+        
+        /* --- FIN SECTION CSS --- */
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        
-        <div class="col-nav">
-            <h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1>
-            <nav>
-                <a href="fedde.html" class="nav-link active"><i class="fas fa-home"></i> eddeF</a>
-                <a href="yeex.html" class="nav-link"><i class="fas fa-search"></i> ehcrcheR</a>
-                <a href="waxtaan.html" class="nav-link"><i class="fas fa-comments"></i> naathaW</a>
-                <a href="safara.html" class="nav-link"><i class="fas fa-cog"></i> sartèmeP</a>
-                <a href="#" id="logout-btn" class="nav-link" style="margin-top: 2rem;"><i class="fas fa-sign-out-alt"></i> nnèG</a>
-            </nav>
+
+    <div id="app">
+
+        <div id="view-auth" class="view auth-page">
+            <div class="auth-container card gagganti-text-flow">
+                <h1 id="auth-title" class="auth-title">retcennoC eS</h1>
+                <form id="auth-form">
+                    <div class="form-group"><label for="email">liamE</label><input type="email" id="email" required></div>
+                    <div id="username-group" class="form-group" style="display: none;"><label for="username">elatam uw ruT</label><input type="text" id="username" class="gagganti-input" data-brut="" required></div>
+                    <div class="form-group"><label for="password">essap eD toM</label><input type="password" id="password" class="gagganti-input" data-brut="" required></div>
+                    <div id="bio-group" class="form-group" style="display: none;"><label for="bio">eihpargoiB</label><textarea id="bio" class="gagganti-input" data-brut="" placeholder="...feddeF ic yeeR"></textarea></div>
+                    <button type="submit" id="auth-button" class="button">retcennoC</button>
+                </form>
+                <button id="toggle-auth" class="button secondary">tinuoC nU ?</button>
+            </div>
         </div>
 
-        <div class="col-list">
-            <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">dneT t éinummoc ic sresu sel atuL</h3>
-            <div id="trends-list" style="padding: 1rem;">
+        <div id="view-fedde" class="view app-container" style="display: none;">
+            <div class="col-nav">
+                <h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1>
+                <nav id="main-nav">
+                    <a href="#fedde" class="nav-link active" data-view="fedde"><i class="fas fa-home"></i> eddeF</a>
+                    <a href="#yeex" class="nav-link" data-view="yeex"><i class="fas fa-search"></i> ehcrcheR</a>
+                    <a href="#waxtaan" class="nav-link" data-view="waxtaan"><i class="fas fa-comments"></i> naathaW</a>
+                    <a href="#safara" class="nav-link" data-view="safara"><i class="fas fa-cog"></i> sartèmeP</a>
+                    <a href="#" id="logout-btn-nav" class="nav-link" data-view="logout" style="margin-top: 2rem;"><i class="fas fa-sign-out-alt"></i> nnèG</a>
+                </nav>
+            </div>
+            <div class="col-list">
+                <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">dneT t éinummoc ic sresu sel atuL</h3>
+                <div id="trends-list" style="padding: 1rem;"></div>
+            </div>
+            <div class="col-main">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">sretla-nI liF</h2>
+                <div class="card create-post-card">
+                    <h3 class="gagganti-text-flow" style="color: var(--accent-secondaire);">dnibM ci kén</h3>
+                    <textarea id="post-input" class="gagganti-input" data-brut="" placeholder="...itnaggag ci bindal, dnobA"></textarea>
+                    <div class="post-actions" style="display: flex; justify-content: space-between; margin-top: 1rem; direction: ltr;">
+                        <button id="attach-media-btn" class="button secondary"><i class="fas fa-image"></i> eGamI</button>
+                        <button id="submit-post-btn" class="button"><i class="fas fa-paper-plane"></i> reyoV</button>
+                    </div>
                 </div>
+                <div id="newsfeed"></div>
+            </div>
         </div>
-
-        <div class="col-main">
-            <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">sretla-nI liF</h2>
-            
-            <div class="card create-post-card">
-                <h3 class="gagganti-text-flow">dnibM ci kén</h3>
-                <textarea id="post-input" class="gagganti-text-flow gagganti-input" data-brut="" placeholder="...itnaggag ci bindal, dnobA"></textarea>
-                <div class="post-actions" style="display: flex; justify-content: space-between; margin-top: 1rem; direction: ltr;">
-                    <button id="attach-media-btn" class="button secondary"><i class="fas fa-image"></i> eGamI</button>
-                    <button id="submit-post-btn" class="button"><i class="fas fa-paper-plane"></i> reyoV</button>
+        
+        <div id="view-waxtaan" class="view app-container" style="display: none;">
+             <div class="col-nav"></div>
+             <div class="col-list">
+                <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">ib yeéggil ic kén yi tiN</h3>
+                <div id="online-users-list" style="padding: 1rem;"></div>
+             </div>
+            <div class="col-main waxtaan-page">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem; text-align: left;">epuorG ic naathaW</h2>
+                <div id="messages"></div>
+                <div id="input-container">
+                    <button id="record-btn" class="button secondary action-btn"><i class="fas fa-microphone"></i></button>
+                    <input type="text" id="message-input" class="gagganti-input" data-brut="" placeholder="...itnagag ci bindal" autocomplete="off">
+                    <button id="send-button" disabled class="button action-btn" style="background-color: var(--accent-secondaire);"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
-
-            <div id="newsfeed">
-                </div>
         </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase_client.js"></script>
-    <script src="js/fedde.js"></script>
-    <script src="js/auth.js"></script>
+
+        <div id="view-safara" class="view app-container" style="display: none;">
+            <div class="col-nav"></div>
+            <div class="col-list" style="text-align: center; padding: 2rem;">
+                <h3 class="gagganti-text-flow" style="margin-bottom: 1rem;">lennosreP liforP</h3>
+                <img id="current-avatar" src="https://via.placeholder.com/120/FFC300/1A1A1A?text=G" alt="giforP eGamI" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent-primaire); margin-bottom: 1rem;">
+                <h2 id="current-username-display" class="gagganti-text-flow" style="color: var(--accent-secondaire);">ruetasilitU</h2>
+                <p id="current-bio" class="gagganti-text-flow" style="font-size: 0.9rem; margin-top: 0.5rem;"></p>
+            </div>
+            <div class="col-main">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">liforP reifidoM</h2>
+                <form id="profile-form" class="card">
+                    <div class="form-group"><label for="new-username">elatam uw ruT</label><input type="text" id="new-username" class="gagganti-input" data-brut=""></div>
+                    <div class="form-group"><label for="new-bio">eihpargoiB</label><textarea id="new-bio" class="gagganti-input" data-brut="" placeholder="...feddeF ic yeeR"></textarea></div>
+                    <div class="form-group"><label for="avatar-upload">giforP eGamI reifidoM</label><input type="file" id="avatar-upload" accept="image/*" style="padding: 0.5rem;"></div>
+                    <button type="submit" class="button" style="width: 100%;">lahaS</button>
+                </form>
+                <h2 class="gagganti-text-flow" style="margin-top: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-secondaire); padding-bottom: 0.5rem;">essap eD toM reifidoM</h2>
+                <form id="password-form" class="card">
+                    <div class="form-group"><label for="new-password">essap eD toM luaevuoN</label><input type="password" id="new-password" required></div>
+                     <div class="form-group"><label for="confirm-password">essap eD toM remrifnoC</label><input type="password" id="confirm-password" required></div>
+                    <button type="submit" class="button secondary" style="width: 100%;">essap eD toM reifidoM</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="view-yeex" class="view app-container" style="display: none;">
+            <div class="col-nav"></div>
+            <div class="col-list">
+                <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">sertliF</h3>
+                <div style="padding: 1rem;"></div>
+            </div>
+            <div class="col-main">
+                <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">serbmeM ehcrcheR</h2>
+                <div class="card">
+                    <input type="text" id="search-input" class="gagganti-input" data-brut="" placeholder="...ruetasilitU ruT ruT">
+                    <button id="search-btn" class="button" style="width: 100%; margin-top: 1rem;">ehcrcheR</button>
+                </div>
+                <div id="search-results"></div>
+            </div>
+        </div>
+        
+    </div> <script>
+        // --- DÉBUT FICHIER script1.js ---
+
+        // ==========================================================
+        // === CORE LOGIC & CONFIGURATION ===
+        // ==========================================================
+
+        const SUPABASE_URL = 'https://jxwumbkoikoyfhcmmocq.supabase.co';
+        const SUPABASE_ANON_KEY = 'VOTRE_CLE_PUBLIQUE_SUPABASE'; // <<< CLÉ CRITIQUE >>>
+        
+        // MODE DÉVELOPPEMENT (Bypass Actif)
+        const BYPASS_AUTH = true; 
+        const TEST_USER_ID = '684d59af-2f0a-48f9-8194-3c48337c16f7'; 
+        
+        const { createClient } = supabase;
+        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let activeRealtimeChannels = {};
+
+        // --- GAGGANTI CORE (Fonctions Essentielles) ---
+        function mirrorWordsOnly(text) {
+            if (!text || text.trim() === '') return '';
+            return text.split(/(\s+)/).map(word => {
+                if (word.trim() === '') return word; 
+                return word.split('').reverse().join('');
+            }).join('');
+        }
+
+        function processGaggantiText(text) { return mirrorWordsOnly(text); }
+        
+        const getBrutValue = (id) => document.getElementById(id)?.getAttribute('data-brut') || document.getElementById(id)?.value || '';
+
+        function activateGaggantiInput(elementId) {
+            const inputElement = document.getElementById(elementId);
+            if (!inputElement) return;
+            inputElement.setAttribute('data-brut', inputElement.value);
+
+            inputElement.addEventListener('input', (e) => {
+                const originalText = e.target.value;
+                const cursorPos = inputElement.selectionStart;
+                const transformedText = mirrorWordsOnly(originalText);
+                
+                inputElement.setAttribute('data-brut', originalText);
+                inputElement.value = transformedText;
+                
+                inputElement.selectionStart = inputElement.selectionEnd = cursorPos;
+            });
+        }
+
+        // --- UTILS ROUTAGE ET ASYNCHRONE ---
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        const sanitizeText = (text) => text?.replace(/</g, "&lt;").replace(/>/g, "&gt;") || '';
+
+        /** Définit la vue active et gère les canaux Realtime */
+        function renderView(viewName) {
+            document.querySelectorAll('.view').forEach(view => { view.style.display = 'none'; });
+            
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (!targetView) return false;
+            
+            // Met à jour la classe active et gère la navigation
+            document.querySelectorAll('#main-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-view') === viewName) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Gère les canaux Realtime
+            Object.keys(activeRealtimeChannels).forEach(channel => {
+                if (channel !== viewName && activeRealtimeChannels[channel]) { 
+                    sb.removeChannel(activeRealtimeChannels[channel]);
+                    delete activeRealtimeChannels[channel];
+                }
+            });
+            
+            targetView.style.display = viewName === 'auth' ? 'flex' : 'grid';
+            window.location.hash = `#${viewName}`;
+            return true;
+        }
+
+        /** Vérifie l'auth et retourne l'ID utilisateur (Bypass inclus) */
+        async function checkAuth(redirectPath = 'fedde') {
+            if (BYPASS_AUTH) {
+                const currentHash = window.location.hash.replace('#', '');
+                if (currentHash === 'auth' || currentHash === '') { window.location.hash = `#${redirectPath}`; }
+                return TEST_USER_ID; 
+            }
+            
+            const { data: { session } } = await sb.auth.getSession();
+            const currentHash = window.location.hash.replace('#', '');
+            
+            if (session) {
+                if (currentHash === 'auth' || currentHash === '') { window.location.hash = `#${redirectPath}`; }
+                return session.user.id;
+            } else {
+                if (currentHash !== 'auth') { window.location.hash = '#auth'; }
+                return null;
+            }
+        }
+
+        /** Gestion de la déconnexion */
+        const handleLogout = async () => {
+            const { error } = await sb.auth.signOut();
+            if (error) alert(`nuG na ppaj`);
+            else renderView('auth');
+        };
+
+        /** Attache les écouteurs de déconnexion et de navigation */
+        function attachLogoutListener() {
+            document.getElementById('logout-btn-nav')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                handleLogout();
+            });
+            document.querySelectorAll('.col-nav a[data-view]').forEach(link => {
+                link.onclick = (e) => { 
+                    e.preventDefault(); 
+                    const targetView = link.getAttribute('data-view');
+                    if (targetView === 'logout') handleLogout();
+                    else renderView(targetView);
+                };
+            });
+        }
+        
+        // ==========================================================
+        // === VUE : AUTHENTIFICATION (initAuth) (Implémentée dans le fichier précédent) ===
+        // ==========================================================
+        async function initAuth() {
+            if (await checkAuth() !== TEST_USER_ID) return;
+            
+            const form = document.getElementById('auth-form');
+            const authTitle = document.getElementById('auth-title');
+            const toggleButton = document.getElementById('toggle-auth');
+            const usernameGroup = document.getElementById('username-group');
+            const bioGroup = document.getElementById('bio-group');
+            
+            activateGaggantiInput('username');
+            activateGaggantiInput('password'); 
+            activateGaggantiInput('bio');
+
+            let isSigningUp = false;
+
+            function updateUI() {
+                if (isSigningUp) {
+                    authTitle.textContent = 'etnuoC nu reérC'; 
+                    toggleButton.textContent = 'retcennoC eS ?'; 
+                } else {
+                    authTitle.textContent = 'retcennoC eS'; 
+                    toggleButton.textContent = 'tinuoC nU ?'; 
+                }
+                document.getElementById('auth-button').textContent = isSigningUp ? 'erircsnI\'S' : 'retcennoC';
+                usernameGroup.style.display = isSigningUp ? 'block' : 'none';
+                bioGroup.style.display = isSigningUp ? 'block' : 'none';
+            }
+
+            toggleButton.addEventListener('click', () => { isSigningUp = !isSigningUp; updateUI(); });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = getBrutValue('password').trim(); 
+                const username = getBrutValue('username').trim();
+                const bioBrut = getBrutValue('bio').trim();
+
+                try {
+                    if (isSigningUp) {
+                        if (!username || !bioBrut) throw new Error('elatam uw ruT tapp elatuL'); 
+                        
+                        const { error: signUpError } = await sb.auth.signUp({ email, password });
+                        if (signUpError) throw signUpError;
+                        
+                        await sleep(500); 
+                        const { data: { user } } = await sb.auth.getUser();
+
+                        if (user) {
+                            const { error: updateError } = await sb.from('users')
+                                .update({ username: username, bio_gagganti: mirrorWordsOnly(bioBrut) })
+                                .eq('id', user.id);
+                            if (updateError) throw updateError;
+                        }
+                        
+                        alert('eliamE ic noitacifiréV : feddeF'); 
+                        
+                    } else {
+                        const { error: signInError } = await sb.auth.signInWithPassword({ email, password });
+                        if (signInError) throw signInError;
+                        
+                        alert('etcennoC ! feddeF ic sset'); 
+                        renderView('fedde');
+                    }
+                } catch (error) {
+                    console.error('Erreur Supabase:', error);
+                    alert(`elraakaj na ppaj : ${error.message}`); 
+                }
+            });
+            updateUI();
+        }
+
+
+        // ==========================================================
+        // === VUE : FIL D'ACTUALITÉ (initFedde) (Implémentée dans le fichier précédent) ===
+        // ==========================================================
+        async function initFedde() {
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return;
+            attachLogoutListener();
+
+            const newsfeedEl = document.getElementById('newsfeed');
+            const postInput = document.getElementById('post-input');
+            const submitPostBtn = document.getElementById('submit-post-btn');
+            const mediaInput = document.createElement('input'); mediaInput.type = 'file'; mediaInput.accept = 'image/*';
+            
+            activateGaggantiInput('post-input');
+            
+            // --- Fonctions Fedde ---
+            function createPostElement(postData, username, avatarUrl) {
+                let html = `<div class="post-card gagganti-text-flow" style="position: relative; z-index: 1;">`;
+                html += `<div class="post-header">`;
+                html += `<div class="post-avatar" style="background-image: url('${avatarUrl || './images/pp5.jpg'}'); background-size:cover;">${username.charAt(0).toUpperCase()}</div>`;
+                html += `<a href="#" class="username">${sanitizeText(username)}</a>`;
+                html += `</div>`;
+                
+                if (postData.type === 'image' && postData.media_url) {
+                    html += `<img src="${postData.media_url}" class="post-media" alt="post-image">`;
+                }
+
+                html += `<div class="post-content">${sanitizeText(postData.contenu_gagganti || '')}</div>`;
+                html += `<div class="post-actions" style="direction: ltr;">`;
+                html += `<button class="action-btn like-btn" data-post-id="${postData.id}"><i class="fas fa-heart"></i> ekiL</button>`;
+                html += `<button class="action-btn comment-btn"><i class="fas fa-comment"></i> retnemmoC</button>`;
+                html += `</div>`;
+                html += `<div class="post-time gagganti-text-flow" style="font-size: 0.7rem;">${new Date(postData.created_at).toLocaleDateString()}</div>`;
+                html += `</div>`;
+                return html;
+            }
+            
+            async function loadNewsfeed() {
+                const { data: posts, error } = await sb.from('posts').select(`*, users!inner(username, avatar_url)`).order('created_at', { ascending: false }).limit(20);
+                if (error) { console.error('Erreur chargement posts:', error); return; }
+                newsfeedEl.innerHTML = '';
+                posts.forEach(post => {
+                    const username = post.users.username;
+                    const avatarUrl = post.users.avatar_url;
+                    newsfeedEl.innerHTML += createPostElement(post, username, avatarUrl);
+                });
+            }
+            
+            // Listeners
+            document.getElementById('attach-media-btn')?.addEventListener('click', () => mediaInput.click());
+            
+            submitPostBtn?.addEventListener('click', async () => {
+                const brutText = getBrutValue('post-input').trim();
+                const file = mediaInput.files[0];
+                if (!brutText && !file) { alert('aradtic bindal t el at eGamI'); return; }
+                
+                try {
+                    let mediaUrl = null;
+                    let postType = 'text';
+
+                    if (file) {
+                        const filePath = `${currentUserId}/posts/${Date.now()}_${file.name}`;
+                        const { error: uploadError } = await sb.storage.from('medias').upload(filePath, file);
+                        if (uploadError) throw uploadError;
+
+                        const { data: urlData } = sb.storage.from('medias').getPublicUrl(filePath);
+                        mediaUrl = urlData.publicUrl;
+                        postType = 'image';
+                    }
+
+                    const postData = {
+                        user_id: currentUserId, 
+                        type: postType,
+                        contenu_brut: brutText,
+                        contenu_gagganti: brutText ? mirrorWordsOnly(brutText) : null,
+                        media_url: mediaUrl,
+                    };
+
+                    const { error: insertError } = await sb.from('posts').insert([postData]);
+                    if (insertError) throw insertError;
+                    
+                    postInput.value = ''; postInput.setAttribute('data-brut', ''); mediaInput.value = ''; 
+                    alert('etceS tsoP !');
+                    await loadNewsfeed(); 
+                } catch (error) {
+                    console.error('Erreur de publication:', error);
+                    alert(`elraakaj na ppaj : ${error.message}`);
+                }
+            });
+            
+            // Realtime 
+            if (!activeRealtimeChannels['fedde']) {
+                 const channel = sb.channel('fedde_posts')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, async (payload) => {
+                        const newPost = payload.new;
+                        const { data: sender } = await sb.from('users').select('username, avatar_url').eq('id', newPost.user_id).single();
+                        if (sender) { newsfeedEl.innerHTML = createPostElement(newPost, sender.username, sender.avatar_url) + newsfeedEl.innerHTML; }
+                    })
+                    .subscribe();
+                activeRealtimeChannels['fedde'] = channel;
+            }
+
+            await loadNewsfeed();
+        }
+
+        // ==========================================================
+        // === VUE : WAXTAAN (initWaxtaan) (DÉTAILLÉE) ===
+        // ==========================================================
+        async function initWaxtaan() { 
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return;
+            attachLogoutListener();
+
+            const messagesEl = document.getElementById('messages');
+            const inputEl = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-button');
+            const usersListEl = document.getElementById('online-users-list');
+            const recordBtn = document.getElementById('record-btn');
+            
+            activateGaggantiInput('message-input');
+            
+            // --- Fonction d'affichage des messages ---
+            function displayMessage(message, username) {
+                const isSelf = message.user_id === currentUserId;
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${isSelf ? 'message-out' : 'message-in'} gagganti-text-flow`;
+                
+                let contentHTML;
+                const messageContent = isSelf ? sanitizeText(message.contenu) : mirrorWordsOnly(sanitizeText(message.contenu));
+                
+                if (message.type === 'text') {
+                    contentHTML = `<p class="message-text">${messageContent}</p>`;
+                } else if (message.type === 'vocal') {
+                    contentHTML = `<audio controls src="${message.contenu}" class="message-audio"></audio>`;
+                } else {
+                    contentHTML = `<p class="message-text">${messageContent}</p>`;
+                }
+
+                messageEl.innerHTML = `
+                    <div class="message-header gagganti-text-flow">${username || 'rueta\'iP'}</div>
+                    ${contentHTML}
+                    <div class="message-time">${new Date(message.created_at).toLocaleTimeString()}</div>
+                `;
+                messagesEl.prepend(messageEl);
+            }
+            
+            // --- Chargement de l'historique ---
+            async function loadHistory() {
+                const { data: messages, error } = await sb
+                    .from('messages')
+                    .select(`*, users!inner(username)`)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                
+                if (error) { console.error('Erreur chargement historique:', error); return; }
+
+                messagesEl.innerHTML = '';
+                messages.reverse().forEach(msg => displayMessage(msg, msg.users.username));
+            }
+            
+            // --- Chargement des utilisateurs en ligne ---
+            async function loadUsers() {
+                const { data: users } = await sb.from('users').select('username, avatar_url').neq('id', currentUserId);
+                usersListEl.innerHTML = '';
+                users.forEach(user => {
+                    const userEl = document.createElement('div');
+                    userEl.className = 'online-user gagganti-text-flow';
+                    userEl.innerHTML = `
+                        <div class="post-avatar" style="background-image: url('${user.avatar_url || './images/pp5.jpg'}'); background-size:cover;">${user.username.charAt(0).toUpperCase()}</div>
+                        <span class="online-user-name">${user.username}</span>
+                    `;
+                    usersListEl.appendChild(userEl);
+                });
+            }
+
+            // --- Envoi de Message ---
+            async function sendMessage() {
+                const brutText = getBrutValue('message-input').trim();
+                if (!brutText) return;
+
+                try {
+                    await sb.from('messages').insert([{ user_id: currentUserId, type: 'text', contenu: brutText }]);
+                    inputEl.value = '';
+                    inputEl.setAttribute('data-brut', '');
+                    sendBtn.disabled = true;
+                } catch (error) {
+                    console.error('Erreur lors de l\'envoi:', error);
+                    alert(`elraakaj na ppaj`);
+                }
+            }
+
+            // --- Listeners WAXTAAN ---
+            if (!activeRealtimeChannels['waxtaan']) {
+                 const channel = sb.channel('waxtaan_room')
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, async (payload) => {
+                        const newMessage = payload.new;
+                        const { data: sender } = await sb.from('users').select('username').eq('id', newMessage.user_id).single();
+                        displayMessage(newMessage, sender ? sender.username : 'rueta\'iP');
+                    })
+                    .subscribe();
+                activeRealtimeChannels['waxtaan'] = channel;
+            }
+            
+            inputEl.addEventListener('input', () => { sendBtn.disabled = inputEl.value.trim() === ''; });
+            inputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+            sendBtn.addEventListener('click', sendMessage);
+            recordBtn.addEventListener('click', () => alert(mirrorWordsOnly("Fonction vocal non implémentée mais possible !")));
+
+            await loadHistory();
+            await loadUsers();
+        }
+
+        // ==========================================================
+        // === VUE : SAFARA (initSafara) (DÉTAILLÉE) ===
+        // ==========================================================
+        async function initSafara() { 
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return;
+            attachLogoutListener();
+
+            const profileForm = document.getElementById('profile-form');
+            const passwordForm = document.getElementById('password-form');
+            const avatarInput = document.getElementById('avatar-upload');
+
+            activateGaggantiInput('new-username');
+            activateGaggantiInput('new-bio');
+
+            // --- Chargement du profil ---
+            async function loadProfile() {
+                const { data: profile } = await sb.from('users').select('*').eq('id', currentUserId).single();
+                if (profile) {
+                    document.getElementById('current-username-display').textContent = profile.username;
+                    document.getElementById('current-bio').textContent = profile.bio_gagganti || mirrorWordsOnly("Bio non définie");
+                    
+                    const avatarUrl = profile.avatar_url || 'https://via.placeholder.com/120/FFC300/1A1A1A?text=G';
+                    document.getElementById('current-avatar').src = avatarUrl;
+                    
+                    document.getElementById('new-username').value = profile.username;
+                    document.getElementById('new-bio').value = profile.bio_gagganti ? mirrorWordsOnly(profile.bio_gagganti) : '';
+                    
+                    document.getElementById('new-username').setAttribute('data-brut', profile.username);
+                    document.getElementById('new-bio').setAttribute('data-brut', profile.bio_gagganti || '');
+                }
+            }
+            
+            // --- Soumission du formulaire de profil ---
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const newUsername = getBrutValue('new-username').trim();
+                const newBioBrut = getBrutValue('new-bio').trim();
+                const avatarFile = avatarInput.files[0];
+                
+                let newAvatarUrl = null;
+
+                try {
+                    if (avatarFile) {
+                        const filePath = `${currentUserId}/avatar/${Date.now()}_${avatarFile.name}`;
+                        const { error: uploadError } = await sb.storage.from('medias').upload(filePath, avatarFile);
+                        if (uploadError) throw uploadError;
+
+                        const { data: urlData } = sb.storage.from('medias').getPublicUrl(filePath);
+                        newAvatarUrl = urlData.publicUrl;
+                    }
+
+                    const updates = { 
+                        username: newUsername,
+                        bio_gagganti: mirrorWordsOnly(newBioBrut) 
+                    };
+                    if (newAvatarUrl) {
+                        updates.avatar_url = newAvatarUrl;
+                    }
+
+                    const { error: updateError } = await sb.from('users').update(updates).eq('id', currentUserId);
+                    if (updateError) throw updateError;
+
+                    alert('sax nàpp na !');
+                    avatarInput.value = '';
+                    await loadProfile(); 
+                } catch (error) {
+                    console.error("Erreur de sauvegarde:", error);
+                    alert(`elraakaj na ppaj : ${error.message}`);
+                }
+            });
+
+            // --- Soumission du formulaire de mot de passe ---
+            passwordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                if (newPassword !== confirmPassword) {
+                    alert('ssap ed stom sel eretnè tnuo snos'); 
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                     alert('ssap ed tom el atuL'); 
+                    return;
+                }
+
+                const { error } = await sb.auth.updateUser({ password: newPassword });
+                if (error) {
+                    alert(`elraakaj na ppaj : ${error.message}`);
+                } else {
+                    alert('sax nàpp na !');
+                    passwordForm.reset();
+                }
+            });
+
+            await loadProfile();
+        }
+
+        // ==========================================================
+        // === VUE : YEEX (initYeex) (DÉTAILLÉE) ===
+        // ==========================================================
+        async function initYeex() { 
+            const currentUserId = await checkAuth(); 
+            if (!currentUserId) return;
+            attachLogoutListener();
+
+            const searchInput = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+            const resultsEl = document.getElementById('search-results');
+            
+            activateGaggantiInput('search-input');
+
+            // --- Rendu d'un résultat utilisateur ---
+            function renderUserResult(user, isFollowing) {
+                const userEl = document.createElement('div');
+                userEl.className = 'card gagganti-text-flow';
+                userEl.style.display = 'flex';
+                userEl.style.justifyContent = 'space-between';
+                userEl.style.alignItems = 'center';
+                userEl.style.padding = '1rem';
+
+                const bioContent = user.bio_gagganti || mirrorWordsOnly('Bio non définie');
+                
+                userEl.innerHTML = `
+                    <div style="flex: 1; direction: rtl;">
+                        <h3 style="color: var(--accent-secondaire);">${sanitizeText(user.username)}</h3>
+                        <p style="font-size: 0.9rem;">${bioContent}</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; direction: ltr;">
+                        <button class="button follow-btn" data-user-id="${user.id}" data-is-following="${isFollowing}">
+                            <i class="fas fa-${isFollowing ? 'user-minus' : 'user-plus'}"></i> ${isFollowing ? 'tnèG' : 'eruivS'}
+                        </button>
+                        <button class="button secondary dm-btn" data-user-id="${user.id}">
+                            <i class="fas fa-paper-plane"></i> reyoV
+                        </button>
+                    </div>
+                `;
+                resultsEl.appendChild(userEl);
+            }
+
+            // --- Fonction de recherche ---
+            async function searchUsers() {
+                const brutSearch = getBrutValue('search-input').trim();
+                resultsEl.innerHTML = '';
+
+                if (!brutSearch) {
+                     resultsEl.innerHTML = '<p class="gagganti-text-flow" style="padding:1rem;">serbmeM seT suoT</p>';
+                }
+
+                const { data: users } = await sb.from('users')
+                    .select('id, username, bio_gagganti')
+                    .ilike('username', `%${brutSearch}%`) // Recherche par nom d'utilisateur (brut)
+                    .neq('id', currentUserId)
+                    .limit(10);
+                    
+                if (!users || users.length === 0) {
+                    resultsEl.innerHTML = '<p class="gagganti-text-flow" style="padding:1rem;">kén snaS</p>';
+                    return;
+                }
+                
+                // Vérifier qui est déjà suivi
+                const { data: followedUsers } = await sb.from('follows').select('followed_id').eq('follower_id', currentUserId);
+                const followedIds = new Set(followedUsers.map(f => f.followed_id));
+
+                users.forEach(user => {
+                    const isFollowing = followedIds.has(user.id);
+                    renderUserResult(user, isFollowing);
+                });
+            }
+
+            // --- Gestion du Follow/Unfollow ---
+            resultsEl.addEventListener('click', async (e) => {
+                const btn = e.target.closest('.follow-btn');
+                if (!btn) return;
+
+                const userIdToFollow = btn.dataset.userId;
+                const isFollowing = btn.dataset.isFollowing === 'true';
+
+                try {
+                    if (isFollowing) {
+                        // Unfollow
+                        await sb.from('follows').delete().eq('follower_id', currentUserId).eq('followed_id', userIdToFollow);
+                    } else {
+                        // Follow
+                        await sb.from('follows').insert([{ follower_id: currentUserId, followed_id: userIdToFollow }]);
+                    }
+                    searchUsers(); // Recharger les résultats
+                } catch (error) {
+                    alert(`elraakaj na ppaj : ${error.message}`);
+                }
+            });
+            
+            // --- Listeners YEEX ---
+            searchBtn.addEventListener('click', searchUsers);
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchUsers();
+            });
+            
+            await searchUsers();
+        }
+
+
+        // ==========================================================
+        // === ROUTER PRINCIPAL (Le moteur de la SPA) ===
+        // ==========================================================
+        async function router() {
+            let view = window.location.hash.replace('#', '');
+            
+            if (!view || view === 'auth' || view === 'logout') {
+                const userId = await checkAuth(); 
+                view = userId ? 'fedde' : 'auth';
+            }
+
+            if (renderView(view)) {
+                switch (view) {
+                    case 'auth': await initAuth(); break;
+                    case 'fedde': await initFedde(); break;
+                    case 'waxtaan': await initWaxtaan(); break;
+                    case 'safara': await initSafara(); break;
+                    case 'yeex': await initYeex(); break;
+                    default: renderView('fedde'); await initFedde(); break;
+                }
+            } else {
+                renderView('auth'); await initAuth();
+            }
+        }
+
+        // Événements de chargement et de hash change
+        window.addEventListener('load', router);
+        window.addEventListener('hashchange', router);
+
+        // --- FIN FICHIER script1.js ---
+    </script>
 </body>
 </html>
