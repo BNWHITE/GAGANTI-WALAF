@@ -1,8 +1,9 @@
-// --- js/safara.js ---
+// --- js/safara.js (CORRIGÉ POUR BYPASS) ---
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuth();
+    // Récupérer l'ID utilisateur (BYPASS ou réel)
+    const currentUserId = await checkAuth(); 
+    if (!currentUserId) return; 
 
-    const currentUserId = (await sb.auth.getUser()).data.user.id;
     const profileForm = document.getElementById('profile-form');
     const passwordForm = document.getElementById('password-form');
     
@@ -14,16 +15,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const { data: profile } = await sb.from('users').select('*').eq('id', currentUserId).single();
         if (profile) {
             document.getElementById('current-username').textContent = profile.username;
-            document.getElementById('current-bio').textContent = profile.bio_gagganti;
-            document.getElementById('current-avatar').src = profile.avatar_url || './images/default_avatar.jpg';
+            document.getElementById('current-bio').textContent = profile.bio_gagganti || mirrorWordsOnly("bio non définie");
+            document.getElementById('current-avatar').src = profile.avatar_url || 'https://via.placeholder.com/120/FFC300/1A1A1A?text=G';
             
-            // Initialiser les champs de modification avec le brut original si on peut le récupérer (ici, on utilise le Gagganti pour l'affichage initial)
-            document.getElementById('new-username').value = profile.username; // Le username est stocké en brut
+            document.getElementById('new-username').value = profile.username;
             document.getElementById('new-bio').value = profile.bio_gagganti ? mirrorWordsOnly(profile.bio_gagganti) : '';
             
-            // Assurer que le champ Gagganti a sa valeur brut stockée
             document.getElementById('new-username').setAttribute('data-brut', profile.username);
-            document.getElementById('new-bio').setAttribute('data-brut', profile.bio_gagganti ? mirrorWordsOnly(profile.bio_gagganti) : '');
+            document.getElementById('new-bio').setAttribute('data-brut', profile.bio_gagganti || '');
         }
     }
     
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             if (avatarFile) {
-                // 1. Uploader l'image
                 const filePath = `${currentUserId}/avatar/${Date.now()}_${avatarFile.name}`;
                 const { error: uploadError } = await sb.storage.from('medias').upload(filePath, avatarFile);
                 if (uploadError) throw uploadError;
@@ -48,7 +46,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 newAvatarUrl = urlData.publicUrl;
             }
 
-            // 2. Mettre à jour la DB
             const updates = { 
                 username: newUsername,
                 bio_gagganti: mirrorWordsOnly(newBioBrut) 
@@ -60,8 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const { error: updateError } = await sb.from('users').update(updates).eq('id', currentUserId);
             if (updateError) throw updateError;
 
-            alert('sax nàpp na !'); // Sauvegardé !
-            loadProfile(); // Recharger le profil
+            alert('sax nàpp na !'); 
+            loadProfile(); 
         } catch (error) {
             console.error("Erreur de sauvegarde:", error);
             alert(`elraakaj na ppaj : ${error.message}`);
@@ -75,12 +72,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const confirmPassword = document.getElementById('confirm-password').value;
 
         if (newPassword !== confirmPassword) {
-            alert('ssap ed stom sel eretnè tnuo snos'); // Les mots de passe ne correspondent pas
+            alert('ssap ed stom sel eretnè tnuo snos'); 
             return;
         }
         
         if (newPassword.length < 6) {
-             alert('ssap ed tom el atuL'); // Mot de passe trop court (min 6)
+             alert('ssap ed tom el atuL'); 
             return;
         }
 
