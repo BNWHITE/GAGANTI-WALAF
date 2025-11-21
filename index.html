@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="wo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lieuccA - itnaggag</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="gagganti.css">
+</head>
+<body style="background-color: var(--fond-clair); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+
+    <div class="card" style="max-width: 600px; text-align: center; padding: 3rem;">
+        <h1 class="gagganti-text-flow" style="font-size: 3rem; color: var(--accent-secondaire);">itnaggag - feddeF</h1>
+        <p class="gagganti-text-flow" style="margin-top: 1rem; margin-bottom: 2rem;">ib yeéggil ic nuynaB ic lafèb nuynaB ic nuynaB ib gnal ci lafèb</p>
+        
+        <div style="display: flex; justify-content: center; gap: 1.5rem;">
+            <a href="auth.html" class="button gagganti-text-flow">retcennoC eS</a>
+            <a href="auth.html" class="button secondary gagganti-text-flow">etnuoC nu reérC</a>
+        </div>
+    </div>
+
+    <script src="js/supabase_client.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check si l'utilisateur est déjà connecté et rediriger vers fedde.html
+            checkAuth('/fedde.html');
+        });
+    </script>
+</body>
+</html>
