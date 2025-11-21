@@ -1,0 +1,282 @@
+/* === VARIABLES CSS === */
+:root {
+  --noir: #0a0a0a;
+  --or: #D4AF37;
+  --terre: #7c4d1e;
+  --ocre: #CC7722;
+  --ivoire: #F5F5DC;
+  --indigo: #4B0082;
+  --vert-fonce: #013220;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* === POLICE GAGANTI & RTL SETUP === */
+@font-face {
+  font-family: 'Gagganti';
+  src: url('gagganti.ttf') format('truetype');
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Gagganti', sans-serif;
+  background-color: var(--noir);
+  color: var(--ivoire);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* La direction par défaut reste LTR pour la structure générale du site */
+}
+
+/* Appliquer le Gagganti et RTL aux conteneurs de texte */
+.gagganti-text-flow, textarea, input[type="text"], input[type="password"], input[type="email"] {
+    direction: rtl; 
+    text-align: right;
+    unicode-bidi: bidi-override;
+}
+
+/* === ÉLÉMENTS COMMUNS === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+}
+
+.button, button {
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  background-color: var(--vert-fonce);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover, button:hover {
+  background-color: var(--or);
+  color: var(--noir);
+  transform: translateY(-2px);
+}
+
+header {
+  background: linear-gradient(to right, var(--noir), var(--indigo));
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 2px solid var(--or);
+  box-shadow: var(--shadow);
+}
+
+.logo h1 {
+  font-size: 2rem;
+  background: linear-gradient(to right, var(--or), #F5DEB3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 2px;
+}
+
+/* === AUTHENTIFICATION (LOGIN/SIGNUP) === */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8));
+}
+
+.auth-container {
+  background-color: rgba(10, 10, 10, 0.9);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--or);
+  width: 90%;
+  max-width: 400px;
+}
+
+.auth-title {
+  color: var(--or);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--or);
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ivoire);
+  font-size: 1.1rem;
+}
+
+#auth-button {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+#toggle-auth {
+  width: 100%;
+  margin-top: 1rem;
+  background: none;
+  border: 1px solid var(--terre);
+  color: var(--ocre);
+}
+
+#toggle-auth:hover {
+    background-color: var(--terre);
+    color: var(--ivoire);
+}
+
+/* === CHAT / WAXTAAN PAGE === */
+.waxtaan-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column-reverse; /* Afficher les nouveaux messages en bas */
+    direction: rtl; /* Conteneur RTL */
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    line-height: 1.5;
+    clear: both; /* Pour l'alignement */
+}
+
+.message-out {
+    background-color: var(--indigo);
+    margin-right: 0;
+    margin-left: auto;
+    border-top-left-radius: 0;
+    float: left; /* Aligner à gauche dans le conteneur RTL */
+}
+
+.message-in {
+    background-color: var(--vert-fonce);
+    margin-left: 0;
+    margin-right: auto;
+    border-top-right-radius: 0;
+    float: right; /* Aligner à droite dans le conteneur RTL */
+}
+
+.message-header {
+    color: var(--or);
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+    direction: rtl;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: var(--ocre);
+    margin-top: 0.3rem;
+    text-align: left; /* L'heure reste lisible en LTR */
+    direction: ltr;
+}
+
+.message-image {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+}
+
+.message-audio {
+    width: 100%;
+    max-width: 300px;
+    direction: ltr; /* Les contrôles audio restent LTR */
+}
+
+.message-emoji {
+    font-size: 2.5rem;
+    text-align: center;
+    display: block;
+}
+
+#input-container {
+    display: flex;
+    padding: 1rem;
+    background: var(--noir);
+    border-top: 1px solid var(--or);
+    gap: 0.5rem;
+    align-items: center;
+}
+
+#message-input {
+    flex: 1;
+    padding: 0.8rem 1.2rem;
+    border-radius: 2rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--ivoire);
+    font-size: 1rem;
+}
+
+.action-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background-color: var(--terre);
+}
+.action-button:hover {
+    background-color: var(--or);
+    color: var(--noir);
+}
+
+/* === RESPONSIVE DESIGN (Media Queries) === */
+@media (min-width: 768px) {
+    /* Mise en page deux colonnes pour le chat */
+    .waxtaan-page {
+        flex-direction: row;
+    }
+    
+    #online-users-panel {
+        width: 300px;
+        min-height: 100vh;
+        background-color: var(--vert-fonce);
+        padding: 1rem;
+        border-left: 1px solid var(--or);
+        order: -1; /* Placer la liste d'utilisateurs à gauche */
+    }
+
+    #main-chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .message {
+        max-width: 60%;
+    }
+}
