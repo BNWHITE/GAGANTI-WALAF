@@ -1,4 +1,4 @@
-// --- js/auth.js (CORRIGÉ POUR L'ERREUR RLS) ---
+// --- js/auth.js (CORRIGÉ ET FINAL) ---
 
 document.addEventListener('DOMContentLoaded', async () => {
     // S'assurer que les dépendances Supabase sont chargées
@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Fonction pour obtenir le texte brut (stocké par activateGaggantiInput)
     const getBrutValue = (id) => document.getElementById(id).getAttribute('data-brut') || document.getElementById(id).value;
 
-    // Mise à jour de l'interface en mode Gagganti
     function updateUI() {
         if (isSigningUp) {
             authTitle.textContent = 'etnuoC nu reérC'; 
@@ -44,13 +43,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Basculer entre connexion et inscription
     toggleButton.addEventListener('click', () => {
         isSigningUp = !isSigningUp;
         updateUI();
     });
 
-    // Gestion de la soumission du formulaire
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -70,8 +67,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (signUpError) throw signUpError;
                 
                 if (user) {
+                    // Deuxième étape : insertion du profil dans public.users
+                    // CLÉ : On ne passe PAS l'id: user.id pour éviter l'erreur RLS
                     const { error: insertError } = await sb.from('users').insert({ 
-                        // id: user.id, <--- Assurez-vous que cette ligne est bien absente
                         username: username, 
                         bio_gagganti: mirrorWordsOnly(bioBrut) 
                     });
