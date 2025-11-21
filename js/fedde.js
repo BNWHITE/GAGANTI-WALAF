@@ -1,30 +1,40 @@
-// --- js/fedde.js ---
+// --- js/fedde.js (CORRIGÉ POUR BYPASS) ---
 document.addEventListener('DOMContentLoaded', async () => {
-    await checkAuth();
+    // Récupérer l'ID utilisateur (BYPASS ou réel)
+    const currentUserId = await checkAuth(); 
+    if (!currentUserId) return; // Si non connecté et pas en bypass, redirection déjà faite.
+
+    // Charger les données complètes de l'utilisateur de la DB (Nécessaire en mode bypass car la session n'est pas complète)
+    const { data: userData, error: userError } = await sb.from('users').select('*').eq('id', currentUserId).single();
+    if (userError || !userData) {
+        console.error("Erreur critique: Profil utilisateur non trouvé.", userError);
+        alert(`elraakaj na ppaj : Profil utilisateur non trouvé pour ID ${currentUserId}`);
+        return;
+    }
+    const currentUser = userData;
+
 
     const postInput = document.getElementById('post-input');
     const submitPostBtn = document.getElementById('submit-post-btn');
     const newsfeedEl = document.getElementById('newsfeed');
-    const mediaInput = document.createElement('input'); // Input caché pour les médias
+    const mediaInput = document.createElement('input'); 
     mediaInput.type = 'file';
     mediaInput.accept = 'image/*';
     
-    // Activer la saisie Gagganti pour le champ de post
     activateGaggantiInput('post-input');
 
-    // Déconnexion
+    // Déconnexion (La déconnexion standard Supabase est toujours utilisée même en bypass)
     document.getElementById('logout-btn').addEventListener('click', async () => {
         const { error } = await sb.auth.signOut();
         if (error) alert(`nuG na ppaj`);
         else navigate('/auth.html');
     });
 
-    // Gestion du média
+    // ... (Logique pour attach-media-btn et mediaInput reste la même) ...
     document.getElementById('attach-media-btn').addEventListener('click', () => mediaInput.click());
 
     mediaInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
-            // Un fichier sélectionné. On l'enverra avec le post s'il y a du texte, sinon seul.
             alert('eGamI etpècceP');
         }
     });
@@ -38,17 +48,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert('aradtic bindal t el at eGamI');
             return;
         }
-        
-        const user = (await sb.auth.getUser()).data.user;
-        if (!user) return;
 
         try {
             let mediaUrl = null;
             let postType = 'text';
 
             if (file) {
-                // 1. Uploader le média
-                const filePath = `${user.id}/posts/${Date.now()}_${file.name}`;
+                const filePath = `${currentUserId}/posts/${Date.now()}_${file.name}`;
                 const { error: uploadError } = await sb.storage.from('medias').upload(filePath, file);
                 if (uploadError) throw uploadError;
 
@@ -57,9 +63,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 postType = 'image';
             }
 
-            // 2. Insérer le post dans la DB
             const postData = {
-                user_id: user.id,
+                user_id: currentUserId, // Utilise l'ID obtenu de checkAuth
                 type: postType,
                 contenu_brut: brutText,
                 contenu_gagganti: brutText ? mirrorWordsOnly(brutText) : null,
@@ -71,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             postInput.value = '';
             postInput.setAttribute('data-brut', '');
-            mediaInput.value = ''; // Réinitialiser le fichier
+            mediaInput.value = ''; 
             alert('etceS tsoP !');
 
         } catch (error) {
@@ -102,24 +107,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             <div class="post-time gagganti-text-flow" style="font-size: 0.7rem;">${new Date(post.created_at).toLocaleDateString()}</div>
         `;
-        newsfeedEl.prepend(postEl); // Ajouter en haut
+        newsfeedEl.prepend(postEl); 
     }
     
     // Chargement du Fil d'Actualité
     async function loadNewsfeed() {
         const { data: posts, error } = await sb
             .from('posts')
-            .select(`
-                *,
-                users!inner(username, avatar_url)
-            `)
+            .select(`*, users!inner(username, avatar_url)`)
             .order('created_at', { ascending: false })
             .limit(20);
             
-        if (error) {
-            console.error('Erreur chargement posts:', error);
-            return;
-        }
+        if (error) { console.error('Erreur chargement posts:', error); return; }
 
         newsfeedEl.innerHTML = '';
         posts.forEach(post => renderPost(post, post.users.username, post.users.avatar_url));
@@ -131,7 +130,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             { event: 'INSERT', schema: 'public', table: 'posts' }, 
             async (payload) => {
                 const newPost = payload.new;
-                // Récupérer l'utilisateur pour l'affichage
                 const { data: sender } = await sb.from('users').select('username, avatar_url').eq('id', newPost.user_id).single();
                 if (sender) {
                     renderPost(newPost, sender.username, sender.avatar_url);
