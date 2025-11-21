@@ -1,37 +1,120 @@
-/* === VARIABLES CSS - Luminosité Gagganti === */
+/* ================================================================= */
+/* === FICHIER CSS COMPLET GAGANTI-WALAF (Thème Lumineux & Social) === */
+/* ================================================================= */
+
+/* === VARIABLES CSS - Luminosité Gagganti (Inspiré par pp.jpg, etc.) === */
 :root {
-  --fond-clair: #F5F5F5; /* Fond principal */
-  --fond-card: #FFFFFF; /* Cartes et zones flottantes */
-  --accent-primaire: #FFC300; /* Jaune Vif - Actions principales */
-  --accent-secondaire: #FF5733; /* Rouge Corail - Actions secondaires */
-  --texte-sombre: #1A1A1A; /* Texte sur fond clair */
-  --bordure-legere: #DEDEDE; /* Séparateurs */
-  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --fond-clair: #F5F5F5;      /* Fond principal du site (Gris très clair) */
+  --fond-card: #FFFFFF;       /* Cartes et zones flottantes (Blanc pur) */
+  --accent-primaire: #FFC300; /* Jaune Vif / Or - Actions principales (Inspiration Solaire) */
+  --accent-secondaire: #FF5733;/* Rouge Corail / Terre - Actions secondaires */
+  --texte-sombre: #1A1A1A;    /* Texte principal sur fond clair */
+  --bordure-legere: #DEDEDE;  /* Séparateurs, bordures des inputs */
+  --ombre-subtile: 0 1px 3px rgba(0, 0, 0, 0.08); /* Ombre légère pour les inputs */
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre plus prononcée pour les cartes */
+  
+  /* Dimensions du layout principal (Desktop) */
   --col-nav-width: 60px;
-  --col-list-width: 320px;
+  --col-list-width: 300px;
 }
 
-/* Base du site */
+/* === POLICE GAGANTI & RTL SETUP === */
+@font-face {
+  font-family: 'Gagganti';
+  src: url('gagganti.ttf') format('truetype');
+  font-display: swap;
+}
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Gagganti', sans-serif;
   background-color: var(--fond-clair);
-  color: var(--texte-sombre); /* Texte devient sombre */
+  color: var(--texte-sombre);
   min-height: 100vh;
   margin: 0;
 }
 
-/* Appliquer le Gagganti et RTL */
-.gagganti-text-flow, textarea, input[type="text"], input[type="password"], input[type="email"] {
+/* Appliquer le Gagganti et RTL au flux de texte */
+.gagganti-text-flow {
     direction: rtl; 
     text-align: right;
-    /* Conserver le texte brut pour le traitement JS */
-    /* unicode-bidi: bidi-override; (retiré pour la gestion JS) */
+    line-height: 1.6;
+}
+/* Le champ de saisie doit toujours être Gagganti/RTL */
+.gagganti-input, input[type="text"], input[type="password"], input[type="email"], textarea {
+    direction: rtl; 
+    text-align: right;
 }
 
-/* === LAYOUT GLOBAL (Desktop) === */
+/* === ÉLÉMENTS COMMUNS (Boutons, Inputs, Cards) === */
+
+.card {
+    background-color: var(--fond-card);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 1.5rem;
+}
+
+.button, button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: var(--accent-primaire);
+  color: var(--texte-sombre);
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: var(--ombre-subtile);
+}
+
+.button:hover, button:hover {
+  background-color: var(--accent-secondaire);
+  color: var(--fond-card);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.secondary {
+    background: var(--fond-clair) !important;
+    border: 1px solid var(--bordure-legere);
+    color: var(--texte-sombre) !important;
+}
+
+.secondary:hover {
+    background-color: var(--bordure-legere) !important;
+    color: var(--texte-sombre) !important;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--bordure-legere);
+  background: var(--fond-clair);
+  color: var(--texte-sombre);
+  font-size: 1.1rem;
+  box-shadow: var(--ombre-subtile);
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-primaire);
+    box-shadow: 0 0 0 2px rgba(255, 195, 0, 0.3);
+}
+
+/* === LAYOUT GLOBAL (Desktop - 3 Colonnes) === */
+
 .app-container {
     display: grid;
-    /* 3 colonnes: Navigation (60px) | Liste (320px) | Contenu Principal (Reste) */
+    /* Nav (60px) | Liste (300px) | Contenu Principal (Reste) */
     grid-template-columns: var(--col-nav-width) var(--col-list-width) 1fr;
     height: 100vh;
     overflow: hidden;
@@ -52,12 +135,11 @@ body {
 }
 
 .col-main {
-    padding: 1.5rem;
     overflow-y: auto;
     background-color: var(--fond-clair);
 }
 
-/* === NAVIGATION (Col 1) === */
+/* === Navigation (col-nav) === */
 .nav-link {
     display: flex;
     flex-direction: column;
@@ -67,7 +149,7 @@ body {
     color: var(--texte-sombre);
     text-decoration: none;
     font-size: 0.8rem;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .nav-link i {
@@ -81,33 +163,174 @@ body {
     font-weight: bold;
 }
 
-/* === CARDS & FORMULAIRES === */
-.card {
-    background-color: var(--fond-card);
+/* === AUTHENTIFICATION (auth.html) === */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--fond-clair);
+}
+
+.auth-container {
+  background-color: var(--fond-card);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  width: 90%;
+  max-width: 450px;
+}
+
+.auth-title {
+  color: var(--accent-secondaire);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--texte-sombre);
+}
+
+/* === FEEDE / POSTS (Fil d'actualité) === */
+#fedde-feed {
     padding: 1.5rem;
+}
+
+.post-card {
+    background-color: var(--fond-card);
+    padding: 1.2rem;
     border-radius: 12px;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--ombre-subtile);
     margin-bottom: 1.5rem;
 }
 
-.button, button {
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    direction: ltr; /* Permet aux éléments d'aller LTR */
+}
+
+.post-header .username {
+    font-weight: bold;
+    color: var(--accent-secondaire);
+    text-decoration: none;
+}
+
+.post-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     background-color: var(--accent-primaire);
     color: var(--texte-sombre);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
     font-weight: bold;
+    order: 2; /* Pour aligner l'avatar à droite dans le conteneur RTL */
+}
+
+.post-content {
+    margin-bottom: 1rem;
+    /* Le texte Gagganti/RTL est géré par la classe gagganti-text-flow */
+}
+
+.post-media {
+    max-width: 100%;
     border-radius: 8px;
-    transition: all 0.2s;
+    height: auto;
+    margin: 0.5rem 0;
 }
 
-.button:hover, button:hover {
-    background-color: var(--accent-secondaire);
-    color: var(--fond-card);
+.post-actions {
+    display: flex;
+    justify-content: flex-end; /* Aligner à droite pour le RTL */
+    gap: 1rem;
+    border-top: 1px solid var(--bordure-legere);
+    padding-top: 0.8rem;
+    direction: ltr; /* Alignement des boutons d'actions */
 }
 
-/* Inputs / Textareas */
-input, textarea {
-    border: 1px solid var(--bordure-legere);
-    background-color: var(--fond-clair);
+.action-btn {
+    background: none;
     color: var(--texte-sombre);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.action-btn:hover {
+    color: var(--accent-primaire);
+    transform: none;
+    box-shadow: none;
+}
+
+/* === WAXTAAN (Chat) === */
+.waxtaan-page {
+    /* Le layout est géré par app-container */
+    display: flex; 
+    flex-direction: column;
+    height: 100vh;
+}
+
+#messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column-reverse; 
+    direction: rtl; /* Conteneur RTL */
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.8rem 1.2rem;
+    margin-bottom: 0.8rem;
+    border-radius: 1rem;
+    line-height: 1.5;
+    clear: both; 
+    float: right; /* Par défaut aligné à droite du conteneur RTL */
+}
+
+.message-in {
+    background-color: var(--fond-clair); /* Message de l'autre */
+    border: 1px solid var(--bordure-legere);
+    margin-right: auto;
+    margin-left: 0;
+    border-top-left-radius: 0;
+    float: left; /* Aligner à gauche (LTR) dans le conteneur RTL */
+}
+
+.message-out {
+    background-color: var(--accent-primaire); /* Mon message */
+    color: var(--texte-sombre);
+    margin-left: auto;
+    margin-right: 0;
+    border-top-right-radius: 0;
+    float: right; /* Aligner à droite (RTL) dans le conteneur RTL */
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: var(--texte-sombre);
+    opacity: 0.7;
+    margin-top: 0.3rem;
+    text-align: left; 
+    direction: ltr; /* L'heure reste lisible en LTR */
+}
+
+#input-container {
+    display: flex;
+    padding: 1rem;
+    background: var(--fond-card);
+    border-top: 1px solid var(--bordure-legere);
+    gap: 0.5rem;
+    align-items: center;
 }
 
 /* === RESPONSIVE (Mobile) === */
@@ -126,8 +349,9 @@ input, textarea {
         width: 100%;
         min-height: 100vh;
     }
-    /* Rendre la navigation principale accessible via un menu hamburger (non codé ici) */
-    header {
-        display: block; /* Rétablir l'entête pour le mobile */
+    
+    /* Le chat doit prendre toute la largeur */
+    .message {
+        max-width: 95%;
     }
 }
