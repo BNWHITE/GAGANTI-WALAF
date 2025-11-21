@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html lang="wo">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>naathaW - itnaggag</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="gagganti.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>naathaW - itnaggag</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="gagganti.css">
 </head>
-<body class="waxtaan-page">
-  <header>
-    <div class="logo">
-      <h1>naathaW - itnaggag</h1>
+<body>
+    <div class="app-container">
+        
+        <div class="col-nav">
+            <h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1>
+            <nav>
+                <a href="fedde.html" class="nav-link"><i class="fas fa-home"></i> eddeF</a>
+                <a href="yeex.html" class="nav-link"><i class="fas fa-search"></i> ehcrcheR</a>
+                <a href="waxtaan.html" class="nav-link active"><i class="fas fa-comments"></i> naathaW</a>
+                <a href="safara.html" class="nav-link"><i class="fas fa-cog"></i> sartèmeP</a>
+                <a href="#" id="logout-btn" class="nav-link" style="margin-top: 2rem;"><i class="fas fa-sign-out-alt"></i> nnèG</a>
+            </nav>
+        </div>
+
+        <div class="col-list">
+            <h3 class="gagganti-text-flow" style="padding: 1rem; text-align: right; border-bottom: 1px solid var(--bordure-legere);">ib yeéggil ic kén yi tiN</h3>
+            <div id="online-users-list" style="padding: 1rem;">
+                </div>
+        </div>
+
+        <div class="col-main waxtaan-page">
+            <h2 class="gagganti-text-flow" style="margin-bottom: 1rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem; text-align: left;">epuorG ic naathaW</h2>
+            
+            <div id="messages">
+                </div>
+
+            <div id="input-container">
+                <button id="record-btn" class="button secondary action-btn">🎤</button>
+                
+                <input type="text" id="message-input" class="gagganti-text-flow gagganti-input" data-brut="" placeholder="...itnagag ci bindal" autocomplete="off">
+                
+                <button id="send-button" disabled class="button action-btn">➡️</button>
+            </div>
+        </div>
     </div>
-  </header>
-    
-  <div id="online-users-panel">
-    <h2 class="gagganti-text-flow" style="color: var(--or); text-align: right;">ib yeéggil ic kén yi tiN (<span class="online-count">0</span>)</h2>
-    <div id="online-users-list">
-      </div>
-  </div>
 
-  <div id="main-chat-area">
-    <div id="messages">
-      </div>
-
-    <div id="input-container">
-      
-      <label for="media-upload" class="action-button">
-        <i class="fas fa-image"></i>
-      </label>
-      <input type="file" id="media-upload" accept="image/*" style="display: none;">
-      
-      <button id="record-btn" class="action-button">🎤</button>
-      
-      <input type="text" id="message-input" class="gagganti-text-flow" placeholder="...itnagag ci bindal" autocomplete="off">
-      
-      <button id="send-button" disabled class="action-button" style="background-color: var(--or); color: var(--noir);">
-        ➡️
-      </button>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase_client.js"></script>
-  <script src="js/waxtaan.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase_client.js"></script>
+    <script src="js/waxtaan.js"></script>
 </body>
 </html>
