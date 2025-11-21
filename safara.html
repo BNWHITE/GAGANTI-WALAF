@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="wo">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sartèmeP - itnaggag</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="gagganti.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <div class="col-nav">
+             <h1 style="text-align: center; color: var(--accent-secondaire);">G!</h1>
+            <nav>
+                <a href="fedde.html" class="nav-link"><i class="fas fa-home"></i> eddeF</a>
+                <a href="yeex.html" class="nav-link"><i class="fas fa-search"></i> ehcrcheR</a>
+                <a href="waxtaan.html" class="nav-link"><i class="fas fa-comments"></i> naathaW</a>
+                <a href="safara.html" class="nav-link active"><i class="fas fa-cog"></i> sartèmeP</a>
+                <a href="#" id="logout-btn" class="nav-link" style="margin-top: 2rem;"><i class="fas fa-sign-out-alt"></i> nnèG</a>
+            </nav>
+        </div>
+
+        <div class="col-list" style="text-align: center; padding: 2rem;">
+            <h3 class="gagganti-text-flow" style="margin-bottom: 1rem;">lennosreP liforP</h3>
+            <img id="current-avatar" src="./images/default_avatar.jpg" alt="giforP eGamI" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent-primaire); margin-bottom: 1rem;">
+            <h2 id="current-username" class="gagganti-text-flow" style="color: var(--accent-secondaire);">ruetasilitU</h2>
+            <p id="current-bio" class="gagganti-text-flow" style="font-size: 0.9rem; margin-top: 0.5rem;"></p>
+        </div>
+
+        <div class="col-main">
+            <h2 class="gagganti-text-flow" style="margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-primaire); padding-bottom: 0.5rem;">liforP reifidoM</h2>
+            
+            <form id="profile-form" class="card">
+                <div class="form-group">
+                    <label for="new-username">elatam uw ruT</label>
+                    <input type="text" id="new-username" class="gagganti-input" data-brut="">
+                </div>
+                <div class="form-group">
+                    <label for="new-bio">eihpargoiB</label>
+                    <textarea id="new-bio" class="gagganti-input" data-brut="" placeholder="...feddeF ic yeeR"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="avatar-upload">giforP eGamI reifidoM</label>
+                    <input type="file" id="avatar-upload" accept="image/*" style="padding: 0.5rem;">
+                </div>
+                <button type="submit" class="button" style="width: 100%;">lahaS</button>
+            </form>
+            
+            <h2 class="gagganti-text-flow" style="margin-top: 2rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--accent-secondaire); padding-bottom: 0.5rem;">essap eD toM reifidoM</h2>
+            <form id="password-form" class="card">
+                <div class="form-group">
+                    <label for="new-password">essap eD toM luaevuoN</label>
+                    <input type="password" id="new-password" required>
+                </div>
+                 <div class="form-group">
+                    <label for="confirm-password">essap eD toM remrifnoC</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <button type="submit" class="button secondary" style="width: 100%;">essap eD toM reifidoM</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase_client.js"></script>
+    <script src="js/safara.js"></script>
+</body>
+</html>
