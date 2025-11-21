@@ -3,7 +3,7 @@
 // ==========================================================
 // === CORE LOGIC & CONFIGURATION ===
 // ==========================================================
-
+const ENTRY_FILE_NAME = 'index1.html'; // Utilisez 'fedde.html' si vous préférez
 // CONFIGURATION (À Remplacer)
 const SUPABASE_URL = 'https://jxwumbkoikoyfhcmmocq.supabase.co';
 const SUPABASE_ANON_KEY = 'VOTRE_CLE_PUBLIQUE_SUPABASE'; // <<< CLÉ CRITIQUE : REMPLACEZ CETTE VALEUR >>>
