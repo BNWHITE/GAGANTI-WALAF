@@ -1,4 +1,4 @@
-// --- js/auth.js (CORRIGÉ) ---
+// --- js/auth.js (CORRIGÉ POUR L'ERREUR RLS) ---
 
 document.addEventListener('DOMContentLoaded', async () => {
     // S'assurer que les dépendances Supabase sont chargées
@@ -30,15 +30,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Mise à jour de l'interface en mode Gagganti
     function updateUI() {
         if (isSigningUp) {
-            authTitle.textContent = 'etnuoC nu reérC'; // Créer un compte
-            authButton.textContent = 'erircsnI\'S'; // S'inscrire
-            toggleButton.textContent = 'retcennoC eS ?'; // Se connecter ?
+            authTitle.textContent = 'etnuoC nu reérC'; 
+            authButton.textContent = 'erircsnI\'S'; 
+            toggleButton.textContent = 'retcennoC eS ?'; 
             usernameGroup.style.display = 'block';
             bioGroup.style.display = 'block';
         } else {
-            authTitle.textContent = 'retcennoC eS'; // Se connecter
-            authButton.textContent = 'retcennoC'; // Se connecter
-            toggleButton.textContent = 'tinuoC nU ?'; // Un compte ?
+            authTitle.textContent = 'retcennoC eS'; 
+            authButton.textContent = 'retcennoC'; 
+            toggleButton.textContent = 'tinuoC nU ?'; 
             usernameGroup.style.display = 'none';
             bioGroup.style.display = 'none';
         }
@@ -54,35 +54,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Récupérer les valeurs BRUTES
-        // L'email est stocké en clair (pas de Gagganti)
         const email = document.getElementById('email').value.trim();
-        // CLÉ : Le mot de passe doit être récupéré en brut pour l'envoyer à Supabase
         const password = getBrutValue('password').trim(); 
-        
         const username = getBrutValue('username').trim();
         const bioBrut = getBrutValue('bio').trim();
 
         try {
             if (isSigningUp) {
                 // --- LOGIQUE INSCRIPTION ---
-                if (!username || !bioBrut) throw new Error('elatam uw ruT tapp elatuL'); // Veuillez taper un nom d'utilisateur.
+                if (!username || !bioBrut) throw new Error('elatam uw ruT tapp elatuL'); 
                 
+                // Première étape : création de l'utilisateur Auth
                 const { data: { user }, error: signUpError } = await sb.auth.signUp({ email, password });
                 
                 if (signUpError) throw signUpError;
                 
                 if (user) {
-                    // Insérer le username et la bio Gagganti dans la table 'users'
+                    // Deuxième étape : insertion du profil dans public.users
+                    // CLÉ : ON NE PASSE PLUS L'ID, ON LAISSE LA DB UTILISER LE DEFAULT (auth.uid())
                     const { error: insertError } = await sb.from('users').insert({ 
-                        id: user.id, 
+                        // id: user.id, <--- CETTE LIGNE EST SUPPRIMÉE
                         username: username, 
                         bio_gagganti: mirrorWordsOnly(bioBrut) 
                     });
                     if (insertError) throw insertError;
                 }
                 
-                alert('eliamE ic noitacifiréV : feddeF'); // Vérification dans l'email
+                alert('eliamE ic noitacifiréV : feddeF'); 
                 
             } else {
                 // --- LOGIQUE CONNEXION (Sign In) ---
@@ -90,17 +88,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 if (signInError) throw signInError;
                 
-                // Connexion réussie, redirection vers le fil d'actualité
                 alert('etcennoC ! feddeF ic sset'); 
                 window.location.href = '/fedde.html';
 
             }
         } catch (error) {
             console.error('Erreur Supabase:', error);
-            // Afficher l'erreur en Gagganti
             alert(`elraakaj na ppaj : ${error.message}`); 
         }
     });
 
-    updateUI(); // Initialisation
+    updateUI(); 
 });
