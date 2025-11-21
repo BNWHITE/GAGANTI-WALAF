@@ -235,3 +235,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     sendBtn.addEventListener('click', sendMessage);
 });
+
+// Fonction à appeler sur chaque champ de saisie Gagganti
+function activateGaggantiInput(elementId) {
+    const inputElement = document.getElementById(elementId);
+    
+    inputElement.addEventListener('input', (e) => {
+        // Sauvegarder la position du curseur
+        const cursorPos = inputElement.selectionStart;
+        
+        // Obtenir le texte brut tapé par l'utilisateur
+        const originalText = e.target.value;
+        
+        // Appliquer la transformation Gagganti (inversion des lettres dans les mots)
+        const transformedText = mirrorWordsOnly(originalText);
+        
+        // Stocker le texte BRUT dans un attribut de données
+        inputElement.setAttribute('data-brut', originalText);
+        
+        // Afficher le texte Gagganti (inversé) dans le champ
+        inputElement.value = transformedText;
+        
+        // Tenter de restaurer la position du curseur (peut être complexe avec RTL)
+        inputElement.selectionStart = inputElement.selectionEnd = cursorPos;
+    });
+}
+// Exemple d'utilisation dans auth.js : 
+// activateGaggantiInput('username');
