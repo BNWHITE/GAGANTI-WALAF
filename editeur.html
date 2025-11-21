@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="wo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>editeur - dnibM ic foloW</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="gagganti.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <h1>editeur - dnibM ic foloW</h1>
+    </div>
+    <button id="logout-btn" class="button" style="position: absolute; top: 1rem; left: 1rem;">
+        <i class="fas fa-sign-out-alt"></i> nnèG
+    </button>
+  </header>
+
+  <nav class="main-nav">
+    <a href="#" class="nav-link active" data-page="editeur.html"><i class="fas fa-edit"></i> dniB</a>
+    <a href="#" class="nav-link" data-page="waxtaan.html"><i class="fas fa-users"></i> naathaW</a>
+  </nav>
+
+  <main class="main-content container">
+    <div class="editor-container">
+        <div class="form-group">
+            <label for="doc-titre">ertit el atuL</label>
+            <input type="text" id="doc-titre" class="gagganti-text-flow" placeholder="...ertit el atuL">
+        </div>
+        
+        <textarea id="editor" class="gagganti-text-flow" placeholder="...Itnagag ci Bindal"></textarea>
+        
+        <div class="editor-footer">
+            <div class="character-count">0 ttam</div>
+            <button id="save-doc-btn" class="button">
+              <i class="fas fa-save"></i> nàppal ci esabaS
+            </button>
+        </div>
+    </div>
+
+    <div class="keyboard-container animate">
+      <h2 class="keyboard-title gagganti-text-flow">
+        <i class="fas fa-keyboard"></i> Itnaggag ic ureegnaP
+      </h2>
+      
+      <div class="keyboard">
+        <button>K</button><button>A</button><button>N</button><button>T</button><button>I</button><button>B</button><button>D</button>
+        <button>E</button><button>F</button><button>H</button><button>J</button><button>G</button><button>L</button><button>M</button>
+        <button>O</button><button>P</button><button>R</button><button>S</button><button>U</button><button>V</button><button>W</button>
+        <button>1</button><button>2</button><button>3</button><button>4</button><button>5</button>
+        <button>6</button><button>7</button><button>8</button><button>9</button><button>0</button>
+        <button>␣</button>
+        <button>é</button>
+        <button>£</button>
+        <button>ù</button>
+        <button>↵</button>
+        <button class="accent"><i class="fas fa-backspace"></i> backspace</button>
+      </div>
+    </div>
+    
+    </main>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase_client.js"></script>
+  <script src="js/editeur.js"></script>
+</body>
+</html>
